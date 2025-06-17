@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+    --color-color: #003366;
+    --color-color-2: #666;
+    --color-color-3: #00509e;
+}
+
+body{
+    background-color: #e0eafc;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}

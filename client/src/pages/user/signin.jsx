@@ -44,11 +44,7 @@ const SignIn = () => {
           Forgot Password?
         </Link>
 
-
-       
       </div>
-
-      
 
     </div>
     </>

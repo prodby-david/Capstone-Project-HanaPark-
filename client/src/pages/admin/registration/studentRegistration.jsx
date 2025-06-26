@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
+
+
+
+
 const StudentRegistration = () => {
 
     const [ formData, setFormData ] = useState({
@@ -37,30 +43,210 @@ const StudentRegistration = () => {
         { value: "ABM", label: "Accountancy, Business and Management" }
     ];
 
+    const brandsByType = {
+        "2-Wheels (110–125cc)": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
+
+        "2-Wheels (125–399cc)": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
+
+        "2-Wheels (400cc and above)": ["Honda", "Yamaha", "Suzuki", "Kawasaki", "Ducati", "BMW", "KTM", "Triumph"],
+
+        "Sedan": ["Toyota","Honda","Mitsubishi","Nissan","Hyundai","Mazda","Chevrolet","Ford",],
+
+        "Hatchback": ["Toyota", "Honda", "Suzuki", "Kia", "Hyundai", "Chevrolet"],
+
+        "SUV": ["Toyota", "Honda", "Ford", "Mitsubishi", "Nissan", "Isuzu", "Hyundai", "Chevrolet"],
+
+        "Pickup": ["Ford", "Isuzu", "Toyota", "Nissan", "Mitsubishi", "Mazda",],
+
+        "MPV": ["Toyota", "Mitsubishi", "Suzuki", "Honda", "Nissan"],
+
+        "Van": ["Toyota", "Nissan", "Hyundai", "Foton"],
+    };
+
+    
+    {/* useStates */}
     const [ step, setStep ] = useState(1);
     const [ selectedCourse, setSelectedCourse ] = useState('');
     const [ selectedYearLevel, setselectedYearLevel ] = useState('');
 
-    const filteredCourses = selectedYearLevel === "college"
-    ? tertiaryCourses
-    : selectedYearLevel === "shs"
-    ? shsCourses
-    : [];
+    {/* Regex Validations */}
+    const emailRegex = /^[a-zA-Z]+\.[0-9]{6}@pcc\.pasig\.edu\.ph$/;
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    const usernameRegex = /^[a-zA-Z]+\.[0-9]{6}$/;
+    const plateNumberRegex = /^(?:[A-Z]{3} ?\d{4}|(?=(?:.*[A-Z]){3})(?=(?:.*\d){3})[A-Z0-9]{6}|\d{4}-\d{11})$/;
+    const mvFileRegex = /^[0-9]{4}-[0-9]{11,12}$/;  
+
+    {/* Filters */}
+    const filteredCourses = selectedYearLevel === "College" ? tertiaryCourses : selectedYearLevel === "Senior High School" ? shsCourses : [];
+
+    const filteredBrands = brandsByType[formData.vehicleType] || [];
 
 
-const nextStep = () => setStep(prev => prev + 1);
+    {/* Validations */}
+    const step1Validations = () => {
+
+    if (!formData.lastname) {
+        toast.error('Lastname must not be empty.', toastOptions);
+        return false;
+    }
+
+    if (!formData.firstname) {
+        toast.error('Firstname must not be empty.', toastOptions);
+        return false;
+    }
+
+    if(formData.middlename && !nameRegex.test(formData.middlename)){
+        toast.error('Middlename must contain letters only', toastOptions);
+        return false;
+    }
+
+    if (!nameRegex.test(formData.lastname) || !nameRegex.test(formData.firstname)) {
+        toast.error("Names must contain letters only.", toastOptions);
+        return false;
+    }
+
+    if(!formData.lastname){
+        toast.error('Lastname must not be empty.', toastOptions)
+        return false;
+    }
+
+    if (!formData.studentId) {
+        toast.error("Student ID is required", toastOptions);
+        return false;
+    }
+
+    if(formData.studentId.length <= 9){
+        toast.error('Student ID should be at least 10 digits long.', toastOptions);
+        return;
+    }
+
+    if (!formData.username) {
+        toast.error("Username is required", toastOptions);
+        return false;
+    }
+
+    if(!usernameRegex.test(formData.username)){
+        toast.error('Username format is invalid.', toastOptions)
+        return;
+    }
+
+    if (!formData.password || !formData.confirmPassword) {
+        toast.error("Password and confirm password are required", toastOptions);
+        return false;
+    }
+
+    if(formData.password.length < 10){
+        toast.error('Password must atleast 10 characters long.', toastOptions);
+        return false;
+    }
+
+    if(formData.password !== formData.confirmPassword){
+        toast.error("Password doesn't match. Try again.", toastOptions);
+        return false;
+    }
+    
+     if(!formData.email){
+        toast.error('Email must not be empty.', toastOptions);
+        return false;
+    }
+
+    if (!emailRegex.test(formData.email)) {
+        toast.error("Invalid school email format", toastOptions);
+        return false;
+    }
+
+    if (!formData.yearLevel || !formData.courses) {
+        toast.error("Year Level and Course should not be empty.", toastOptions);
+        return false;
+    }
+
+    return true;
+};
+
+const step2Validations = () => {
+
+    if(!formData.vehicleType){
+        toast.error("Vehicle Type is required.", toastOptions);
+        return false;
+    }
+
+    if(!formData.model){
+        toast.error("Year model is required.", toastOptions);
+        return false;
+    }
+
+    if (!formData.plateNumber) {
+        toast.error("Plate Number or MV File is required.", toastOptions);
+        return false;
+    }
+
+    if (!plateNumberRegex.test(formData.plateNumber) && !mvFileRegex.test(formData.plateNumber)) {
+        toast.error("Invalid Plate Number or MV File format. Use 123ABC or 1234-00000012345 format.", toastOptions);
+        return false;
+    }
+
+    if (!formData.color) {
+        toast.error("Vehicle color is required.", toastOptions);
+        return false;
+    }
+
+  return true;
+};
+
+const toastOptions = {
+  style: {
+    background: '#00509e',
+    color: '#fefefe',
+    fontSize: '14px'
+  }
+};
+
+
+const nextStep = () => {
+
+    if(step === 1){
+        const valid = step1Validations();
+        if(!valid) return;
+    }
+
+    if (step === 2) {
+        const valid = step2Validations();
+        if (!valid) return;
+  }
+
+    setStep(prev => prev + 1)
+};
+
 const prevStep = () => setStep(prev => prev - 1);
 
-const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const toTitleCase = (str) =>
+  str.toLowerCase().split(' ').map(word =>
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
 
-  const handlesubmit = async (e) => {
+const handleChange = (e) => {
+
+    const { name, value } = e.target;
+
+    const titleCaseFields = ['lastname', 'firstname', 'middlename', 'color'];
+    const upperCaseFields = ['plateNumber'];
+
+    setFormData({
+    ...formData,[name]: titleCaseFields.includes(name) ? toTitleCase(value) : upperCaseFields.includes(name) ? value.toUpperCase() : value
+});
+};
+
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
     try{
-        const res = await axios.post('');
+        Swal.fire({
+            title: 'Registration Success',
+            text: 'Click the OK button to continue.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          });
 
     }catch(err){
         
@@ -72,7 +258,7 @@ const handleChange = (e) => {
     <>
         <div className='flex flex-col items-center justify-center min-h-screen px-5'>
 
-            <div className='flex flex-col border border-gray-300 rounded-lg p-6 shadow-lg bg-white w-full max-w-xl text-center'>
+            <div className='flex flex-col border border-gray-300 rounded-lg px-6 py-4 shadow-lg bg-white w-full max-w-xl text-center'>
 
                 <div className='mb-5'>
                     <h2 className='font-bold text-color text-xl'>Student Parking Registration</h2>
@@ -88,99 +274,165 @@ const handleChange = (e) => {
                             </h2>
                         </div>
 
-                        <div className='flex flex-col gap-3'>
+                        <div className='flex flex-col gap-2'>
 
-                            <div className='flex flex-col md:flex-row gap-3'>
+                            <div className='flex flex-col md:flex-row gap-x-3'>
+
+                                <div className='flex flex-col w-full'>
+
+                                    <label htmlFor="Lastname"
+                                    className='text-start text-color-3 text-sm font-semibold'>Lastname</label>
+                                    
+                                    <input type="text"
+                                    name="lastname"
+                                    id="Lastname"
+                                    placeholder='e.g. Dela Cruz' 
+                                    onChange={handleChange}
+                                    value={formData.lastname}
+                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                    />  
+
+                                </div>
+
+                                <div className='flex flex-col w-full'>
+
+                                    <label htmlFor="Firstname"
+                                    className='text-start text-color-3 text-sm font-semibold'>Firstname</label>
+
+                                    <input type="text"
+                                    name="firstname"
+                                    id="Firstname"
+                                    placeholder='e.g. Juan'
+                                    onChange={handleChange}
+                                    value={formData.firstname}
+                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                    />  
+                                </div>
+                                
+                            </div>
+
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="Firstname"
+                                className='text-start text-color-3 text-sm font-semibold'>Middlename (Optional)</label>
+
                                 <input type="text"
-                                name="lastname"
-                                id="Lastname"
-                                placeholder='Last Name'
+                                name="middlename"
+                                id="Middlename"
                                 onChange={handleChange}
-                                value={formData.lastname}
+                                value={formData.middlename}
                                 className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
                                 />  
 
+                            </div>
+                           
+                        </div>
+
+                        <div className='flex flex-col md:flex-row gap-3 mt-2'>
+
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="StudentId"
+                                className='text-start text-color-3 text-sm font-semibold'>Student ID
+                                </label>
+
                                 <input type="text"
-                                name="firstname"
-                                id="Firstname"
-                                placeholder='First Name'
+                                name="studentId"
+                                id="StudentId"
+                                maxLength={10}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 onChange={handleChange}
-                                value={formData.firstname}
+                                value={formData.studentId}
+                                onInput={(e) => {
+                                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                                }}
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                />
+
+                            </div>
+                           
+                            <div className='flex flex-col w-full'>
+                            
+                                <label htmlFor="Username"
+                                className='text-start text-color-3 text-sm font-semibold'>Username
+                                </label>
+
+                                <input type="text"
+                                name="username"
+                                id="Username"
+                                placeholder='e.g. delacruz.123456'
+                                onChange={handleChange}
+                                value={formData.username}
                                 className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
                                 />  
                             </div>
+        
+                        </div>
 
-                            <input type="text"
-                            name="middlename"
-                            id="Middlename"
-                            placeholder='Middle Name (Optional)'
-                            onChange={handleChange}
-                            value={formData.middlename}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                            />  
+                        <div className='flex flex-col md:flex-row gap-3 mt-2'>
+                            
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="Password"
+                                className='text-start text-color-3 text-sm font-semibold'>Password
+                                </label>
+
+                                <input type="password"
+                                name='password'
+                                id='Password'
+                                onChange={handleChange}
+                                value={formData.password}
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                />
+
+                            </div>
+                            
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="ConfirmPassword"
+                                className='text-start text-color-3 text-sm font-semibold'>Confirm Password
+                                </label>
+
+                                <input type="password"
+                                name='confirmPassword'
+                                id='ConfirmPassword'
+                                onChange={handleChange}
+                                value={formData.confirmPassword}
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                />
+                            </div>
+                           
+                        </div>
+
+                        <div className='flex flex-col gap-3 mt-1'>
+
+                            <div className='flex flex-col w-full'>
+                                
+                                <label htmlFor="Email"
+                                className='text-start text-color-3 text-sm font-semibold'>Campus Email
+                                </label>
+                                
+                                <input type="email"
+                                name='email'
+                                id='Email'
+                                placeholder='e.g. lastname.123456@pcc.pasig.edu.ph'
+                                onChange={handleChange}
+                                value={formData.email}
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'  
+                                />
+
+                            </div>
+                            
                         </div>
 
                         <div className='flex flex-col md:flex-row gap-3 mt-3'>
+                        
+                        <div className='flex flex-col w-full'>
 
-                            <input type="text"
-                            name="studentId"
-                            id="studentId"
-                            maxLength={10}
-                            placeholder="Student ID Number"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            onChange={handleChange}
-                            value={formData.studentId}
-                            onInput={(e) => {
-                                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                            }}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                            />
-
-                            <input type="text"
-                            name="username"
-                            id="Username"
-                            placeholder='Username'
-                            onChange={handleChange}
-                            value={formData.username}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                            />  
-
-                        </div>
-
-                        <div className='flex flex-col md:flex-row gap-3 mt-3'>
-
-                            <input type="password"
-                            name='password'
-                            id='password'
-                            placeholder='Password'
-                            onChange={handleChange}
-                            value={formData.password}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                            />
-
-                            <input type="password"
-                            name='confirmPassword'
-                            id='ConfirmPassword'
-                            placeholder='Confirm Password'
-                            onChange={handleChange}
-                             value={formData.confirmPassword}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                            />
-
-                        </div>
-
-                        <div className='flex flex-col gap-3 mt-3'>
-                            <input type="email"
-                            name='email'
-                            id='Email'
-                            placeholder='School Email Address'
-                            onChange={handleChange}
-                            value={formData.email}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'  />
-                        </div>
-
-                        <div className='flex flex-col md:flex-row gap-3 mt-3'>
+                            <label htmlFor="YearLevel"
+                            className='text-start text-color-3 text-sm font-semibold'>Year Level
+                            </label>
 
                             <select 
                             name="yearLevel" 
@@ -197,17 +449,25 @@ const handleChange = (e) => {
                                     Student Year Level
                                 </option>
 
-                                <option value="shs">
+                                <option value="Senior High School">
                                     Senior High School
                                 </option>
 
-                                <option value="college">
+                                <option value="College">
                                     Tertiary
                                 </option>
 
                             </select>
 
-                             <select 
+                        </div>
+                           
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="YearLevel"
+                                className='text-start text-color-3 text-sm font-semibold'>Course
+                                </label>
+
+                                <select 
                                 name="courses" 
                                 id="Courses"
                                 value={selectedCourse}
@@ -229,15 +489,18 @@ const handleChange = (e) => {
                                 
                             </select>
 
+                            </div>
+                            
                         </div>
 
                         <div className='text-center mt-3'>
-                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The username and password created by admin should be given or used by registered student when logging in into his/her account.</h2>
+                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The username format should be lastname.studentIdLast6Digits.</h2>
                         </div>
 
                         <div className='mt-3 flex justify-end'>
                             <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                            onClick={nextStep}>
+                            onClick={nextStep}
+                            type='button'>
                                 Next
                             </button>
                         </div>
@@ -253,69 +516,146 @@ const handleChange = (e) => {
                             </h2>
                         </div>
 
-                        <div>
-                            <input type="text"
-                            name='type'
-                            id='Type'
+                        <div className='flex flex-col w-full'>
+
+                            <label htmlFor="Type"
+                             className='text-start text-color-3 text-sm font-semibold'>Vehicle Type
+                             </label>
+
+                            <select 
+                            name="vehicleType"
+                            id="Type"
                             value={formData.vehicleType}
                             onChange={handleChange}
-                            placeholder='Vehicle Type'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
-                        </div>
+                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
+                            >
+                            <option value="" disabled>
+                                Vehicle Type
+                            </option>
+
+                            <option value="2-Wheels (110–125cc)">2-Wheels (110–125cc)</option>
+                            <option value="2-Wheels (125–399cc)">2-Wheels (125–399cc)</option>
+                            <option value="2-Wheels (400cc and above)">2-Wheels (400cc and above)</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="Hatchback">Hatchback</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Pickup">Pickup</option>
+                            <option value="MPV">MPV</option>
+                            <option value="Van">Van</option>
+
+                        </select>
+                    </div>
 
                         <div className='flex gap-3 mt-3'>
-                            <input type="text"
-                            name='brand'
-                            id='Vehiclename'
-                            value={formData.brand}
-                            onChange={handleChange}
-                            placeholder='Vehicle Brand'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
-                            />
+
+                        <div className='flex flex-col w-full'>
+
+                            <label htmlFor="Brand" 
+                            className='text-start text-color-3 text-sm font-semibold'>
+                                Brand
+                            </label>
+
+                            <select
+                                name="brand"
+                                id="Brand"
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
+                                value={formData.brand}
+                                onChange={handleChange}
+                            >
+                               <option value="" disabled>
+                                    {filteredBrands.length === 0 ? "Select vehicle type first" : "Select Brand"}
+                                </option>
+
+                                {filteredBrands.map((brand) => (
+                                    <option key={brand} value={brand}>
+                                    {brand}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        
+                        <div className='flex flex-col w-full'>
+
+                            <label htmlFor="Model"
+                            className='text-start text-color-3 text-sm font-semibold'
+                            >Year Model</label>
 
                             <input type="Number"
                             name='model'
                             id='Model'
                             value={formData.model}
                             onChange={handleChange}
-                            placeholder='Vehicle Year Model'
+                            placeholder='e.g. 2024, 2025, etc.'
                             className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
+                        </div>
+                            
 
                         </div>
 
-                        <div className='mt-3'>
+                        <div className='flex flex-col mt-3'>
+
+                            <label htmlFor="Platenumber"
+                            className='text-start text-color-3 text-sm font-semibold'>
+                                Plate Number or MV File
+                            </label>
+
                             <input type="text"
-                            name='platenumber'
+                            name='plateNumber'
                             id='Platenumber'
                             value={formData.plateNumber}
                             onChange={handleChange}
-                            placeholder='Plate Number or MV File'
+                            placeholder='e.g 123ABC or 1234-00000012345'
                             className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
+
                         </div>
 
-                        <div className='flex gap-5 mt-3'>
+                        <div className='flex gap-x-3 mt-3'>
 
-                            <input type="text"
-                            name='transmission'
-                            id='Transmission'
-                            value={formData.transmission}
-                            onChange={handleChange}
-                            placeholder='Transmission (Optional)'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
-                            />
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="Transmission"
+                                className='text-start text-color-3 text-sm font-semibold'>
+                                    Transmission (Optional)
+                                </label>
+
+                                <select 
+                                name="transmission" 
+                                id="Transmission"
+                                value={formData.transmission}
+                                onChange={handleChange}
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
+                                >
+                                    <option value="" disabled></option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                </select>
+
+                            </div>
+                         
+                            <div className='flex flex-col w-full'>
+
+                                <label htmlFor="Color"
+                                className='text-start text-color-3 text-sm font-semibold'>
+                                    Vehicle Color
+                                </label>
+
+                                <input type="text"
+                                name='color'
+                                id='Color'
+                                value={formData.color}
+                                onChange={handleChange}
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                />
+
+                            </div>
                             
-                            <input type="text"
-                            name='color'
-                            id='Color'
-                            value={formData.color}
-                            onChange={handleChange}
-                            placeholder='Vehicle Color'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
 
                         </div>
 
                         <div className='text-center mt-3'>
-                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> After creating the account, the client should be able to register more vehicles.</h2>
+                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The Plate Number or MV File should be unique.</h2>
                         </div>
 
                         <div className='flex gap-x-5 justify-end'>
@@ -329,7 +669,7 @@ const handleChange = (e) => {
 
                             <div className='mt-3'>
                                 <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                                onClick={nextStep}>
+                                onClick={nextStep} type='button'>
                                     Next
                                 </button>
                             </div>
@@ -353,7 +693,7 @@ const handleChange = (e) => {
                         
                             <p><strong>Last Name:</strong> {formData.lastname}</p>
                             <p><strong>First Name:</strong> {formData.firstname}</p>
-                            <p><strong>Middle Name:</strong> {formData.middlename}</p>
+                            <p><strong>Middle Name (Optional):</strong> {formData.middlename}</p>
                             <p><strong>Student ID:</strong> {formData.studentId}</p>
                             <p><strong>Username:</strong> {formData.username}</p>
                             <p><strong>School Email:</strong> {formData.email}</p>
@@ -368,11 +708,11 @@ const handleChange = (e) => {
                                 <span className='font-bold text-color'>Step 2:</span> Student Vehicle Information
                             </h2>
 
-                            <p><strong>Vehicle Type:</strong> {formData.type}</p>
+                            <p><strong>Vehicle Type:</strong> {formData.vehicleType}</p>
                             <p><strong>Vehicle Brand:</strong> {formData.brand}</p>
                             <p><strong>Vehicle Model:</strong> {formData.model}</p>
-                            <p><strong>Plate Number:</strong> {formData.platenumber}</p>
-                            <p><strong>Transmission:</strong> {formData.transmission}</p>
+                            <p><strong>Plate Number:</strong> {formData.plateNumber}</p>
+                            <p><strong>Transmission (Optional): </strong> {formData.transmission}</p>
                             <p><strong>Color:</strong> {formData.color}</p>
                         </div>
 
@@ -383,8 +723,7 @@ const handleChange = (e) => {
                                 Edit
                             </button>
 
-                            <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                            onClick={nextStep}>
+                            <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300' onClick={handleSubmit}>
                                 Submit
                             </button>
                         </div>

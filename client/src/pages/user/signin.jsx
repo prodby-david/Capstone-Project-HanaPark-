@@ -1,7 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import toastOptions from '../../lib/toastConfig';
 
+ 
 const SignIn = () => {
+
+  const [userData, setUserData] = useState({
+    username: '',
+    password: ''
+  });
+
+const [showPassword, setShowPassword] = useState(false);
+
+ const togglePassword = () => {
+  setShowPassword(prev => !prev);
+ }
+
+
+ const handleChange = (e) => {
+    const {name, value} = e.target;
+    setUserData({...userData, [name]: value});
+ }
+
+ const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try{
+
+      if(!userData.username || !userData.password){
+        return toast.error('Please fill in all fields', toastOptions);
+      }
+
+      const res = await axios.post('http://localhost:4100/sign-in', userData);
+
+      if(res.data.success){
+        Swal.fire({
+          title: 'Success',
+          text: res.data.message,
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+
+      setUserData({
+        username: '',
+        password: ''
+      });
+
+      }
+    }catch(err){
+
+      if(err.response && err.response.data) {
+        Swal.fire({
+          title: 'Error',
+          text: err.response.data.message || 'An error occurred',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+
+}
+
+
   return (
     <>
 
@@ -20,19 +86,33 @@ const SignIn = () => {
           required
           name='username'
           id='Username'
+          onChange={handleChange}
+          value={userData.username}
           className='outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2'
           placeholder='Username'/>  
+          
+          <div className='relative'>
+            <input type={showPassword ? 'text' : 'password'}
+            required
+            name='password'
+            id='Password'
+            onChange={handleChange}
+            value={userData.password}
+            className='outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2 w-full'
+            placeholder='Password' 
+            />
 
-          <input type="password"
-          required
-          name='password'
-          id='Password'
-          className='outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2'
-          placeholder='Password' />
+            <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash}
+            className='absolute right-3 top-3 text-color-2 hover:text-color-3 cursor-pointer' 
+            onClick={togglePassword}
+            />
+
+          </div>
+          
 
           <div className='w-full'>
 
-            <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-600 hover:to-blue-800 transition duration-300 cursor-pointer text-sm'>
+            <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-600 hover:to-blue-800 transition duration-300 cursor-pointer text-sm' onClick={handleSubmit}>
               Sign In
             </button>
 

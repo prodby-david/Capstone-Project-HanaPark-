@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import toastOptions from '../../../lib/toastConfig'
 
 
 
@@ -17,7 +21,7 @@ const StudentRegistration = () => {
         password: '',
         confirmPassword: '',
         email: '',
-        courses: '',
+        course: '',
         yearLevel: '',
         vehicleType: '',
         brand: '',
@@ -63,14 +67,18 @@ const StudentRegistration = () => {
         "Van": ["Toyota", "Nissan", "Hyundai", "Foton"],
     };
 
+    {/* Routings */}
+    const navigate = useNavigate();
     
     {/* useStates */}
     const [ step, setStep ] = useState(1);
     const [ selectedCourse, setSelectedCourse ] = useState('');
     const [ selectedYearLevel, setselectedYearLevel ] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     {/* Regex Validations */}
-    const emailRegex = /^[a-zA-Z]+\.[0-9]{6}@pcc\.pasig\.edu\.ph$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     const nameRegex = /^[a-zA-Z\s]+$/;
     const usernameRegex = /^[a-zA-Z]+\.[0-9]{6}$/;
     const plateNumberRegex = /^(?:[A-Z]{3} ?\d{4}|(?=(?:.*[A-Z]){3})(?=(?:.*\d){3})[A-Z0-9]{6}|\d{4}-\d{11})$/;
@@ -81,9 +89,8 @@ const StudentRegistration = () => {
 
     const filteredBrands = brandsByType[formData.vehicleType] || [];
 
-
     {/* Validations */}
-    const step1Validations = () => {
+const step1Validations = () => {
 
     if (!formData.lastname) {
         toast.error('Lastname must not be empty.', toastOptions);
@@ -155,7 +162,7 @@ const StudentRegistration = () => {
         return false;
     }
 
-    if (!formData.yearLevel || !formData.courses) {
+    if (!formData.yearLevel || !formData.course) {
         toast.error("Year Level and Course should not be empty.", toastOptions);
         return false;
     }
@@ -193,14 +200,6 @@ const step2Validations = () => {
   return true;
 };
 
-const toastOptions = {
-  style: {
-    background: '#00509e',
-    color: '#fefefe',
-    fontSize: '14px'
-  }
-};
-
 
 const nextStep = () => {
 
@@ -224,6 +223,14 @@ const toTitleCase = (str) =>
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
 
+const togglePassword = () => {
+    setShowPassword(prev => !prev);
+}
+
+const toggleConfirmPassword = () => {
+    setShowConfirmPassword(prev => !prev);
+}
+
 const handleChange = (e) => {
 
     const { name, value } = e.target;
@@ -241,17 +248,49 @@ const handleChange = (e) => {
     e.preventDefault();
 
     try{
+
+        const res = await axios.post('http://localhost:4100/admin/student-registration', formData);
+
+        if(res?.data?.success){
         Swal.fire({
             title: 'Registration Success',
             text: 'Click the OK button to continue.',
             icon: 'success',
             confirmButtonText: 'OK',
+          }).then(() => {
+            navigate('/');
           });
+        }
+
+        setFormData({
+            lastname: '',
+            firstname: '',
+            middlename: '',
+            studentId:'',
+            username: '',
+            password: '',
+            confirmPassword: '',
+            email: '',
+            courses: '',
+            yearLevel: '',
+            vehicleType: '',
+            brand: '',
+            model: '',
+            plateNumber: '',
+            transmission: '',
+            color: ''
+        });
 
     }catch(err){
-        
+        if(err.response && err.response.status === 409){
+            Swal.fire({
+                title: 'Registration Failed',
+                text: err.response.data.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
     }
-    
   }
 
   return (
@@ -377,14 +416,24 @@ const handleChange = (e) => {
                                 <label htmlFor="Password"
                                 className='text-start text-color-3 text-sm font-semibold'>Password
                                 </label>
+                                
+                                <div className='relative'>
 
-                                <input type="password"
-                                name='password'
-                                id='Password'
-                                onChange={handleChange}
-                                value={formData.password}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                />
+                                    <input type={showPassword ? 'text' : 'password'}
+                                    name='password'
+                                    id='Password'
+                                    onChange={handleChange}
+                                    value={formData.password}
+                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                    />
+
+                                    <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash}
+                                    className='absolute right-3 top-3 text-color-2 hover:text-color-3 cursor-pointer' 
+                                    onClick={togglePassword}
+                                    />
+
+                                </div>
+                                
 
                             </div>
                             
@@ -393,14 +442,23 @@ const handleChange = (e) => {
                                 <label htmlFor="ConfirmPassword"
                                 className='text-start text-color-3 text-sm font-semibold'>Confirm Password
                                 </label>
+                                
+                                <div className='relative'>
+                                    <input type={showConfirmPassword ? 'text' : 'password'}
+                                    name='confirmPassword'
+                                    id='ConfirmPassword'
+                                    onChange={handleChange}
+                                    value={formData.confirmPassword}
+                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                    />
 
-                                <input type="password"
-                                name='confirmPassword'
-                                id='ConfirmPassword'
-                                onChange={handleChange}
-                                value={formData.confirmPassword}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                />
+                                    <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash}
+                                    className='absolute right-3 top-3 text-color-2 hover:text-color-3 cursor-pointer' 
+                                    onClick={toggleConfirmPassword}
+                                    />
+
+                                </div>
+                               
                             </div>
                            
                         </div>
@@ -410,13 +468,13 @@ const handleChange = (e) => {
                             <div className='flex flex-col w-full'>
                                 
                                 <label htmlFor="Email"
-                                className='text-start text-color-3 text-sm font-semibold'>Campus Email
+                                className='text-start text-color-3 text-sm font-semibold'>Email Address
                                 </label>
                                 
                                 <input type="email"
                                 name='email'
                                 id='Email'
-                                placeholder='e.g. lastname.123456@pcc.pasig.edu.ph'
+                                placeholder='e.g. johndoe123@gmail.com'
                                 onChange={handleChange}
                                 value={formData.email}
                                 className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'  
@@ -468,12 +526,12 @@ const handleChange = (e) => {
                                 </label>
 
                                 <select 
-                                name="courses" 
+                                name="course" 
                                 id="Courses"
                                 value={selectedCourse}
                                 onChange={(e) => {
                                     setSelectedCourse(e.target.value);
-                                    setFormData({ ...formData, courses: e.target.value });
+                                    setFormData({ ...formData, course: e.target.value });
                                 }}
                                 className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
                                 >

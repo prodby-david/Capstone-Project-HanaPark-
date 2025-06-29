@@ -1,10 +1,14 @@
 import mongoose from 'mongoose'
+import User from '../models/user.js'
 
 const vehicleSchema = mongoose.Schema({
 
+    vehicleOwner:{
+        type: mongoose.Schema.ObjectId,
+        ref: User
+    },
     vehicleType:{
         type: String,
-        enum: ['Toyota', 'Ford', 'Mitsubishi', 'Nissan', 'Hyundai', 'Mazda', 'Suzuki', 'Isuzu', 'MG', 'Kia', 'Geely', 'Chery', 'BYD', 'Peugeot', 'Volkswagen'],
         required: true
     },
     brand:{
@@ -12,7 +16,7 @@ const vehicleSchema = mongoose.Schema({
         required: true
     },
     model:{
-        type: Number,
+        type: String,
         required: true
     },
     plateNumber:{
@@ -21,8 +25,7 @@ const vehicleSchema = mongoose.Schema({
         unique: true
     },
     transmission:{
-        type: String,
-        required: true
+        type: String
     },
     color:{
         type: String,

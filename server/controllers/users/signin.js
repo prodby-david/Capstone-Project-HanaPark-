@@ -11,12 +11,12 @@ const studentSignInController = async (req,res) => {
 
         const user = await User.findOne({username});
         if(!user){
-            return res.status(404).json({message: "User not found"});
+            return res.status(404).json({message: "Username not found. Try again."});
         }
 
         const isPaswordMatch = await bcrypt.compare(password, user.password);
         if(!isPaswordMatch){
-            return res.status(401).json({message: "Invalid password"});
+            return res.status(401).json({message: "Password is incorrect. Please try again."});
         }
 
         const user_token = jwt.sign({userId: user._id}, process.env.JWT_SECRET_KEY, {expiresIn: "5m"});
@@ -28,7 +28,10 @@ const studentSignInController = async (req,res) => {
             sameSite: 'Strict'
         });
 
-        res.status(200).json({message: "Sign in successful.", success:true});
+        res.status(200).json({message: "Sign in successful.", success: true, 
+            user: {
+            username: user.username,
+        }});
 
     }catch(err){
         console.error(err);

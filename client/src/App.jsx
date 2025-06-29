@@ -7,12 +7,15 @@ import Visitors from './pages/visitors'
 import StudentRegistration from './pages/admin/registration/studentRegistration'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { AuthProvider } from './context/authContext';
+import Dashboard from './pages/user/dashboard'
+import ProtectedRoute from './routes/protectedRoute';
 
 function App() {
 
 
   return (
+    <AuthProvider>
     <Router>
       <Routes>
 
@@ -21,6 +24,14 @@ function App() {
           <Route path="/sign-in" element={ <SignIn />} />
           <Route path="/reset-password" element={ <ForgotPassword />} />
           <Route path="/visitors" element={ <Visitors /> } />
+
+          <Route path='/dashboard'
+          element={ 
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+          />
 
           {/* Admin Routes */}
           <Route path='/admin/student-registration' element={ <StudentRegistration /> } />
@@ -36,6 +47,7 @@ function App() {
       />
       
     </Router>
+    </AuthProvider>
   )
 }
 

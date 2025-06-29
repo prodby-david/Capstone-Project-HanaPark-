@@ -25,6 +25,8 @@ function App() {
           <Route path="/reset-password" element={ <ForgotPassword />} />
           <Route path="/visitors" element={ <Visitors /> } />
 
+          {/* User Routes */}
+
           <Route path='/dashboard'
           element={ 
             <ProtectedRoute>

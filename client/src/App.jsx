@@ -5,9 +5,12 @@ import SignIn from './pages/user/signin'
 import ForgotPassword from './pages/user/forgot-password'
 import Visitors from './pages/visitors'
 import StudentRegistration from './pages/admin/registration/studentRegistration'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
+
 
   return (
     <Router>
@@ -22,6 +25,16 @@ function App() {
           {/* Admin Routes */}
           <Route path='/admin/student-registration' element={ <StudentRegistration /> } />
       </Routes>
+
+      <ToastContainer 
+          position="bottom-right"
+          autoClose={5000}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          theme='colored'
+      />
+      
     </Router>
   )
 }

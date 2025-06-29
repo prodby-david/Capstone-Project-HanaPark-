@@ -7,6 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
+import { useAuth } from '../../context/authContext';
 
  
 const SignIn = () => {
@@ -16,14 +17,14 @@ const SignIn = () => {
     password: ''
   });
 
+const { setAuth } = useAuth();
+const navigate = useNavigate();
+
 const [showPassword, setShowPassword] = useState(false);
 
  const togglePassword = () => {
   setShowPassword(prev => !prev);
  }
-
- const navigate = useNavigate();
-
 
  const handleChange = (e) => {
     const {name, value} = e.target;
@@ -36,16 +37,24 @@ const [showPassword, setShowPassword] = useState(false);
 
     try{
 
-      if(!userData.username || !userData.password){
-        return toast.error('Please fill in all fields', toastOptions);
+      if(!userData.username){
+          toast.error('Username should not be empty.', toastOptions);
+          return;
+      }
+
+      if(!userData.password){
+        toast.error('Password should not be empty.', toastOptions);
+        return;
       }
 
       const res = await axios.post('http://localhost:4100/sign-in', userData, { withCredentials: true });
 
+      setAuth({ user: res.data.user });
+
       if(res.data.success){
         Swal.fire({
-          title: 'Success',
-          text: res.data.message,
+          title: 'Sign in successful',
+          text: 'Press OK to continue.',
           icon: 'success',
           confirmButtonText: 'OK'
         }).then(() => {
@@ -65,7 +74,7 @@ const [showPassword, setShowPassword] = useState(false);
           title: 'Sign in failed',
           text: err.response.data.message || 'An error occurred',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'Try Again'
         });
       }
     }

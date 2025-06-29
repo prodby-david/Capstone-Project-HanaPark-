@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
@@ -21,6 +22,8 @@ const [showPassword, setShowPassword] = useState(false);
   setShowPassword(prev => !prev);
  }
 
+ const navigate = useNavigate();
+
 
  const handleChange = (e) => {
     const {name, value} = e.target;
@@ -37,7 +40,7 @@ const [showPassword, setShowPassword] = useState(false);
         return toast.error('Please fill in all fields', toastOptions);
       }
 
-      const res = await axios.post('http://localhost:4100/sign-in', userData);
+      const res = await axios.post('http://localhost:4100/sign-in', userData, { withCredentials: true });
 
       if(res.data.success){
         Swal.fire({
@@ -45,6 +48,8 @@ const [showPassword, setShowPassword] = useState(false);
           text: res.data.message,
           icon: 'success',
           confirmButtonText: 'OK'
+        }).then(() => {
+          navigate('/dashboard')
         });
 
       setUserData({
@@ -57,7 +62,7 @@ const [showPassword, setShowPassword] = useState(false);
 
       if(err.response && err.response.data) {
         Swal.fire({
-          title: 'Error',
+          title: 'Sign in failed',
           text: err.response.data.message || 'An error occurred',
           icon: 'error',
           confirmButtonText: 'OK'

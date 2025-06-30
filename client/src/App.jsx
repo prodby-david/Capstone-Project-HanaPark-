@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/authContext';
 import Dashboard from './pages/user/dashboard'
 import ProtectedRoute from './routes/protectedRoute';
+import ErrorNotFound from './components/error/404error'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
       <Routes>
 
           {/* General Routes */}
+          <Route path="*" element={ <ErrorNotFound />} />
           <Route path="/" element={ <Hero />} />
           <Route path="/sign-in" element={ <SignIn />} />
           <Route path="/reset-password" element={ <ForgotPassword />} />
@@ -41,8 +43,7 @@ function App() {
 
       <ToastContainer 
           position="bottom-right"
-          autoClose={5000}
-          newestOnTop
+          autoClose={3000}
           closeOnClick
           pauseOnHover
           theme='colored'

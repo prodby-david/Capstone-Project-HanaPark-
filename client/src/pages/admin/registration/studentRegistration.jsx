@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import toastOptions from '../../../lib/toastConfig'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
 
 
@@ -427,10 +426,19 @@ const handleChange = (e) => {
                                     className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
                                     />
 
-                                    <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash}
-                                    className='absolute right-3 top-3 text-color-2 hover:text-color-3 cursor-pointer' 
-                                    onClick={togglePassword}
-                                    />
+                                    {showPassword ? (
+                                        <EyeIcon
+                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
+                                        onClick={togglePassword}
+                                        />
+                                    ) : (
+                                        <EyeSlashIcon
+                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
+                                        onClick={togglePassword}
+                                        />
+                                    )}
+
+                                   
 
                                 </div>
                                 
@@ -452,10 +460,17 @@ const handleChange = (e) => {
                                     className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
                                     />
 
-                                    <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash}
-                                    className='absolute right-3 top-3 text-color-2 hover:text-color-3 cursor-pointer' 
-                                    onClick={toggleConfirmPassword}
-                                    />
+                                    {showConfirmPassword ? (
+                                        <EyeIcon
+                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
+                                        onClick={togglePassword}
+                                        />
+                                    ) : (
+                                        <EyeSlashIcon
+                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
+                                        onClick={togglePassword}
+                                        />
+                                    )}
 
                                 </div>
                                

@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 import { useAuth } from '../../context/authContext';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+
 
  
 const SignIn = () => {
@@ -54,9 +54,10 @@ const [showPassword, setShowPassword] = useState(false);
       if(res.data.success){
         Swal.fire({
           title: 'Sign in successful',
-          text: 'Press OK to continue.',
+          text: 'Press Confirm to continue.',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonColor: '#00509e',
+          confirmButtonText: 'Confirm'
         }).then(() => {
           navigate('/dashboard')
         });
@@ -116,10 +117,18 @@ const [showPassword, setShowPassword] = useState(false);
             placeholder='Password' 
             />
 
-            <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash}
-            className='absolute right-3 top-3 text-color-2 hover:text-color-3 cursor-pointer' 
-            onClick={togglePassword}
-            />
+            { showPassword ? (
+              <EyeIcon 
+              className='absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer' 
+              onClick={togglePassword} 
+              fontSize={'12px'}/>
+            ) : (
+              <EyeSlashIcon 
+              className='absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer'
+              onClick={togglePassword}
+              fontSize={'12px'} /> 
+            )
+          }
 
           </div>
           

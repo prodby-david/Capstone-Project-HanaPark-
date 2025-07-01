@@ -1,11 +1,11 @@
 import React from 'react'
 import { useAuth } from '../../context/authContext';
 import { Link } from 'react-router-dom';
-import UserHeader from '../../components/headers/userHeader';
-import UserFooter from '../../components/footers/userFooter';
 import { MapPinIcon, ClockIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { container, fadeUp } from '../../lib/motionConfigs';
+import UserHeader from '../../components/headers/userHeader';
+import UserFooter from '../../components/footers/userFooter';
 
 
 
@@ -48,7 +48,7 @@ const { auth } = useAuth();
               <p className='text-sm text-color-2 '>Find and reserve a parking slot.</p>
             </div>
 
-            <Link to={'/reserve/slot'} 
+            <Link to={'/user/reservation-form'} 
             className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
             >
               Secure a Spot

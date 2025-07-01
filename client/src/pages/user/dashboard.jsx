@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import UserHeader from '../../components/headers/userHeader';
 import UserFooter from '../../components/footers/userFooter';
 import { MapPinIcon, ClockIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
+import { container, fadeUp } from '../../lib/motionConfigs';
 
 
 
@@ -26,28 +28,42 @@ const { auth } = useAuth();
 
       <div>
 
-        <div className='flex flex-col lg:flex-row gap-4 items-center justify-center px-5 mt-10'>
+        <motion.div 
+        variants={container}
+        initial='hidden'
+        animate='show'
+        className='flex flex-col lg:flex-row gap-4 items-center justify-center px-5 mt-10'>
 
-          <div className='flex flex-col items-center justify-center gap-y-5 py-10 bg-white shadow-md rounded-lg text-center w-full max-w-sm'>
+          <motion.div 
+          className='flex flex-col items-center justify-center gap-y-5 py-10 bg-white shadow-md rounded-lg text-center w-full max-w-sm'
+          variants={fadeUp}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3}}
+          >
 
-            <MapPinIcon className="w-10 h-10 text-color-3 group-hover:text-color cursor-pointer" />
+            <MapPinIcon className="w-10 h-10 text-color-3 group-hover:text-color" />
 
             <div className='flex flex-col gap-y-2 '>
               <h2 className='text-xl font-semibold text-color'>Reserve a Spot</h2>
               <p className='text-sm text-color-2 '>Find and reserve a parking slot.</p>
             </div>
 
-            <Link to={'/reserve-parking'} 
+            <Link to={'/reserve/slot'} 
             className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
             >
               Secure a Spot
             </Link>
 
-          </div>
+          </motion.div>
 
-          <div className='flex flex-col items-center justify-center gap-y-5 p-4 bg-white shadow-md rounded-lg text-center w-full max-w-sm py-10'>
+          <motion.div 
+          className='flex flex-col items-center justify-center gap-y-5 p-4 bg-white shadow-md rounded-lg text-center w-full max-w-sm py-10'
+          variants={fadeUp}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3}}
+          >
 
-            <ClockIcon className="w-10 h-10 text-color-3 group-hover:text-color cursor-pointer" />
+            <ClockIcon className="w-10 h-10 text-color-3 group-hover:text-color " />
 
             <div className='flex flex-col gap-y-2'>
               <h2 className='text-xl font-semibold text-color'>Recent Activities</h2>
@@ -60,11 +76,16 @@ const { auth } = useAuth();
               View History
             </Link>
 
-          </div>
+          </motion.div>
           
-          <div className='flex flex-col items-center justify-center gap-y-5 p-4 bg-white shadow-md rounded-lg text-center w-full max-w-sm py-10'>
+          <motion.div 
+          className='flex flex-col items-center justify-center gap-y-5 p-4 bg-white shadow-md rounded-lg text-center w-full max-w-sm py-10'
+          variants={fadeUp}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3}}
+          >
 
-            <UserCircleIcon className="w-10 h-10 text-color-3 group-hover:text-color cursor-pointer" />
+            <UserCircleIcon className="w-10 h-10 text-color-3 group-hover:text-color" />
 
             <div className='flex flex-col gap-y-2'>
               <h2 className='text-xl font-semibold text-color'>Account Settings</h2>
@@ -77,12 +98,11 @@ const { auth } = useAuth();
               Go to Settings
             </Link>
 
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
         <UserFooter />
-
       </div>
 
       

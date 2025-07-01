@@ -135,7 +135,7 @@ const [showPassword, setShowPassword] = useState(false);
 
           <div className='w-full'>
 
-            <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-600 hover:to-blue-800 transition duration-300 cursor-pointer text-sm' onClick={handleSubmit}>
+            <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm' onClick={handleSubmit}>
               Sign In
             </button>
 
@@ -143,7 +143,7 @@ const [showPassword, setShowPassword] = useState(false);
 
         </form>
 
-        <Link to='/reset-password' className='text-sm text-color'>
+        <Link to='/reset-password' className='text-sm text-color transition ease-in-out hover:text-color-3 hover:underline duration-300 '>
           Forgot Password?
         </Link>
 

@@ -11,6 +11,7 @@ import { AuthProvider } from './context/authContext';
 import Dashboard from './pages/user/dashboard'
 import ProtectedRoute from './routes/protectedRoute';
 import ErrorNotFound from './components/error/404error'
+import UserReservationForm from './components/forms/userReservationForm'
 
 function App() {
 
@@ -33,6 +34,14 @@ function App() {
           element={ 
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+          />
+
+          <Route path='/user/reservation-form'
+          element={ 
+            <ProtectedRoute>
+              <UserReservationForm />
             </ProtectedRoute>
           }
           />

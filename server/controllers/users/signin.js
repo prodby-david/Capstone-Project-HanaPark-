@@ -30,8 +30,9 @@ const studentSignInController = async (req,res) => {
 
         res.status(200).json({message: "Sign in successful.", success: true, 
             user: {
-            username: user.username,
-        }});
+            firstname: user.firstname,
+            }
+        });
 
     }catch(err){
         console.error(err);

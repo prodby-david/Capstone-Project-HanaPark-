@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { ArrowLeftStartOnRectangleIcon, Cog8ToothIcon } from '@heroicons/react/24/outline'
+import { ArrowLeftStartOnRectangleIcon, Cog8ToothIcon, Bars3Icon } from '@heroicons/react/24/outline'
+import { motion, AnimatePresence } from 'framer-motion'
 
 
 
@@ -12,6 +13,10 @@ const UserHeader = () => {
 
 const { logout } = useAuth(); 
 const navigate = useNavigate();
+
+const [isOpen, setIsOpen] = useState(false);
+
+const toggleMenu = () => setIsOpen(!isOpen);
 
 const handleLogout = () => {
     Swal.fire({
@@ -49,14 +54,20 @@ const handleLogout = () => {
                 HanaPark
             </h2>
         </div>
+
+        <Bars3Icon 
+            onClick={toggleMenu}
+            className="w-6 h-6 text-color-3 cursor-pointer md:hidden"
+        />
         
 
-        <div className='flex items-center gap-x-5 font-semibold text-color-3 text-sm lg:text-lg'>
+        <div className={`flex-col md:flex md:flex-row md:items-center md:gap-x-5 ${isOpen ? 'flex' : 'hidden'} absolute top-14 left-0 w-full bg-white shadow-md md:static md:w-auto md:shadow-none transition ease-in-out`}>
 
-            <div className='flex items-center cursor-pointer hover:text-color-3 transition duration-300 ease-in-out group'>
+        <div className='flex items-center cursor-pointer hover:text-color-3 transition duration-300 ease-in-out group'>
+
                 <Cog8ToothIcon className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer"/>
                 <Link to={'/settings'} 
-                    className='hover:text-color text-sm md:text-md'
+                    className='hover:text-color text-sm md:text-md text-color-3'
                     >
                         Settings
                 </Link>
@@ -72,12 +83,49 @@ const handleLogout = () => {
 
                 <button 
                 onClick={handleLogout} 
-                className='cursor-pointer hover:text-color text-sm md:text-md'
+                className='cursor-pointer hover:text-color text-sm md:text-md text-color-3'
                 >
                     Logout
                 </button>
 
             </div>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              key="mobile-menu"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              className="flex flex-col items-center absolute top-1 left-0 w-full bg-white shadow-md md:hidden text-color-3 "
+            >
+           
+            <Link
+                to="/settings"
+                className="px-6 py-4 text-center flex items-center gap-1"
+                onClick={toggleMenu}
+            >
+                <Cog8ToothIcon className="w-5 h-5" />
+                Settings
+            </Link>
+
+ 
+             
+
+              <button
+                onClick={() => {
+                  toggleMenu()
+                  handleLogout()
+                }}
+                className="px-6 py-4 flex items-center gap-2"
+              >
+                <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
+                Logout
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
             
 

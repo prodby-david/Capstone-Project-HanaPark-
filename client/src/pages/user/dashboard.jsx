@@ -1,43 +1,96 @@
 import React from 'react'
 import { useAuth } from '../../context/authContext';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
+import UserHeader from '../../components/headers/userHeader';
+import UserFooter from '../../components/footers/userFooter';
+import { MapPinIcon, ClockIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+
+
+
 
 const Dashboard = () => {
 
-const { logout } = useAuth();
-const navigate = useNavigate();
-
-const handleLogout = () => {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You will be logged out.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Confirm'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-            title: 'Logged out!',
-            text: 'You have been logged out successfully.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-            }).then(() => {
-                logout();
-                navigate('/sign-in');
-            });
-        }
-    });
-}
-
+const { auth } = useAuth(); 
 
   return (
-    <div>
-      <h2>Hello, user</h2>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+
+    <>
+      <UserHeader />
+
+      <div className='flex flex-col items-center justify-center mt-15 lg:mt-20'>
+        <h2 className='text-[26px] lg:text-[32px] font-semibold text-color'>
+          Hello, {auth.user.firstname}!
+        </h2>
+        <p className='text-sm text-color-2 mt-3 max-w-3xl text-center px-5'>Your parking experience just got easier. Reserve a spot, View your recent activities, and manage your account.</p>
+      </div>
+
+      <div>
+
+        <div className='flex flex-col lg:flex-row gap-4 items-center justify-center px-10 mt-10'>
+
+          <div className='flex flex-col items-center justify-center gap-y-5 py-10 bg-white shadow-md rounded-lg text-center w-full max-w-sm'>
+
+            <MapPinIcon className="w-10 h-10 text-color-3 group-hover:text-color cursor-pointer" />
+
+            <div className='flex flex-col gap-y-2 '>
+              <h2 className='text-xl font-semibold text-color'>Reserve a Spot</h2>
+              <p className='text-sm text-color-2 '>Find and reserve a parking slot.</p>
+            </div>
+
+            <Link to={'/reserve-parking'} 
+            className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
+            >
+              Secure a Spot
+            </Link>
+
+          </div>
+
+          <div className='flex flex-col items-center justify-center gap-y-5 p-4 bg-white shadow-md rounded-lg text-center w-full max-w-sm py-10'>
+
+            <ClockIcon className="w-10 h-10 text-color-3 group-hover:text-color cursor-pointer" />
+
+            <div className='flex flex-col gap-y-2'>
+              <h2 className='text-xl font-semibold text-color'>Recent Activities</h2>
+              <p className='text-sm text-color-2'>Check your recent parking history.</p>
+            </div>
+
+            <Link to={'/recents'} 
+            className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
+            >
+              View History
+            </Link>
+
+          </div>
+          
+          <div className='flex flex-col items-center justify-center gap-y-5 p-4 bg-white shadow-md rounded-lg text-center w-full max-w-sm py-10'>
+
+            <UserCircleIcon className="w-10 h-10 text-color-3 group-hover:text-color cursor-pointer" />
+
+            <div className='flex flex-col gap-y-2'>
+              <h2 className='text-xl font-semibold text-color'>Account Settings</h2>
+              <p className='text-sm text-color-2'>Update your profile, password, and more.</p>
+            </div>
+
+            <Link to={'/account-settings'} 
+            className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
+            >
+              Go to Settings
+            </Link>
+
+          </div>
+
+        </div>
+
+        <UserFooter />
+
+      </div>
+
+      
+      
+    </>
+    
+      
+    
   )
 }
 

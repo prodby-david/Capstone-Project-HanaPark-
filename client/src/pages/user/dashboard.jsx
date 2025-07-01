@@ -26,7 +26,7 @@ const { auth } = useAuth();
 
       <div>
 
-        <div className='flex flex-col lg:flex-row gap-4 items-center justify-center px-10 mt-10'>
+        <div className='flex flex-col lg:flex-row gap-4 items-center justify-center px-5 mt-10'>
 
           <div className='flex flex-col items-center justify-center gap-y-5 py-10 bg-white shadow-md rounded-lg text-center w-full max-w-sm'>
 

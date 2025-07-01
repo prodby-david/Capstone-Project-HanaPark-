@@ -41,7 +41,7 @@ const Footer = () => {
                 </div>
 
                 <div className="text-xs">
-                    <h2 className="font-semibold text-lg text-center text-color-3">Contact</h2>
+                    <h2 className="font-semibold text-lg text-center text-color-3 mb-3">Contact</h2>
 
                     <p>Email: support@hanapark.com</p>
 

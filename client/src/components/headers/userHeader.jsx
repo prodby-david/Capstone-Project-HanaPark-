@@ -59,36 +59,8 @@ const handleLogout = () => {
             onClick={toggleMenu}
             className="w-6 h-6 text-color-3 cursor-pointer md:hidden"
         />
-        
 
         <div className={`flex-col md:flex md:flex-row md:items-center md:gap-x-5 ${isOpen ? 'flex' : 'hidden'} absolute top-14 left-0 w-full bg-white shadow-md md:static md:w-auto md:shadow-none transition ease-in-out`}>
-
-        <div className='flex items-center cursor-pointer hover:text-color-3 transition duration-300 ease-in-out group'>
-
-                <Cog8ToothIcon className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer"/>
-                <Link to={'/settings'} 
-                    className='hover:text-color text-sm md:text-md text-color-3'
-                    >
-                        Settings
-                </Link>
-
-            </div>
-            
-
-            <div className='flex items-center cursor-pointer hover:text-color-3 transition duration-300 ease-in-out group'>
-
-                <ArrowLeftStartOnRectangleIcon 
-                className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer" 
-                />
-
-                <button 
-                onClick={handleLogout} 
-                className='cursor-pointer hover:text-color text-sm md:text-md text-color-3'
-                >
-                    Logout
-                </button>
-
-            </div>
 
         <AnimatePresence>
           {isOpen && (
@@ -103,29 +75,57 @@ const handleLogout = () => {
            
             <Link
                 to="/settings"
-                className="px-6 py-4 text-center flex items-center gap-1"
+                className="p-5 text-center flex items-center gap-1 cursor-pointer hover:text-color"
                 onClick={toggleMenu}
             >
                 <Cog8ToothIcon className="w-5 h-5" />
                 Settings
             </Link>
 
- 
-             
-
-              <button
+            <button
                 onClick={() => {
                   toggleMenu()
                   handleLogout()
                 }}
-                className="px-6 py-4 flex items-center gap-2"
-              >
-                <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
+                className="p-5 flex items-center gap-2 cursor-pointer hover:text-color"
+            >
+
+            <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
                 Logout
-              </button>
+            </button>
+
             </motion.div>
           )}
         </AnimatePresence>
+
+        <div className='hidden md:flex items-center gap-x-2'>
+
+            <div className='flex items-center gap-x-1 group'>
+                <Cog8ToothIcon className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer"/>
+                    <Link to={'/settings'} 
+                        className='hover:text-color text-sm md:text-md text-color-3'
+                    >
+                        Settings
+                    </Link>
+            </div>
+        
+            <div className='flex items-center gap-x-1 group'>
+
+                <ArrowLeftStartOnRectangleIcon 
+                    className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer" 
+                />
+
+                <button 
+                onClick={handleLogout} 
+                className='cursor-pointer hover:text-color text-sm md:text-md text-color-3'
+                >
+                    Logout
+                </button>
+
+            </div>
+            
+
+        </div> 
 
             
 

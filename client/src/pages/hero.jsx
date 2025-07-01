@@ -43,13 +43,13 @@ const Hero = () => {
         <div className='flex gap-x-5 mt-4'>
 
           <Link to='/sign-in' 
-          className='text-sm p-3 bg-gradient-to-r from-blue-500 to-blue-900 text-white rounded-md w-[90px] text-center hover:bg-gradient-to-r hover:from-blue-800 hover:to-blue-500 transition ease-in-out hover:scale-105 duration-300'
+          className='text-sm p-3 bg-gradient-to-r from-blue-500 to-blue-900 text-white rounded-md w-[90px] text-center hover:bg-gradient-to-r hover:from-blue-800 hover:to-blue-500 transition ease-in-out hover:scale-105 shadow-md shadow-color-3 duration-300'
           >
             Sign in
           </Link>
 
           <a href="/visitors" 
-            className='text-sm p-3 bg-gradient-to-r from-blue-900 to-blue-500 text-white rounded-md w-[90px] text-center hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition  ease-in-out hover:scale-105 duration-300'
+            className='text-sm p-3 bg-gradient-to-r from-blue-900 to-blue-500 text-white rounded-md w-[90px] text-center hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition  ease-in-out hover:scale-105 shadow-md shadow-color-3 duration-300'
           >
               Visitors
           </a>

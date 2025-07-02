@@ -8,7 +8,10 @@ import UserRouter from './routers/user/studentSignIn.js';
 
 
 dotenv.config();
+
 const app = express();
+
+
 
 app.use(cors({
     origin: 'http://localhost:5173',

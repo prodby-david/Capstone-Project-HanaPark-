@@ -12,13 +12,18 @@ import Dashboard from './pages/user/dashboard'
 import ProtectedRoute from './routes/protectedRoute';
 import ErrorNotFound from './components/error/404error'
 import UserReservationForm from './components/forms/user/userReservationForm'
-
+import CreateAdminAccount from './components/forms/admin/createAdminAccount'
+import AdminSignInForm from './components/forms/admin/adminSignInForm'
+import { AdminContextProvider } from './context/adminContext'
+import AdminRoute from './routes/adminProtectedRoute'
+import PasswordPrompt from './components/modals/passwordPrompt'
 
 function App() {
 
 
   return (
     <AuthProvider>
+      <AdminContextProvider>
     <Router>
       <Routes>
 
@@ -48,10 +53,30 @@ function App() {
           />
 
           {/* Admin Routes */}
+       
+          <Route 
+          path='/admin' 
+          element={ <AdminSignInForm /> } 
+          />
+
           <Route 
           path='/admin/student-registration' 
-          element={ <StudentRegistration /> } 
+          element={ 
+          <AdminRoute>
+            <StudentRegistration />
+          </AdminRoute> } 
           />
+
+          <Route 
+          path='/admin/create-account'
+          element={ 
+          <AdminRoute>
+            <CreateAdminAccount />
+          </AdminRoute> } 
+          />
+
+
+
       </Routes>
 
       <ToastContainer 
@@ -63,6 +88,7 @@ function App() {
       />
       
     </Router>
+    </AdminContextProvider>
     </AuthProvider>
   )
 }

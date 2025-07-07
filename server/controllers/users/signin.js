@@ -19,7 +19,12 @@ const studentSignInController = async (req,res) => {
             return res.status(401).json({message: "Password is incorrect. Please try again."});
         }
 
-        const user_token = jwt.sign({userId: user._id}, process.env.JWT_SECRET_KEY, {expiresIn: "5m"});
+        const payload = {
+            userId: user._id,
+            role: 'user'
+        };
+
+        const user_token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: "1h"});
 
         res.cookie('token', user_token, {
             httpOnly: true,

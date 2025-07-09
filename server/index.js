@@ -7,6 +7,7 @@ import StudentAccountRouter from './routers/admin/studentAccount.js';
 import UserRouter from './routers/user/studentSignIn.js';
 import AdminRegistration from './routers/admin/registerAdmin.js';
 import VerifyAdmin from './routers/admin/verifyAdmin.js';
+import AdminSignIn from './routers/admin/adminSignin.js';
 
 
 dotenv.config();
@@ -21,7 +22,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(StudentAccountRouter, UserRouter, AdminRegistration, VerifyAdmin);
+app.use(StudentAccountRouter, UserRouter, AdminRegistration, VerifyAdmin, AdminSignIn);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);

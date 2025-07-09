@@ -3,8 +3,8 @@ import axios from 'axios'
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import toastOptions from '../../../lib/toastConfig';
-import PasswordPrompt from '../../modals/passwordPrompt';
 import { useAdminContext } from "../../../context/adminContext";
+import { useNavigate } from 'react-router-dom';
 
 
 const AdminSignInForm = () => {
@@ -13,6 +13,7 @@ const AdminSignInForm = () => {
     adminusername: '',
     adminpassword: ''
   });
+  const navigate = useNavigate();
   const { Login } = useAdminContext();
 
   const handleChange = (e) => {
@@ -22,6 +23,16 @@ const AdminSignInForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!adminData.adminusername){
+      toast.error('Admin username is required.', toastOptions);
+      return;
+    }
+
+    if(!adminData.adminpassword){
+      toast.error('Admin password is required.', toastOptions);
+      return;
+    }
 
     try {
 
@@ -35,6 +46,8 @@ const AdminSignInForm = () => {
           icon: 'success',
           confirmButtonColor: '#00509e',
           confirmButtonText: 'Confirm'
+        }).then(() => {
+          navigate('/admin-dashboard');
         });
       }
 

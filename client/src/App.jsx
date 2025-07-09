@@ -18,6 +18,7 @@ import { AdminContextProvider } from './context/adminContext'
 import AdminRoute from './routes/adminProtectedRoute'
 import PasswordPrompt from './components/modals/passwordPrompt'
 import PasscodeProtectedRoute from './routes/adminpasscodeRoute'
+import AdminDashboard from './pages/admin/adminDashboard'
 
 function App() {
 
@@ -67,6 +68,14 @@ function App() {
               <AdminSignInForm />
             </PasscodeProtectedRoute>     
           } 
+          />
+
+          <Route 
+          path='/admin-dashboard' 
+          element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>}
           />
 
           <Route 

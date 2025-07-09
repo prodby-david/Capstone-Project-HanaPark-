@@ -17,6 +17,7 @@ import AdminSignInForm from './components/forms/admin/adminSignInForm'
 import { AdminContextProvider } from './context/adminContext'
 import AdminRoute from './routes/adminProtectedRoute'
 import PasswordPrompt from './components/modals/passwordPrompt'
+import PasscodeProtectedRoute from './routes/adminpasscodeRoute'
 
 function App() {
 
@@ -53,10 +54,19 @@ function App() {
           />
 
           {/* Admin Routes */}
+
+          <Route 
+          path='/admin/passcode' 
+          element={ <PasswordPrompt /> } 
+          />
        
           <Route 
-          path='/admin' 
-          element={ <AdminSignInForm /> } 
+          path='/admin/sign-in' 
+          element={ 
+            <PasscodeProtectedRoute>
+              <AdminSignInForm />
+            </PasscodeProtectedRoute>     
+          } 
           />
 
           <Route 
@@ -64,19 +74,18 @@ function App() {
           element={ 
           <AdminRoute>
             <StudentRegistration />
-          </AdminRoute> } 
+          </AdminRoute> 
+          } 
           />
 
           <Route 
           path='/admin/create-account'
           element={ 
-          <AdminRoute>
-            <CreateAdminAccount />
-          </AdminRoute> } 
+            <PasscodeProtectedRoute>
+              <CreateAdminAccount />
+            </PasscodeProtectedRoute>
+           } 
           />
-
-
-
       </Routes>
 
       <ToastContainer 

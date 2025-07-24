@@ -6,13 +6,12 @@ import EditSlot from '../../controllers/admin/slots/editSlot.js';
 import DeleteSlot from '../../controllers/admin/slots/deleteSlot.js';
 import AdminRegistrationController from '../../controllers/admin/adminRegistration.js';
 import VerifyAdminController from '../../controllers/admin/verifyAdmin.js';
-import FetchUsers from '../../controllers/users/getUserList.js'
-import DeleteUser from '../../controllers/users/deleteUser.js'
-import studentRegistrationController from '../../controllers/users/registration.js';
+import FetchUsers from '../../controllers/admin/accounts/getUserList.js'
+import DeleteUser from '../../controllers/admin/accounts/deleteUser.js'
+import studentRegistrationController from '../../controllers/admin/accounts/registration.js';
 import authAdminToken from '../../middlewares/authAdminToken.js';
 import authRoles from '../../middlewares/verifyRoles.js';
 import FetchOneSlot from '../../controllers/admin/slots/fetchOneSlot.js';
-
 import VerifyAdminRefreshToken from '../../middlewares/verifyAdminRefreshToken.js';
 import AdminRefreshTokenController from '../../controllers/admin/adminRefreshToken.js';
 

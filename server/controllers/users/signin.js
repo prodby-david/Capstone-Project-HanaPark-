@@ -24,12 +24,20 @@ const studentSignInController = async (req,res) => {
             role: 'user'
         };
 
-        const user_token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {expiresIn: "1h"});
-
-        res.cookie('token', user_token, {
+        const user_token = jwt.sign(payload, process.env.USER_ACCESS_KEY, {expiresIn: "1h"});
+        const user_refresh_token = jwt.sign(payload, process.env.USER_REFRESH_KEY, {expiresIn: "7d"});
+        
+        res.cookie('user_token', user_token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             maxAge: 3600000,
+            sameSite: 'Strict'
+        });
+
+        res.cookie('user_refresh_token', user_refresh_token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
             sameSite: 'Strict'
         });
 

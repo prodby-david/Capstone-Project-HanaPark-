@@ -9,7 +9,7 @@ const VerifyAdminController = async (req,res) => {
             return;
         }
 
-        if(password !== process.env.ADMIN_SECRET_KEY){
+        if(password !== process.env.ADMIN_PASSCODE_KEY){
             res.status(401).json({message: 'You must enter the correct password.'});
             return;
         }

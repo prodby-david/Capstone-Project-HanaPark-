@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    vehicles: [{ 
+        type: mongoose.Schema.ObjectId, 
+        ref: 'Vehicle' 
+    }],
     username: {
         type: String,
         required: true,

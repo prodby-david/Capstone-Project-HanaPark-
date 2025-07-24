@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
-import User from '../models/user.js'
+
 
 const vehicleSchema = mongoose.Schema({
 
     vehicleOwner:{
         type: mongoose.Schema.ObjectId,
-        ref: User
+        ref: 'User'
     },
     vehicleType:{
         type: String,

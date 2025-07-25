@@ -28,7 +28,7 @@ const PasswordPrompt = () => {
 
       try{
 
-          const res = await axios.post('http://localhost:4100/admin/passcode', { password });
+          const res = await axios.post('http://localhost:4100/admin/passcode-verification', { password });
 
           if(res.data.success){
             Swal.fire({

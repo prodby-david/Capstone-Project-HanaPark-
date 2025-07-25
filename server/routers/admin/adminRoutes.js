@@ -14,6 +14,7 @@ import authRoles from '../../middlewares/verifyRoles.js';
 import FetchOneSlot from '../../controllers/admin/slots/fetchOneSlot.js';
 import VerifyAdminRefreshToken from '../../middlewares/verifyAdminRefreshToken.js';
 import AdminRefreshTokenController from '../../controllers/admin/adminRefreshToken.js';
+import ClearAdminCookies from '../../controllers/admin/accounts/clearcookie.js';
 
 
 const AdminRoute = express.Router();
@@ -35,5 +36,6 @@ AdminRoute.delete('/users/:id', DeleteUser);
 AdminRoute.post('/slots', CreateSlot);
 AdminRoute.put('/slots/:id', EditSlot);
 AdminRoute.delete('/slots/:id', DeleteSlot);
+AdminRoute.post('/logout', ClearAdminCookies);
 
 export default AdminRoute;

@@ -28,7 +28,7 @@ export const AdminContextProvider =  ({ children }) => {
 
     const Logout = () => {
         localStorage.removeItem('hanaparkadmin'); 
-        localStorage.removeItem('token');
+        localStorage.removeItem('passcode_verified');
         setAdmin(null);
     }
 

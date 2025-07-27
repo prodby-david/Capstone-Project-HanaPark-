@@ -19,6 +19,10 @@ import AdminRoute from './routes/adminProtectedRoute'
 import PasswordPrompt from './components/modals/passwordPrompt'
 import PasscodeProtectedRoute from './routes/adminpasscodeRoute'
 import AdminDashboard from './pages/admin/adminDashboard'
+import CreateSlot from './components/forms/admin/createSlot'
+import AvailableSlots from './pages/admin/availableSlots'
+import Spots from './pages/user/spots'
+import UserList from './pages/admin/userlist'
 
 function App() {
 
@@ -46,7 +50,15 @@ function App() {
           }
           />
 
-          <Route path='/user/reservation-form'
+          <Route path='/spots'
+          element={ 
+            <ProtectedRoute>
+              <Spots />
+            </ProtectedRoute>
+          }
+          />
+
+          <Route path='/reservation-form/:slotId'
           element={ 
             <ProtectedRoute>
               <UserReservationForm />
@@ -70,6 +82,14 @@ function App() {
           } 
           />
 
+           <Route path='/users-lists'
+          element={ 
+            <AdminRoute>
+              <UserList />
+            </AdminRoute>
+          }
+          />
+
           <Route 
           path='/admin-dashboard' 
           element={
@@ -79,11 +99,28 @@ function App() {
           />
 
           <Route 
+          path='/admin/slots' 
+          element={
+          <AdminRoute>
+            <CreateSlot />
+          </AdminRoute>} 
+          />
+
+          <Route 
           path='/admin/student-registration' 
           element={ 
           <AdminRoute>
             <StudentRegistration />
           </AdminRoute> 
+          } 
+          />
+
+          <Route 
+          path='/admin-dashboard/available-slots' 
+          element={
+          <AdminRoute>
+            <AvailableSlots/>
+          </AdminRoute>
           } 
           />
 

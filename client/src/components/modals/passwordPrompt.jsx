@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios'
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 import { useNavigate } from 'react-router-dom';
 import { useAdminContext } from '../../context/adminContext';
+import { publicApi } from '../../lib/api';
 
 
 
@@ -28,7 +28,7 @@ const PasswordPrompt = () => {
 
       try{
 
-          const res = await axios.post('http://localhost:4100/admin/passcode-verification', { password });
+          const res = await publicApi.post('http://localhost:4100/admin/passcode-verification', { password });
 
           if(res.data.success){
             Swal.fire({

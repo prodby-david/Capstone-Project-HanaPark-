@@ -1,10 +1,9 @@
 import React, {useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'  
 import toastOptions from '../../../lib/toastConfig'
-
+import { api } from '../../../lib/api';
 
 
 
@@ -39,7 +38,7 @@ const CreateAdminAccount = () => {
 
         try{
 
-            const res = await axios.post('http://localhost:4100/admin/create-account', adminData);
+            const res = await api.post('http://localhost:4100/admin/account', adminData);
 
             if(res.data.success){
                Swal.fire({

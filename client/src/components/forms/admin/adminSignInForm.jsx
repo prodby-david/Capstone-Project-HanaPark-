@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import toastOptions from '../../../lib/toastConfig';
 import { useAdminContext } from "../../../context/adminContext";
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../../lib/api'
 
 
 const AdminSignInForm = () => {
@@ -36,7 +36,7 @@ const AdminSignInForm = () => {
 
     try {
 
-      const res = await axios.post('http://localhost:4100/admin/sign-in', adminData);
+      const res = await api.post('http://localhost:4100/admin/sign-in', adminData);
       Login({ verified: true });
 
       if(res.data.success){

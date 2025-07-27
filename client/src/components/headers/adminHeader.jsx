@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Swal from 'sweetalert2'
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAdminContext } from '../../context/adminContext';
+import { api } from '../../lib/api'
 
 
 
@@ -42,7 +42,7 @@ const AdminHeader = () => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Confirm',
           }).then(async () => {
-            await axios.post('http://localhost:4100/admin/logout', {}, {withCredentials: true});
+            await api.post('http://localhost:4100/admin/logout', {});
             Logout();
             navigate('/admin/passcode');
           });

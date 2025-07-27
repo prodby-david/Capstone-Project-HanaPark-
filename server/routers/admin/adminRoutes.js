@@ -21,7 +21,6 @@ const AdminRoute = express.Router();
 
 AdminRoute.get('/refresh', AdminRefreshTokenController, VerifyAdminRefreshToken);
 
-AdminRoute.post('/account', AdminRegistrationController);
 AdminRoute.post('/sign-in', AdminSignInController);
 AdminRoute.post('/passcode-verification', VerifyAdminController);
 AdminRoute.get('/slots', FetchSlots);
@@ -32,6 +31,7 @@ AdminRoute.use(authAdminToken);
 AdminRoute.use(authRoles('admin'));
 
 AdminRoute.post('/student-registration', studentRegistrationController);
+AdminRoute.post('/account', AdminRegistrationController);
 AdminRoute.delete('/users/:id', DeleteUser);
 AdminRoute.post('/slots', CreateSlot);
 AdminRoute.put('/slots/:id', EditSlot);

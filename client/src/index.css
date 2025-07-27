@@ -6,8 +6,19 @@
     --color-color-3: #00509e;
 }
 
+@layer components {
+  th, td {
+    @apply border border-color-2;
+  }
+}
+
 body{
     background-color: #e0eafc;
+}
+input{
+      outline: none !important;
+      border-color:#666;
+      color:#666;
 }
 
 ::-webkit-scrollbar{

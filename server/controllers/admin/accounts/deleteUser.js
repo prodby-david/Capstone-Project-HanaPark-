@@ -1,10 +1,13 @@
 import User from "../../../models/user.js"
+import Vehicle from "../../../models/vehicle.js"
 
 
 const DeleteUser = async (req,res) => {
 
     try{
         const { id } = req.params;
+
+        await Vehicle.deleteMany({ vehicleOwner: id });
 
         const deleteUser = await User.findByIdAndDelete(id);
 

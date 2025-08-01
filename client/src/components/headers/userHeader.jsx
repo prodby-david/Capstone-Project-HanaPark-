@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { ArrowLeftStartOnRectangleIcon, Cog8ToothIcon, Bars3Icon } from '@heroicons/react/24/outline'
+import { ArrowLeftStartOnRectangleIcon, Cog8ToothIcon, Bars3Icon, BellIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
+import { api } from '../../lib/api';
 
 
 
@@ -34,7 +35,8 @@ const handleLogout = () => {
             text: 'You have been logged out successfully.',
             icon: 'success',
             confirmButtonText: 'OK'
-            }).then(() => {
+            }).then(async() => {
+                await api.post('http://localhost:4100/logout', {});
                 logout();
                 navigate('/');
             });
@@ -72,15 +74,6 @@ const handleLogout = () => {
               transition={{ duration: 0.4, ease: 'easeInOut' }}
               className="flex flex-col items-center absolute top-1 left-0 w-full bg-white shadow-md md:hidden text-color-3 "
             >
-           
-            <Link
-                to="/settings"
-                className="p-5 text-center flex items-center gap-1 cursor-pointer hover:text-color"
-                onClick={toggleMenu}
-            >
-                <Cog8ToothIcon className="w-5 h-5" />
-                Settings
-            </Link>
 
             <button
                 onClick={() => {
@@ -101,25 +94,25 @@ const handleLogout = () => {
         <div className='hidden md:flex items-center gap-x-2'>
 
             <div className='flex items-center gap-x-1 group'>
-                <Cog8ToothIcon className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer"/>
-                    <Link to={'/settings'} 
+                    <Link to={'/notifications'} 
                         className='hover:text-color text-sm md:text-md text-color-3'
                     >
-                        Settings
+                        <BellIcon
+                        title="Notifications"
+                        className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer"/>
                     </Link>
             </div>
         
-            <div className='flex items-center gap-x-1 group'>
-
-                <ArrowLeftStartOnRectangleIcon 
-                    className="w-5 h-5 text-color-3 group-hover:text-color cursor-pointer" 
-                />
+            <div className='flex items-center gap-x-1'>
 
                 <button 
                 onClick={handleLogout} 
                 className='cursor-pointer hover:text-color text-sm md:text-md text-color-3'
                 >
-                    Logout
+                    <ArrowLeftStartOnRectangleIcon
+                    title='Logout' 
+                    className="w-5 h-5 text-color-3 hover:text-color cursor-pointer" 
+                    />
                 </button>
 
             </div>

@@ -1,7 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { publicApi } from '../../lib/api'; 
 
 const ForgotPassword = () => {
+
+    const [email, setEmail] = useState('');
+
+    const handleChange = (e) => {
+        setEmail(e.target.value);
+    }
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        try{
+            const res = await publicApi.post('/reset-password', {email});
+            Swal.fire('Success', res.data.message, 'success');
+            setEmail('');
+
+        } catch(err){
+            Swal.fire('Reset Failed', err.response?.data?.message || 'Something went wrong', 'error');
+            setEmail('')
+        }
+    }
+
+
   return (
    <>
 
@@ -26,8 +51,10 @@ const ForgotPassword = () => {
 
                     <input type="email"
                     required
-                    name='reset-email'
+                    name='email'
                     id='Reset-email'
+                    onChange={handleChange}
+                    value={email}
                     placeholder='Your email address'
                     className='w-full p-2 border rounded-md outline-none focus:border-color-3 text-sm text-color-2' 
                     />
@@ -36,7 +63,8 @@ const ForgotPassword = () => {
 
                 <div className='mt-5 text-center flex flex-col gap-y-3'>
 
-                    <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm'>
+                    <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm'
+                    onClick={handleSubmit}>
                         Send Reset Instruction
                     </button>
 

@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import toastOptions from '../../../lib/toastConfig'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
-
-
+import { api } from '../../../lib/api'
 
 
 const StudentRegistration = () => {
@@ -248,7 +246,7 @@ const handleChange = (e) => {
 
     try{
 
-        const res = await axios.post('http://localhost:4100/admin/student-registration', formData, {withCredentials:true});
+        const res = await api.post('http://localhost:4100/admin/student-registration', formData);
 
         if(res?.data?.success){
         Swal.fire({

@@ -18,20 +18,20 @@ const navigate = useNavigate();
 
 useEffect(() => {
   socket.on('slotCreated', (newSlot) => {
-  if (newSlot.slotUser !== 'Visitor') {
-        Swal.fire({
-          title: 'New Slot Available!',
-          text: `A new ${newSlot.slotUser} slot (${newSlot.slotNumber}) has been added.`,
-          icon: 'info',
-          confirmButtonColor: '#00509e'
-        }).then((result) => {
-          if(result.isConfirmed){
-            navigate('/spots');
-          }
-        });
-      }
-  })  
-});
+    if (newSlot.slotUser !== 'Visitor') {
+          Swal.fire({
+            title: 'New Slot Available!',
+            text: `A new ${newSlot.slotUser} slot (${newSlot.slotNumber}) has been added.`,
+            icon: 'info',
+            confirmButtonColor: '#00509e'
+          }).then((result) => {
+            if(result.isConfirmed){
+              navigate('/spots');
+            }
+          });
+        }
+    })  
+  });
 
   return (
 
@@ -125,12 +125,8 @@ useEffect(() => {
         <UserFooter />
       </div>
 
-      
-      
     </>
-    
-      
-    
+ 
   )
 }
 

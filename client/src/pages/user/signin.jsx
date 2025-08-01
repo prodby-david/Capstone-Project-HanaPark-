@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 import { useAuth } from '../../context/authContext';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { api } from '../../lib/api';
 
 
  
@@ -47,7 +48,7 @@ const [showPassword, setShowPassword] = useState(false);
         return;
       }
 
-      const res = await axios.post('http://localhost:4100/sign-in', userData, { withCredentials: true });
+      const res = await api.post('http://localhost:4100/sign-in', userData);
 
       setAuth({ user: res.data.user });
 

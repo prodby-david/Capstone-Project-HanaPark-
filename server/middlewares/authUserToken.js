@@ -4,7 +4,7 @@ import User from "../models/user.js";
 
 const authToken = async (req, res, next) => {
     
-    const user_token = req.cookies.token;
+    const user_token = req.cookies.user_token;
 
     if (!user_token) {
         return res.status(401).json({ message: "Unauthorized access. No token provided." });

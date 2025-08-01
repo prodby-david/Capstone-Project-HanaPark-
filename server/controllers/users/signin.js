@@ -29,14 +29,14 @@ const studentSignInController = async (req,res) => {
         
         res.cookie('user_token', user_token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             maxAge: 3600000,
             sameSite: 'Strict'
         });
 
         res.cookie('user_refresh_token', user_refresh_token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000, 
             sameSite: 'Strict'
         });

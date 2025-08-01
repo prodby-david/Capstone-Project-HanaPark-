@@ -20,6 +20,15 @@ input{
       border-color:#666;
       color:#666;
 }
+select{
+      outline: none !important;
+      border-color:#666;
+      color:#666;
+      cursor: pointer;
+}
+label{
+  color:#003366;
+}
 
 ::-webkit-scrollbar{
     display: none;

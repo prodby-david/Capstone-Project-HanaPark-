@@ -19,7 +19,7 @@ import ClearAdminCookies from '../../controllers/admin/accounts/clearcookie.js';
 
 const AdminRoute = express.Router();
 
-AdminRoute.get('/refresh', AdminRefreshTokenController, VerifyAdminRefreshToken);
+AdminRoute.get('/refresh', VerifyAdminRefreshToken, AdminRefreshTokenController);
 
 AdminRoute.post('/sign-in', AdminSignInController);
 AdminRoute.post('/passcode-verification', VerifyAdminController);

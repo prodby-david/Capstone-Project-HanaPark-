@@ -23,6 +23,7 @@ import CreateSlot from './components/forms/admin/createSlot'
 import AvailableSlots from './pages/admin/availableSlots'
 import Spots from './pages/user/spots'
 import UserList from './pages/admin/userlist'
+import ResetPassword from './components/forms/user/resetpassword';
 
 function App() {
 
@@ -49,6 +50,16 @@ function App() {
             </ProtectedRoute>
           }
           />
+
+          <Route 
+          path="/reset-password/:token" 
+          element={
+            <ProtectedRoute>
+              <ResetPassword />
+            </ProtectedRoute>
+          } 
+          />
+
 
           <Route path='/spots'
           element={ 

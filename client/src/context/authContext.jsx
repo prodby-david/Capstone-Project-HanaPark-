@@ -4,21 +4,21 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
-    user: JSON.parse(localStorage.getItem('user')) || null
+    user: JSON.parse(sessionStorage.getItem('user')) || null
   });
 
   useEffect(() => {
     if (auth.user) {
-      localStorage.setItem('user', JSON.stringify(auth.user));
+      sessionStorage.setItem('user', JSON.stringify(auth.user));
     } else {
-      localStorage.removeItem('user');
+      sessionStorage.removeItem('user');
     }
   }, [auth.user]);
 
   
   const logout = () => {
     setAuth({ user: null });
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   };
 
   return (

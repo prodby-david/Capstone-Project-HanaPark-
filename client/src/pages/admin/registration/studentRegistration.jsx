@@ -248,7 +248,7 @@ const handleChange = (e) => {
 
     try{
 
-        const res = await axios.post('http://localhost:4100/admin/student-registration', formData);
+        const res = await axios.post('http://localhost:4100/admin/student-registration', formData, {withCredentials:true});
 
         if(res?.data?.success){
         Swal.fire({
@@ -257,7 +257,7 @@ const handleChange = (e) => {
             icon: 'success',
             confirmButtonText: 'OK',
           }).then(() => {
-            navigate('/');
+            navigate('/admin-dashboard');
           });
         }
 
@@ -463,12 +463,12 @@ const handleChange = (e) => {
                                     {showConfirmPassword ? (
                                         <EyeIcon
                                         className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
-                                        onClick={togglePassword}
+                                        onClick={toggleConfirmPassword}
                                         />
                                     ) : (
                                         <EyeSlashIcon
                                         className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
-                                        onClick={togglePassword}
+                                        onClick={toggleConfirmPassword}
                                         />
                                     )}
 
@@ -771,7 +771,7 @@ const handleChange = (e) => {
                             <p><strong>Username:</strong> {formData.username}</p>
                             <p><strong>School Email:</strong> {formData.email}</p>
                             <p><strong>Year Level:</strong> {formData.yearLevel}</p>
-                            <p><strong>Course:</strong> {formData.courses}</p>
+                            <p><strong>Course:</strong> {formData.course}</p>
 
                             <div className='w-full h-px bg-color-3 my-2'>
                                 

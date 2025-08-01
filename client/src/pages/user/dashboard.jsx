@@ -1,22 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAuth } from '../../context/authContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MapPinIcon, ClockIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { container, fadeUp } from '../../lib/motionConfigs';
 import UserHeader from '../../components/headers/userHeader';
 import UserFooter from '../../components/footers/userFooter';
-
+import { socket } from '../../lib/socket';
+import Swal from 'sweetalert2';
 
 
 
 const Dashboard = () => {
 
 const { auth } = useAuth(); 
+const navigate = useNavigate();
+
+useEffect(() => {
+  socket.on('slotCreated', (newSlot) => {
+  if (newSlot.slotUser !== 'Visitor') {
+        Swal.fire({
+          title: 'New Slot Available!',
+          text: `A new ${newSlot.slotUser} slot (${newSlot.slotNumber}) has been added.`,
+          icon: 'info',
+          confirmButtonColor: '#00509e'
+        }).then((result) => {
+          if(result.isConfirmed){
+            navigate('/spots');
+          }
+        });
+      }
+  })  
+});
 
   return (
 
     <>
+
       <UserHeader />
 
       <div className='flex flex-col items-center justify-center mt-15 lg:mt-20'>
@@ -48,7 +68,7 @@ const { auth } = useAuth();
               <p className='text-sm text-color-2 '>Find and reserve a parking slot.</p>
             </div>
 
-            <Link to={'/user/reservation-form'} 
+            <Link to={'/spots'} 
             className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
             >
               Secure a Spot

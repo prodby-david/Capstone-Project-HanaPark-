@@ -16,7 +16,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const verified = localStorage.getItem('passcode_verified');
+    const verified = sessionStorage.getItem('passcode_verified');
     if (!verified) {
       navigate('/admin/passcode'); 
     }

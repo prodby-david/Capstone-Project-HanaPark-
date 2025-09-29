@@ -132,6 +132,7 @@ const Recents = () => {
         </div>
 
         <div className="overflow-x-auto">
+          
           <div className="min-w-[900px] flex flex-col gap-3">
             <div className="grid grid-cols-8 w-full font-semibold text-color-3 text-center bg-white p-5 rounded-md sticky top-0 z-10">
               <h2>Reservation Code</h2>
@@ -191,16 +192,19 @@ const Recents = () => {
         </div>
 
         {/* QR Code Modal */}
-        {showQR && latestReservation && (
-          <div className="fixed inset-0 flex items-center justify-center bg-white/50 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 relative max-w-md w-full">
-              <button className="absolute top-3 right-3 text-gray-500 hover:text-gray-800" onClick={() => setShowQR(false)}>
-                <XMarkIcon className="w-6 h-6 cursor-pointer" />
-              </button>
-              <Step5 reservationResult={latestReservation} navigate={navigate} />
-            </div>
-          </div>
-        )}
+       {selectedReservation && (
+  <div className="fixed inset-0 flex items-center justify-center bg-white/50 z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 relative max-w-md w-full">
+      <button
+        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+        onClick={() => setSelectedReservation(null)}
+      >
+        <XMarkIcon className="w-6 h-6 cursor-pointer" />
+      </button>
+      <Step5 reservationResult={selectedReservation} navigate={navigate} />
+    </div>
+  </div>
+)}
 
         {/* Reservation Details Modal */}
         {selectedReservation && (

@@ -21,7 +21,8 @@ const studentSignInController = async (req,res) => {
 
         const payload = {
             userId: user._id,
-            role: 'user'
+            role: 'user',
+            userType: user.userType
         };
 
         const user_token = jwt.sign(payload, process.env.USER_ACCESS_KEY, {expiresIn: "1h"});
@@ -30,20 +31,20 @@ const studentSignInController = async (req,res) => {
         res.cookie('user_token', user_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600000,
+            maxAge: 30 * 60 * 1000,
             sameSite: 'Strict'
         });
 
         res.cookie('user_refresh_token', user_refresh_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000, 
             sameSite: 'Strict'
         });
 
-        res.status(200).json({message: "Sign in successful.", success: true, 
+        res.status(200).json({message: "Sign in successful", success: true, 
             user: {
             firstname: user.firstname,
+            userType: user.userType,
             }
         });
 

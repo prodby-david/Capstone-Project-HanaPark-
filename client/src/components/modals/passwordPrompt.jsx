@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 import { useNavigate } from 'react-router-dom';
 import { useAdminContext } from '../../context/adminContext';
-import { publicApi } from '../../lib/api';
+import AdminAPI from '../../lib/inteceptors/adminInterceptor';
 
 
 
@@ -28,7 +28,7 @@ const PasswordPrompt = () => {
 
       try{
 
-          const res = await publicApi.post('http://localhost:4100/admin/passcode-verification', { password });
+          const res = await AdminAPI.post('http://localhost:4100/admin/passcode-verification', { password });
 
           if(res.data.success){
             Swal.fire({

@@ -15,10 +15,10 @@ const UserRefreshTokenController = async(req,res) => {
 
       const newUserAccessToken = jwt.sign(payload, process.env.USER_ACCESS_KEY, {expiresIn:'1h'});
 
-      res.cookie('token', newUserAccessToken, {
+      res.cookie('user_token', newUserAccessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
-          maxAge: 3600000,
+          maxAge: 30 * 60 * 1000,
           sameSite: 'Strict'
       });
 

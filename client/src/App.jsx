@@ -4,7 +4,6 @@ import Hero from './pages/hero'
 import SignIn from './pages/user/signin'
 import ForgotPassword from './pages/user/forgot-password'
 import Visitors from './pages/visitors'
-import StudentRegistration from './pages/admin/registration/studentRegistration'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/authContext';
@@ -24,6 +23,14 @@ import AvailableSlots from './pages/admin/availableSlots'
 import Spots from './pages/user/spots'
 import UserList from './pages/admin/userlist'
 import ResetPassword from './components/forms/user/resetpassword';
+import UserReservationLists from './pages/admin/userReservationLists'
+import Recents from './pages/user/recents'
+import CompletedReservation from './pages/admin/completedReservation'
+import AccountSettings from './pages/user/accountSettings'
+import GuestRoute from './routes/guestRoute'
+import UserType from './pages/admin/userType'
+import StaffRegistration from './components/forms/admin/staffRegistration'
+import UserRegistration from './pages/admin/registration/userRegistration'
 
 function App() {
 
@@ -36,8 +43,8 @@ function App() {
 
           {/* General Routes */}
           <Route path="*" element={ <ErrorNotFound />} />
-          <Route path="/" element={ <Hero />} />
-          <Route path="/sign-in" element={ <SignIn />} />
+          <Route path="/" element={ <GuestRoute><Hero /></GuestRoute> } />
+          <Route path="/sign-in" element={ <GuestRoute><SignIn /></GuestRoute>} />
           <Route path="/reset-password" element={ <ForgotPassword />} />
           <Route path="/visitors" element={ <Visitors /> } />
 
@@ -54,9 +61,7 @@ function App() {
           <Route 
           path="/reset-password/:token" 
           element={
-            <ProtectedRoute>
-              <ResetPassword />
-            </ProtectedRoute>
+            <ResetPassword />
           } 
           />
 
@@ -69,6 +74,14 @@ function App() {
           }
           />
 
+          <Route path='/account-settings'
+          element={ 
+            <ProtectedRoute>
+              <AccountSettings />
+            </ProtectedRoute>
+          }
+          />
+
           <Route path='/reservation-form/:slotId'
           element={ 
             <ProtectedRoute>
@@ -77,7 +90,16 @@ function App() {
           }
           />
 
-          {/* Admin Routes */}
+          <Route 
+          path='/recents'
+          element={ 
+            <ProtectedRoute>
+              <Recents />
+            </ProtectedRoute>
+          }
+          />
+
+          {/* ---------- Admin Routes--------------- */}
 
           <Route 
           path='/admin/passcode' 
@@ -109,6 +131,24 @@ function App() {
           </AdminRoute>}
           />
 
+          <Route
+          path='/admin/reservations/completed'
+          element={
+            <AdminRoute>
+              <CompletedReservation />
+            </AdminRoute>
+          }
+          />
+
+          <Route
+          path='/account-type'
+          element={
+            <AdminRoute>
+              <UserType/>
+            </AdminRoute>
+          }
+          />
+
           <Route 
           path='/admin/slots' 
           element={
@@ -118,10 +158,37 @@ function App() {
           />
 
           <Route 
+          path='/user-reservations' 
+          element={ 
+          <AdminRoute>
+            <UserReservationLists />
+          </AdminRoute> 
+          } 
+          />
+
+          <Route 
           path='/admin/student-registration' 
           element={ 
           <AdminRoute>
-            <StudentRegistration />
+            <UserRegistration />
+          </AdminRoute> 
+          } 
+          />
+
+          <Route 
+          path='/registration/staff' 
+          element={ 
+          <AdminRoute>
+            <StaffRegistration />
+          </AdminRoute> 
+          } 
+          />
+
+          <Route 
+          path='/reservation/lists' 
+          element={ 
+          <AdminRoute>
+            <UserReservationLists />
           </AdminRoute> 
           } 
           />
@@ -143,6 +210,8 @@ function App() {
             </PasscodeProtectedRoute>
            } 
           />
+
+          
       </Routes>
 
       <ToastContainer 

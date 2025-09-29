@@ -9,10 +9,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    vehicles: [{ 
+    userType:{
+        type: String,
+        enum: ['Student', 'Staff'],
+        required: true
+    },
+    vehicle: { 
         type: mongoose.Schema.ObjectId, 
-        ref: 'Vehicle' 
-    }],
+        ref: 'Vehicle',
+        unique: true
+    },
     username: {
         type: String,
         required: true,
@@ -38,13 +44,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    course:{
-        type: String,
-        required: true,
+    isLocked: {
+        type: Boolean,
+        default: false
     },
-    yearLevel:{
+    lockReason:{
         type: String,
-        required: true
+        default: ''
+    },
+    status:{
+        type: String,
+        default:'Active'
     }
 });
 

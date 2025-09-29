@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import toastOptions from '../../../lib/toastConfig';
 import { useAdminContext } from "../../../context/adminContext";
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../../lib/api'
+import AdminAPI from '../../../lib/inteceptors/adminInterceptor';
+import Loader from '../../loaders/loader';
 
 
 const AdminSignInForm = () => {
@@ -13,6 +14,7 @@ const AdminSignInForm = () => {
     adminusername: '',
     adminpassword: ''
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { Login } = useAdminContext();
 
@@ -36,10 +38,12 @@ const AdminSignInForm = () => {
 
     try {
 
-      const res = await api.post('http://localhost:4100/admin/sign-in', adminData);
-      Login({ verified: true });
+      setLoading(true);
 
+      const res = await AdminAPI.post('http://localhost:4100/admin/sign-in', adminData);
+      
       if(res.data.success){
+        Login({ verified: true });
         Swal.fire({
           title: 'Credentials Valid',
           text: res.data.message,
@@ -62,6 +66,8 @@ const AdminSignInForm = () => {
                 confirmButtonText: 'Try Again'
               });
             }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -108,6 +114,16 @@ const AdminSignInForm = () => {
 
         </div>
       </div>
+
+      {loading ? (
+        <div>
+            <Loader />
+        </div>
+      ) : (
+        <div>
+
+        </div>
+      )}
     </>
   )
 }

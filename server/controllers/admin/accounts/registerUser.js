@@ -1,12 +1,13 @@
-import User from '../../models/user.js'
-import Vehicle from '../../models/vehicle.js'
+import User from '../../../models/user.js'
+import Vehicle from '../../../models/vehicle.js'
+import { normalizeVehicleType } from '../../../utils/vehicleTypes.js';
 
 
 const studentRegistrationController = async (req,res) => {
 
     try{
 
-        const {lastname, firstname, middlename, studentId, username, password, email, course, yearLevel,vehicleType, brand, model, plateNumber, transmission, color} = req.body;
+        const {userType, lastname, firstname, middlename, studentId, username, password, email, vehicleType, brand, model, plateNumber, transmission, color} = req.body;
 
         const existingStudentId = await User.findOne({ studentId });
         if(existingStudentId){
@@ -18,7 +19,7 @@ const studentRegistrationController = async (req,res) => {
             return res.status(409).json({message: 'Email already used. Please try a different one.'});
         }
 
-        const newUser = new User ({lastname, firstname, middlename, studentId, username, password, email, course, yearLevel});
+        const newUser = new User ({userType, lastname, firstname, middlename, studentId, username, password, email});
 
         await newUser.save();
 
@@ -27,9 +28,15 @@ const studentRegistrationController = async (req,res) => {
             return res.status(409).json({message: 'Plate number already registered. Please try a different one.'});
         }
 
-        const newVehicle = new Vehicle ({vehicleOwner: newUser._id, vehicleType, brand, model, plateNumber, transmission, color});
+        const normalizedType = normalizeVehicleType(vehicleType);
+
+        const newVehicle = new Vehicle ({vehicleOwner: newUser._id, vehicleType: normalizedType , brand, model, plateNumber, transmission, color});
 
         await newVehicle.save();
+
+        newUser.vehicle = newVehicle._id;
+        
+        await newUser.save();
 
         return res.status(201).json({message: 'Registration successful.', success: true});
 

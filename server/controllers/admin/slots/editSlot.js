@@ -1,4 +1,5 @@
 import Slot from "../../../models/slot.js";
+import Reservation from "../../../models/reservation.js";
 
 
 
@@ -8,7 +9,13 @@ const EditSlot = async (req, res) => {
     const { slotStatus, slotDescription } = req.body;
     
     const updatedSlot = await Slot.findByIdAndUpdate(id, { slotStatus, slotDescription }, { new: true });
-    console.log('Emitting slotUpdated for:', updatedSlot);
+    
+     if (slotStatus === "Available") {
+      await Reservation.updateMany(
+        { slotId: id, status: "Reserved" },
+        { $set: { status: "Completed" } }
+      );
+    }
     req.io.emit('slotUpdated', updatedSlot);
 
     res.status(200).json({ message: 'Slot updated successfully' });

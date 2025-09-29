@@ -1,19 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
-import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { ArrowLeftStartOnRectangleIcon, Cog8ToothIcon, Bars3Icon, BellIcon } from '@heroicons/react/24/outline'
+import { ArrowLeftStartOnRectangleIcon, Bars3Icon, BellIcon } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
 import { api } from '../../lib/api';
 
 
-
-
 const UserHeader = () => {
 
-const { logout } = useAuth(); 
-const navigate = useNavigate();
+const { logout, auth } = useAuth(); 
+const userId = auth.user?._id;
+
 
 const [isOpen, setIsOpen] = useState(false);
 
@@ -38,7 +36,6 @@ const handleLogout = () => {
             }).then(async() => {
                 await api.post('http://localhost:4100/logout', {});
                 logout();
-                navigate('/');
             });
         }
     });
@@ -52,9 +49,7 @@ const handleLogout = () => {
     <div className='flex justify-between items-center py-4 px-6 bg-white shadow-md'>
 
         <div className='flex items-center gap-x-px text-color'>
-            <h2 className='font-bold text-sm md:text-md'>
-                HanaPark
-            </h2>
+            <Link  to={'/dashboard'} className='font-bold text-sm md:text-md'>HanaPark</Link>
         </div>
 
         <Bars3Icon 
@@ -117,10 +112,7 @@ const handleLogout = () => {
 
             </div>
             
-
         </div> 
-
-            
 
         </div>
         

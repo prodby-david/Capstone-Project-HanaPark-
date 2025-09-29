@@ -20,12 +20,15 @@ const authToken = async (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized: User no longer exists." });
         }
 
-        req.user = decoded; 
+        req.user = {
+            userId: decoded.userId,
+            userType: decoded.userType 
+        };
         next(); 
         
     } catch (error) {
         console.error("Token verification failed:", error);
-        return res.status(403).json({ message: "Forbidden. Invalid token." });
+        return res.status(401).json({ message: "Forbidden. Invalid token." });
     }
 };
 

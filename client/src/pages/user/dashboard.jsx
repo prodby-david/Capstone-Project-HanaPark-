@@ -31,7 +31,7 @@ useEffect(() => {
           });
         }
     })  
-  });
+  }, []);
 
   return (
 
@@ -93,7 +93,7 @@ useEffect(() => {
             <Link to={'/recents'} 
             className='p-4 bg-color-3 text-white rounded-md text-sm cursor-pointer transition ease-in-out hover:scale-105 duration-300'
             >
-              View History
+              View Activities
             </Link>
 
           </motion.div>

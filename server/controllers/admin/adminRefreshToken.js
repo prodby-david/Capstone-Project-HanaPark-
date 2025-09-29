@@ -8,12 +8,12 @@ const AdminRefreshTokenController = async (req,res) => {
     role: 'admin'
     };
 
-    const newAdminAccessToken = jwt.sign(payload, process.env.ADMIN_ACCESS_KEY , { expiresIn:'1h' });
+    const newAdminAccessToken = jwt.sign(payload, process.env.ADMIN_ACCESS_KEY , { expiresIn:'30m' });
 
-    res.cookie('token', newAdminAccessToken, {
+    res.cookie('admin_token', newAdminAccessToken, {
         httpOnly: true,
-        secure: true,
-        maxAge: 60 * 60 * 1000,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 30 * 60 * 1000,
         sameSite: 'Strict'
     });
 

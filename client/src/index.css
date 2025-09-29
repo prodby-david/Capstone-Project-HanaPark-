@@ -29,9 +29,20 @@ select{
 label{
   color:#003366;
 }
+::-webkit-scrollbar {
+  width: 8px;           
+  height: 10px;         
+}
 
-::-webkit-scrollbar{
-    display: none;
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3366cc;  
+  border-radius: 10px;       
+  border: 2px solid #f1f1f1;  
 }
 
 input[type=number]::-webkit-outer-spin-button,

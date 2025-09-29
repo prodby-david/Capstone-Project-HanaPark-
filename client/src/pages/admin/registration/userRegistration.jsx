@@ -4,12 +4,14 @@ import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 import toastOptions from '../../../lib/toastConfig'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
-import { api } from '../../../lib/api'
+import AdminAPI from '../../../lib/inteceptors/adminInterceptor'
+import AdminHeader from '../../../components/headers/adminHeader'
 
 
-const StudentRegistration = () => {
+const UserRegistration = () => {
 
     const [ formData, setFormData ] = useState({
+        userType: '',
         lastname: '',
         firstname: '',
         middlename: '',
@@ -18,8 +20,6 @@ const StudentRegistration = () => {
         password: '',
         confirmPassword: '',
         email: '',
-        course: '',
-        yearLevel: '',
         vehicleType: '',
         brand: '',
         model: '',
@@ -28,26 +28,10 @@ const StudentRegistration = () => {
         color: ''
     });
 
-    const tertiaryCourses = [
-        { value: "BSIT", label: "Bachelor of Science in Information Technology" },
-        { value: "BSCS", label: "Bachelor of Science in Computer Science" },
-        { value: "BSCpE", label: "Bachelor of Science in Computer Engineering" },
-        { value: "BSAIS", label: "Bachelor of Science in Accounting Information System" },
-        { value: "BSTM", label: "Bachelor of Science in Tourism Management" },
-        { value: "BSBA", label: "Bachelor of Science in Business Administration" },
-        { value: "BSHM", label: "Bachelor of Science in Hospitality Management" },
-        { value: "BACOMM", label: "Bachelor of Arts in Communication" },
-    ];
-
-    const shsCourses = [
-        { value: "STEM", label: "Science, Technology, Engineering and Mathematics" },
-        { value: "ABM", label: "Accountancy, Business and Management" }
-    ];
-
     const brandsByType = {
-        "2-Wheels (110–125cc)": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
+        "Small Motorcycle": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
 
-        "2-Wheels (125–399cc)": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
+        "Bigbike Motorcycle": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
 
         "2-Wheels (400cc and above)": ["Honda", "Yamaha", "Suzuki", "Kawasaki", "Ducati", "BMW", "KTM", "Triumph"],
 
@@ -69,28 +53,39 @@ const StudentRegistration = () => {
     
     {/* useStates */}
     const [ step, setStep ] = useState(1);
-    const [ selectedCourse, setSelectedCourse ] = useState('');
-    const [ selectedYearLevel, setselectedYearLevel ] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     {/* Regex Validations */}
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     const nameRegex = /^[a-zA-Z\s]+$/;
+    const studentIdRegex = /^2000\d{6}$/;
     const usernameRegex = /^[a-zA-Z]+\.[0-9]{6}$/;
-    const plateNumberRegex = /^(?:[A-Z]{3} ?\d{4}|(?=(?:.*[A-Z]){3})(?=(?:.*\d){3})[A-Z0-9]{6}|\d{4}-\d{11})$/;
+    const plateNumberRegex = /^(?:([A-Z]{3}\d{3}|\d{3}[A-Z]{3}|(?=(?:.*[A-Z]){3})(?=(?:.*\d){3})[A-Z0-9]{6})|([A-Z]{3}\d{4})|(\d{4}-\d{9,11}))$/;
     const mvFileRegex = /^[0-9]{4}-[0-9]{11,12}$/;  
-
-    {/* Filters */}
-    const filteredCourses = selectedYearLevel === "College" ? tertiaryCourses : selectedYearLevel === "Senior High School" ? shsCourses : [];
 
     const filteredBrands = brandsByType[formData.vehicleType] || [];
 
     {/* Validations */}
 const step1Validations = () => {
 
+    if (!formData.userType) {
+        toast.error('User Type must not be empty.', toastOptions);
+        return false;
+    }
+
     if (!formData.lastname) {
         toast.error('Lastname must not be empty.', toastOptions);
+        return false;
+    }
+
+    if (formData.lastname.length < 2) {
+        toast.error('Lastname must be atleast 2 characters.', toastOptions);
+        return false;
+    }
+
+    if (formData.firstname.length < 2) {
+        toast.error('Firstname must be atleast 2 characters.', toastOptions);
         return false;
     }
 
@@ -121,6 +116,11 @@ const step1Validations = () => {
 
     if(formData.studentId.length <= 9){
         toast.error('Student ID should be at least 10 digits long.', toastOptions);
+        return;
+    }
+
+    if(!studentIdRegex.test(formData.studentId)){
+        toast.error('Student ID format is invalid.', toastOptions)
         return;
     }
 
@@ -156,11 +156,6 @@ const step1Validations = () => {
 
     if (!emailRegex.test(formData.email)) {
         toast.error("Invalid school email format", toastOptions);
-        return false;
-    }
-
-    if (!formData.yearLevel || !formData.course) {
-        toast.error("Year Level and Course should not be empty.", toastOptions);
         return false;
     }
 
@@ -246,7 +241,7 @@ const handleChange = (e) => {
 
     try{
 
-        const res = await api.post('http://localhost:4100/admin/student-registration', formData);
+        const res = await AdminAPI.post('/admin/student-registration', formData);
 
         if(res?.data?.success){
         Swal.fire({
@@ -292,12 +287,13 @@ const handleChange = (e) => {
 
   return (
     <>
+        <AdminHeader />
         <div className='flex flex-col items-center justify-center min-h-screen px-5'>
 
             <div className='flex flex-col border border-gray-300 rounded-lg px-6 py-4 shadow-lg bg-white w-full max-w-xl text-center'>
 
                 <div className='mb-5'>
-                    <h2 className='font-bold text-color text-xl'>Student Parking Registration</h2>
+                    <h2 className='font-bold text-color text-xl'>HanaPark Parking Registration</h2>
                 </div>
 
                 <form>
@@ -306,13 +302,32 @@ const handleChange = (e) => {
 
                         <div className='flex items-center mb-5'>
                             <h2 className='text-color-3'>
-                                <span className='font-bold text-color'>Step 1:</span> Student Information
+                                <span className='font-bold text-color'>Step 1:</span> User Information
                             </h2>
                         </div>
 
                         <div className='flex flex-col gap-2'>
 
+                            <div className='flex flex-col w-full'>
+
+                                    <label htmlFor="UserType"
+                                    className='text-start text-color-3 text-sm font-semibold'>User Type</label>
+                                    
+                                   <select 
+                                   className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
+                                   name="userType" 
+                                   id="UserType"
+                                   value={formData.userType}
+                                   onChange={handleChange}>
+                                    <option value="">Select User Type</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Staff">Staff</option>
+                                   </select>
+
+                                </div>
+
                             <div className='flex flex-col md:flex-row gap-x-3'>
+                                
 
                                 <div className='flex flex-col w-full'>
 
@@ -495,75 +510,9 @@ const handleChange = (e) => {
                             
                         </div>
 
-                        <div className='flex flex-col md:flex-row gap-3 mt-3'>
-                        
-                        <div className='flex flex-col w-full'>
-
-                            <label htmlFor="YearLevel"
-                            className='text-start text-color-3 text-sm font-semibold'>Year Level
-                            </label>
-
-                            <select 
-                            name="yearLevel" 
-                            id="YearLevel"
-                            value={selectedYearLevel}
-                            onChange={(e) => {
-                                setselectedYearLevel(e.target.value);
-                                setFormData({ ...formData, yearLevel: e.target.value, courses: '' });
-                                setSelectedCourse('');
-                            }}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
-                            >
-                                <option value="" disabled>
-                                    Student Year Level
-                                </option>
-
-                                <option value="Senior High School">
-                                    Senior High School
-                                </option>
-
-                                <option value="College">
-                                    Tertiary
-                                </option>
-
-                            </select>
-
-                        </div>
-                           
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="YearLevel"
-                                className='text-start text-color-3 text-sm font-semibold'>Course
-                                </label>
-
-                                <select 
-                                name="course" 
-                                id="Courses"
-                                value={selectedCourse}
-                                onChange={(e) => {
-                                    setSelectedCourse(e.target.value);
-                                    setFormData({ ...formData, course: e.target.value });
-                                }}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
-                                >
-                                    <option value="" disabled>
-                                        Student Course
-                                    </option>
-
-                                {filteredCourses.map(course => (
-                                <option key={course.value} value={course.value}>
-                                {course.label}
-                                </option>
-                                ))}
-                                
-                            </select>
-
-                            </div>
-                            
-                        </div>
-
+                    
                         <div className='text-center mt-3'>
-                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The username format should be lastname.studentIdLast6Digits.</h2>
+                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The username format should be lastname.IdLast6Digits.</h2>
                         </div>
 
                         <div className='mt-3 flex justify-end'>
@@ -602,9 +551,8 @@ const handleChange = (e) => {
                                 Vehicle Type
                             </option>
 
-                            <option value="2-Wheels (110–125cc)">2-Wheels (110–125cc)</option>
-                            <option value="2-Wheels (125–399cc)">2-Wheels (125–399cc)</option>
-                            <option value="2-Wheels (400cc and above)">2-Wheels (400cc and above)</option>
+                            <option value="Small Motorcycle">Small Motorcycle</option>
+                            <option value="Bigbike Motorcycle">Bigbike Motorcycle</option>
                             <option value="Sedan">Sedan</option>
                             <option value="Hatchback">Hatchback</option>
                             <option value="SUV">SUV</option>
@@ -759,16 +707,15 @@ const handleChange = (e) => {
                         <h2 className='text-color-3 mb-1 text-lg'>
                             <span className='font-bold text-color'>Step 1:</span> Student Information
                         </h2>
-                        
+
+                            <p><strong>User Type:</strong> {formData.userType}</p>
                             <p><strong>Last Name:</strong> {formData.lastname}</p>
                             <p><strong>First Name:</strong> {formData.firstname}</p>
                             <p><strong>Middle Name (Optional):</strong> {formData.middlename}</p>
                             <p><strong>Student ID:</strong> {formData.studentId}</p>
                             <p><strong>Username:</strong> {formData.username}</p>
                             <p><strong>School Email:</strong> {formData.email}</p>
-                            <p><strong>Year Level:</strong> {formData.yearLevel}</p>
-                            <p><strong>Course:</strong> {formData.course}</p>
-
+    
                             <div className='w-full h-px bg-color-3 my-2'>
                                 
                             </div>
@@ -807,4 +754,4 @@ const handleChange = (e) => {
   )
 }
 
-export default StudentRegistration;
+export default UserRegistration;

@@ -28,7 +28,7 @@ app.use(cors({
     credentials: true, 
 }));
 
-io.on('connection', (socket) => {
+  io.on('connection', (socket) => {
   console.log('A client connected:', socket.id);
 
   socket.on('disconnect', () => {

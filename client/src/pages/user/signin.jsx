@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 import { useAuth } from '../../context/authContext';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
-import { api } from '../../lib/api';
+import UserAPI from '../../lib/inteceptors/userInterceptor';
+import Loader from '../../components/loaders/loader';
 
 
  
@@ -17,6 +17,8 @@ const SignIn = () => {
     username: '',
     password: ''
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
 const { setAuth } = useAuth();
 const navigate = useNavigate();
@@ -36,9 +38,7 @@ const [showPassword, setShowPassword] = useState(false);
 
     e.preventDefault();
 
-    try{
-
-      if(!userData.username){
+    if(!userData.username){
           toast.error('Username should not be empty.', toastOptions);
           return;
       }
@@ -48,18 +48,21 @@ const [showPassword, setShowPassword] = useState(false);
         return;
       }
 
-      const res = await api.post('http://localhost:4100/sign-in', userData);
+      setIsLoading(true);
 
-      setAuth({ user: res.data.user });
+    try{
 
+      const res = await UserAPI.post('http://localhost:4100/sign-in', userData);
+      
       if(res.data.success){
         Swal.fire({
-          title: 'Sign in successful',
-          text: 'Press Confirm to continue.',
+          title: res.data.message,
+          text: 'Press confirm to continue.',
           icon: 'success',
           confirmButtonColor: '#00509e',
           confirmButtonText: 'Confirm'
         }).then(() => {
+          setAuth({ user: res.data.user });
           navigate('/dashboard')
         });
 
@@ -67,8 +70,8 @@ const [showPassword, setShowPassword] = useState(false);
         username: '',
         password: ''
       });
-
       }
+
     }catch(err){
 
       if(err.response && err.response.data) {
@@ -79,8 +82,9 @@ const [showPassword, setShowPassword] = useState(false);
           confirmButtonText: 'Try Again'
         });
       }
+    } finally {
+      setIsLoading(false)
     }
-
 }
 
 
@@ -96,7 +100,7 @@ const [showPassword, setShowPassword] = useState(false);
           <p className='text-color-2 text-sm'>Parking System</p>
         </div>
 
-        <form className='flex flex-col gap-y-3 w-full'>
+        <form className='flex flex-col gap-y-3 w-full' onSubmit={handleSubmit}>
 
           <input type="text"
           required
@@ -134,9 +138,9 @@ const [showPassword, setShowPassword] = useState(false);
           </div>
           
 
-          <div className='w-full'>
-
-            <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm' onClick={handleSubmit}>
+          <div className='flex flex-col items-center w-full'>
+            
+            <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm'>
               Sign In
             </button>
 
@@ -151,6 +155,8 @@ const [showPassword, setShowPassword] = useState(false);
       </div>
 
     </div>
+
+    {isLoading ? <Loader text='Signing in...' /> : null}
     </>
   )
 }

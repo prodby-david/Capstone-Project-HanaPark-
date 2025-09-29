@@ -6,7 +6,8 @@ const vehicleSchema = mongoose.Schema({
     vehicleOwner:{
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        unique: true
     },
     vehicleType:{
         type: String,

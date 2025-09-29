@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { container } from '../../lib/motionConfigs';
 import AdminHeader from '../../components/headers/adminHeader';
 import DashboardCard from '../../components/cards/dashboardCards';
-import { UsersIcon, MapPinIcon, CalendarIcon, WalletIcon } from '@heroicons/react/24/solid'
-import { api } from '../../lib/api';
+import { UsersIcon, MapPinIcon, CalendarIcon, ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
+import AdminAPI from '../../lib/inteceptors/adminInterceptor'
 
 
 const AdminDashboard = () => {
 
   const [showSlots, setShowSlots] = useState([]);
   const [countUser, setCountUser] = useState([]);
+  const [countReservation, setCountReservation] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
    useEffect(() => {
     const fetchSlots = async () => {
       try {
-        const res = await api.get('http://localhost:4100/admin/slots', {withCredentials: true});
+        const res = await AdminAPI.get('http://localhost:4100/admin/slots', {withCredentials: true});
         setShowSlots(res.data);
       } catch (err) {
         console.error('Error fetching slots:', err);
@@ -38,8 +38,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const countUsers = async () => {
       try {
-        const res = await api.get('http://localhost:4100/admin/users', {withCredentials: true});
-        setCountUser(res.data);
+        const res = await AdminAPI.get('http://localhost:4100/admin/users', {withCredentials: true});
+        const activeUsers = res.data.filter(user => user.status === 'Active');
+        setCountUser(activeUsers);
       } catch (err) {
         console.error('Error fetching slots:', err);
       }
@@ -47,6 +48,22 @@ const AdminDashboard = () => {
 
     countUsers();
   }, []);
+
+  useEffect(() => {
+    const getReservation = async () => {
+      try {
+        const res = await AdminAPI.get('/admin/reservations');
+        setCountReservation(res.data);
+        
+      } catch (err) {
+        console.error("Error fetching reservations:", err.response?.data || err.message);
+
+      }
+    }
+    getReservation();
+  }, [])
+
+   
 
   return (
     <>
@@ -56,7 +73,6 @@ const AdminDashboard = () => {
 
             <div className='flex items-center justify-between px-10 mt-10'>
                 <h2 className='text-xl text-color font-semibold'>System Overview</h2>
-                <h2>Filters</h2>
             </div>
 
             <motion.div
@@ -82,18 +98,19 @@ const AdminDashboard = () => {
                 <DashboardCard 
                 icon={CalendarIcon}
                 title={'Reservations'}
-                value={0}
-                to={'/admin-dashboard/reservations'} 
+                value={countReservation.length}
+                to={'/reservation/lists'} 
                 />
 
                 <DashboardCard 
-                icon={WalletIcon}
-                title={'Revenue'}
-                value={'₱ 0'}
-                to={'/admin-dashboard/parking-revenue'} 
+                icon={ChatBubbleOvalLeftIcon}
+                title={'Feedbacks'}
+                value={0}
+                to={'/feedbacks'} 
                 />
                    
             </motion.div>
+
         </div>
     </>
   )

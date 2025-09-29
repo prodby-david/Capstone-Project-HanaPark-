@@ -1,57 +1,97 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import { MapPinIcon, CalendarIcon, ClipboardDocumentListIcon, CheckCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
-import NextButton from '../../buttons/nextbutton';
-import BackButton from '../../buttons/backbutton'
-import { api } from '../../../lib/api';
+import { MapPinIcon, CalendarIcon, CheckCircleIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
+import AdminAPI from '../../../lib/inteceptors/adminInterceptor'
+import UserAPI from '../../../lib/inteceptors/userInterceptor'
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import Step1 from '../../reservation/step1/step1';
+import Step2 from '../../reservation/step2/step2';
+import Step3 from '../../reservation/step3/step3';
+import Step4 from '../../reservation/step4/step4';
+import Step5 from '../../reservation/step5/step5';
 
 const UserReservationForm = () => {
 
-    const [step, setStep] = useState(1);
     const { slotId } = useParams();
+    const [step, setStep] = useState(1);
     const [slot, setSlot] = useState(null); 
-    const [time, setTime] = useState('');
-    const [date, setDate] = useState('');
+    
+    const [reservationDate, setReservationDate] = useState('');
+    const [reservationTime, setReservationTime] = useState('');
+    const [arrivalTime, setArrivalTime] = useState(''); 
+
     const [trackRadioBox, setTrackRadioBox] = useState(false);
+    const navigate  = useNavigate();
+    const [reservationResult, setReservationResult] = useState(null);
+
+    const [modalOpen, setModalOpen] = useState(false);
+
+    {/* State use to hold all reservation form data */}
+    const [reservationData, setReservationData] = useState({
+        slotId,
+        slotCode: '',
+        slotPrice: 0,
+        slotType: '',
+        reservationDate: '',
+        reservationTime: '',
+        plateNumber: '',
+        vehicleType: ''
+    })
+
+    {/* State use to get value in the vehicle input */}
     const [userVehicle, setUserVehicle] = useState({
         vehicleNumber: '',
         vehicleType: ''
     });
+
+    {/* State use to hold user regstered vehicle into their account */}
     const [registeredVehicle, setRegisteredVehicle] = useState({
         vehicleNumber: '',
         vehicleType: ''
     });
 
-
-    
     useEffect(() => {
+        const now = new Date();
 
-        const updateClock = () => {
-
-            const now = new Date();
-
-            const timeString = now.toLocaleTimeString();  
-
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1);
-            const day = String(now.getDate());
-            const dateString = `${month}-${day}-${year}`;
-                setTime(timeString);
-                setDate(dateString);
+        const dateOptions = {
+        timeZone: "Asia/Manila",
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
         };
 
-        updateClock(); 
-        const interval = setInterval(updateClock, 1000); 
+        setReservationDate(new Intl.DateTimeFormat("en-PH", dateOptions).format(
+        now
+        ));
 
-        return () => clearInterval(interval);
+        const timeOptions = {
+        timeZone: "Asia/Manila",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+        };
+
+        setReservationTime(new Intl.DateTimeFormat("en-PH", timeOptions).format(
+        now
+        ));
+
     }, []);
 
 
     useEffect(() => {
         const fetchSlots = async () => {
             try{
-                const res = await api.get(`http://localhost:4100/admin/slots/${slotId}`);
+                const res = await UserAPI.get(`/slots/${slotId}`);
                 setSlot(res.data);
+
+                setReservationData(prev => ({
+                    ...prev,
+                    slotCode: res.data.slotNumber || res.data.slotCode || '',
+                    slotPrice: res.data.price || res.data.slotPrice || 0,
+                    slotType: res.data.type || res.data.slotType || ''
+                }));
             }
             catch(err){
                 console.error('Error fetching slots', err);
@@ -64,20 +104,38 @@ const UserReservationForm = () => {
     useEffect(() => {
         const getRegisteredVehicle = async () => {
             try {
-                const registeredVehicle = await api.get('/user-vehicle');
-                const firstVehicle = registeredVehicle.data.vehicles?.[0]; 
-      
-                setRegisteredVehicle({
-                    vehicleNumber: firstVehicle?.plateNumber || '',
-                    vehicleType: firstVehicle?.vehicleType || ''
-                });
-            } 
-            catch(err) {
-                console.error('Error fetching user vehicles', err);
+            const res = await UserAPI.get('/user-vehicle'); 
+            const vehicle = res.data.vehicle; 
+
+            setRegisteredVehicle({
+                vehicleNumber: vehicle?.plateNumber || '',
+                vehicleType: vehicle?.vehicleType || ''
+            });
+            } catch (err) {
+            console.error('Error fetching user vehicle', err);
             }
-        }
+        };
         getRegisteredVehicle();
     }, []);
+
+
+    useEffect(() => {
+        setReservationData(prev => ({
+            ...prev,
+            reservationDate,
+            reservationTime, 
+            arrivalTime,
+        }));
+    }, [reservationDate, reservationTime, arrivalTime]);
+
+
+    useEffect(() => {
+        setReservationData(prev => ({
+            ...prev,
+            plateNumber: userVehicle.vehicleNumber,
+            vehicleType: userVehicle.vehicleType
+        }));
+    }, [userVehicle]);
 
     const handleRadioBox = (e) => {
         const checked = e.target.checked;
@@ -96,9 +154,7 @@ const UserReservationForm = () => {
         }
     };
 
-
-        const nextStep = (e) => {
-            e.preventDefault();
+        const nextStep = () => {
             setStep(prevStep => prevStep + 1);
         }
 
@@ -112,15 +168,42 @@ const UserReservationForm = () => {
             setUserVehicle(prev => ({ ...prev, [name]: value }));
         }
 
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            try {
+                const res = await UserAPI.post(`/reservation-form/${slotId}`, reservationData);
+                setReservationResult(res.data);
+
+                Swal.fire({
+                    title: 'Slot reservation success!',
+                    text: 'Press OK to continue.',
+                    icon: 'success',
+                    showConfirmButton: true,
+                })
+
+                nextStep();
+                
+            } catch (err) {
+                Swal.fire({
+                    title: 'Reservation failed',
+                    text: err.response.data.message,
+                    icon: 'error',
+                    confirmButtonText: 'Check reservations'
+                })
+            }
+            
+        }
 
   return (
     <>
 
-       <div className='flex items-center justify-center gap-x-10 min-h-screen px-5'>
+       <div className='flex items-center justify-center gap-x-5 min-h-screen px-5'>
    
             {/* Reservation Steps Sidebar */}
 
-            <div className='hidden md:flex flex-col items-start gap-y-5 p-10 bg-white shadow-md rounded-lg text-center w-full max-w-[300px] min-h-[400px]'>
+            {step !== 5 && (
+                <div className={`hidden md:flex flex-col items-start gap-y-5 p-10 bg-white shadow-md rounded-lg text-center w-full max-w-[300px] min-h-[400px]`}>
 
                 <h2 className='text-xl text-color font-semibold'>Reserve a spot</h2>
 
@@ -140,11 +223,12 @@ const UserReservationForm = () => {
 
                     <li className={`${step === 3 ? 'text-color-3' : 'text-color-2'} flex items-center mb-3`}>
                         <div className={`${step === 3 ? 'block' : 'hidden'} h-6 w-1 bg-color-3 mr-2`}></div>
-                        <CalendarIcon className='w-6 h-6 mr-2' />
+                        <ClipboardDocumentListIcon className='w-6 h-6 mr-2' />
                         <p className='font-semibold'>Vehicle Information</p>
                     </li>
 
-                    <li className='flex items-center mb-3 text-color-2'>
+                    <li className={`${step === 4 ? 'text-color-3' : 'text-color-2'} flex items-center mb-3`}>
+                        <div className={`${step === 4 ? 'block' : 'hidden'} h-6 w-1 bg-color-3 mr-2`}></div>
                         <CheckCircleIcon className='w-6 h-6 mr-2' />
                         <p className='font-semibold'>Confirmation</p>
                     </li>
@@ -152,181 +236,66 @@ const UserReservationForm = () => {
                 </ul>
  
             </div>
+            )}
 
             {/* Reservation Form */}
 
-             <div className='flex flex-col items-center justify-center gap-y-5 py-10 bg-white shadow-md rounded-lg text-center w-full max-w-4xl min-h-[400px]'>
+             <div className='flex flex-col items-center justify-center gap-y-5 md:p-0 bg-white shadow-md rounded-lg text-center w-full max-w-2xl min-h-[400px]'>
 
                 <form className='w-full'>
 
-                    {/* Step 1: Site Location */}
-                    {step === 1 && (
-                        <div> 
-                           {slot ? (
-                                <div className='flex flex-col items-center gap-5'>
+                    {/* Step 1: Spot Information */}
 
-                                    <div className='flex flex-col items-baseline w-full max-w-xs gap-1'>
+                    { step === 1 &&
+                        <Step1 
+                        slot={slot} 
+                        nextStep={nextStep} 
+                        /> 
+                    }
 
-                                        <label 
-                                        htmlFor="slotNumber"
-                                        className='font-semibold text-color'>
-                                            Selected Slot Code
-                                        </label>
+                    {/* Step 2: Date and Time */}
 
-                                        <input 
-                                        type="text"
-                                        id='slotNumber'
-                                        readOnly
-                                        value={slot.slotNumber}
-                                        className='w-full outline-0 border p-2 border-color-2 rounded-md text-sm text-color-2 cursor-default' 
-                                        />
-                                        
-                                    </div>
+                    {step === 2 && <Step2 
+                        date={reservationDate}
+                        reservationTime={reservationTime}
+                        arrivalTime={arrivalTime}
+                        setArrivalTime={setArrivalTime}
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                    />
+                    }
 
-                                     <div className='flex flex-col items-baseline w-full max-w-xs gap-1'>
+                    {/* Vehicle Information Form */}
 
-                                        <label 
-                                        htmlFor="slotType"
-                                        className='font-semibold text-color '>
-                                            Parking Slot Type
-                                        </label>
-
-                                        <input 
-                                        type="text"
-                                        id='slotType'
-                                        readOnly
-                                        value= {slot.slotType}
-                                        className='w-full outline-0 border p-2 border-color-2 rounded-md text-sm text-color-2 cursor-default' 
-                                        />
-                                        
-                                    </div>
-
-                                    <div className='flex items-center justify-center gap-x-2'>
-                                        <NextButton onClick={nextStep}/>
-                                    </div>
-                                    
-
-                                </div>
-                            ) : (
-                                <p>Loading slot info...</p>
-                            )}
-
-                             
-                        </div>
+                   {step === 3 && (
+                        <Step3
+                        userVehicle={userVehicle}
+                        registeredVehicle={registeredVehicle}
+                        trackRadioBox={trackRadioBox}
+                        handleChange={handleChange}
+                        handleRadioBox={handleRadioBox}
+                        prevStep={prevStep}
+                        nextStep={nextStep}
+                        slot={slot}
+                        />
                     )}
 
-                    {step === 2 && (
-                        <div className='flex flex-col justify-center items-center relative'>
-
-                            <div className='font-semibold absolute -top-10 right-15'>
-                                 <p className='text-color'><span className='text-color-2'>Time:</span>      {time}
-                                 </p>
-                            </div>
-
-                            <div className='flex flex-col gap-y-2 mt-5'>
-                                <label htmlFor="date" className='font-semibold text-color'>Reservation Date</label>
-                                <input 
-                                type="text" 
-                                name="date" 
-                                value={date}
-                                readOnly
-                                id="date" 
-                                className='border p-2 rounded-md w-full max-w-sm text-center font-semibold' 
-                                />
-                            </div>
-
-                            <div className='flex flex-col gap-y-2 mt-5'>
-                                <label htmlFor="time" className='font-semibold text-color'>Arrival Time</label>
-                                <input 
-                                type="time" 
-                                name="time" 
-                                id="time" 
-                                className='border p-2 rounded-md w-full max-w-sm cursor-pointer' 
-                                />
-                            </div>
-
-                            <div className='flex gap-2 items-center justify-center mt-5'>
-                                <BackButton onClick={prevStep}/>
-                                <NextButton onClick={nextStep}/>
-                            </div>
-                           
-                        </div>
+                    {step === 4 && (
+                        <Step4  
+                        {...reservationData} 
+                        prevStep={prevStep} 
+                        nextStep={nextStep}
+                        submit={handleSubmit}
+                        />
                     )}
-                    {step === 3 && (
-                        <div className='flex flex-col items-center gap-3'>
 
-                            <h2 className='text-lg font-semibold text-color'>Vehicle Information</h2>
-
-                            <div className='flex flex-col items-baseline w-full max-w-xs gap-1'>
-
-                                <label 
-                                htmlFor="vehicleNumber" 
-                                className='font-semibold text-color'>Vehicle Plate Number
-                                </label>
-
-                                <input 
-                                type="text" 
-                                id="vehicleNumber" 
-                                name="vehicleNumber"
-                                value={userVehicle.vehicleNumber}
-                                disabled={trackRadioBox}
-                                onChange={handleChange}
-                                className='w-full outline-0 border p-2 border-color-2 rounded-md text-sm text-color-2' 
-                                />
-                            </div>
-
-                            <div className='flex flex-col items-baseline w-full max-w-xs gap-1'>
-
-                                <label 
-                                htmlFor="vehicleType" 
-                                className='font-semibold text-color'>
-                                    Vehicle Type
-                                </label>
-
-                                <input 
-                                type="text" 
-                                id="vehicleType" 
-                                name="vehicleType"
-                                onChange={handleChange}
-                                disabled={trackRadioBox}
-                                value={userVehicle.vehicleType}
-                                className='w-full outline-0 border p-2 border-color-2 rounded-md text-sm text-color-2' 
-                                />
-
-                                <div className='flex items-center gap-x-1'>
-
-                                    <input type="checkbox"
-                                    id='RegVehicle'
-                                    name='useRegisteredVehicleCheckbox'
-                                    onChange={handleRadioBox}
-                                    className='cursor-pointer'
-                                    />
-
-                                    <label 
-                                        htmlFor="RegVehicle" 
-                                        className='text-sm'
-                                        >Use your registered vehicle in to your account
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-                            <div className='flex flex-col gap-2  mt-5'>
-
-                                <h2 
-                                    className='text-xs text-color-3 w-sm'><span className='text-color font-semibold'>NOTE:</span> If you are using another vehicle, please fill out the form. If not, just click the checkbox then proceed.
-                                </h2>
-
-                                <div className='flex items-center justify-center gap-x-3 mt-2'>
-                                    <BackButton onClick={prevStep}/>
-                                    <NextButton onClick={nextStep}/>
-                                </div>
-                                
-                            </div>
-
-                        </div>
+                     {step === 5 && (
+                        <Step5 
+                        reservationResult={reservationResult}
+                        navigate={navigate} 
+                        />
                     )}
+
                    
                 </form>
                 

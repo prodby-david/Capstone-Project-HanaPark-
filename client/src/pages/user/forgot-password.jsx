@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { publicApi } from '../../lib/api'; 
+import Loader from '../../components/loaders/loader';
 
 const ForgotPassword = () => {
 
     const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleChange = (e) => {
         setEmail(e.target.value);
@@ -14,7 +16,7 @@ const ForgotPassword = () => {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-
+        setIsLoading(true)
         try{
             const res = await publicApi.post('/reset-password', {email});
             Swal.fire('Success', res.data.message, 'success');
@@ -23,6 +25,8 @@ const ForgotPassword = () => {
         } catch(err){
             Swal.fire('Reset Failed', err.response?.data?.message || 'Something went wrong', 'error');
             setEmail('')
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -81,9 +85,9 @@ const ForgotPassword = () => {
 
         </div>
 
-       
-
     </div>
+
+    {isLoading ? <Loader text='Sending instruction on provided email...'/> : null}
 
    </>
   )

@@ -52,7 +52,7 @@ const [showPassword, setShowPassword] = useState(false);
 
     try{
 
-      const res = await UserAPI.post('http://localhost:4100/sign-in', userData);
+      const res = await UserAPI.post('/sign-in', userData);
       
       if(res.data.success){
         Swal.fire({

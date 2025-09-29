@@ -72,7 +72,7 @@ const UserList = () => {
         }).then(async (result) => {
             if(result.isConfirmed){
                 try{
-                  const res = await AdminAPI.patch(`http://localhost:4100/admin/archive/${id}`);
+                  const res = await AdminAPI.patch(`/admin/archive/${id}`);
                   Swal.fire({
                   title: 'User Archived',
                   text: "User archived successfully.",

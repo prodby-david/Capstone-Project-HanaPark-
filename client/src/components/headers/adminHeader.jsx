@@ -42,7 +42,7 @@ const AdminHeader = () => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Confirm',
           }).then(async () => {
-            await api.post('http://localhost:4100/admin/logout', {});
+            await api.post('/admin/logout', {});
             Logout();
             navigate('/admin/passcode');
           });

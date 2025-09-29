@@ -646,7 +646,6 @@ const handleChange = (e) => {
                                     <option value="" disabled></option>
                                     <option value="Manual">Manual</option>
                                     <option value="Automatic">Automatic</option>
-                                    <option value="Hybrid">Hybrid</option>
                                 </select>
 
                             </div>

@@ -28,7 +28,7 @@ const PasswordPrompt = () => {
 
       try{
 
-          const res = await AdminAPI.post('h/admin/passcode-verification', { password });
+          const res = await AdminAPI.post('/admin/passcode-verification', { password });
 
           if(res.data.success){
             Swal.fire({

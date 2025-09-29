@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Loader from '../../loaders/loader';
+import { api } from '../../../lib/api';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -26,7 +27,7 @@ const ResetPassword = () => {
     setIsLoading(true)
 
     try {
-      const response = await axios.post(`http://localhost:4100/reset-password/${token}`, {
+      const response = await api.post(`/reset-password/${token}`, {
         password,
       });
 

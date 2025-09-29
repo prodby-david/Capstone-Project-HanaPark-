@@ -193,18 +193,18 @@ const Recents = () => {
 
         {/* QR Code Modal */}
        {selectedReservation && (
-  <div className="fixed inset-0 flex items-center justify-center bg-white/50 z-50">
-    <div className="bg-white rounded-lg shadow-lg p-6 relative max-w-md w-full">
-      <button
-        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-        onClick={() => setSelectedReservation(null)}
-      >
-        <XMarkIcon className="w-6 h-6 cursor-pointer" />
-      </button>
-      <Step5 reservationResult={selectedReservation} navigate={navigate} />
-    </div>
-  </div>
-)}
+          <div className="fixed inset-0 flex items-center justify-center bg-white/50 z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 relative max-w-md w-full">
+              <button
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+                onClick={() => setSelectedReservation(null)}
+              >
+                <XMarkIcon className="w-6 h-6 cursor-pointer" />
+              </button>
+              <Step5 reservationResult={selectedReservation} navigate={navigate} />
+            </div>
+          </div>
+        )}
 
         {/* Reservation Details Modal */}
         {selectedReservation && (

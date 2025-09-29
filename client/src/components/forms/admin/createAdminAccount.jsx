@@ -38,7 +38,7 @@ const CreateAdminAccount = () => {
 
         try{
 
-            const res = await api.post('http://localhost:4100/admin/account', adminData);
+            const res = await api.post('/admin/account', adminData);
 
             if(res.data.success){
                Swal.fire({

@@ -14,19 +14,23 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app); 
 
+const allowedOrigins = [
+  'https://capstone-project-hana-park.vercel.app', 
+  'http://localhost:5173', 
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 const io = new Server(server, {
   cors: {
-    origin: 'https://capstone-project-hana-park.vercel.app',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   },
 });
-
-
-app.use(cors({
-    origin: 'https://capstone-project-hana-park.vercel.app',
-    credentials: true, 
-}));
 
   io.on('connection', (socket) => {
   console.log('A client connected:', socket.id);

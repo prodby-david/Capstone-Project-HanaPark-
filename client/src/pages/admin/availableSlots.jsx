@@ -61,7 +61,7 @@ const AvailableSlots = () => {
     const handleUpdate = async () => {
       
       try {
-        await api.put(`http://localhost:4100/admin/slots/${selectedSlot._id}`, {
+        await api.put(`/admin/slots/${selectedSlot._id}`, {
           slotStatus: editedStatus,
           slotDescription: editedDescription,
         });
@@ -87,7 +87,7 @@ const AvailableSlots = () => {
             if(result.isConfirmed){
               setIsLoading(true);
                 try{
-                  await api.delete(`http://localhost:4100/admin/slots/${id}`);
+                  await api.delete(`/admin/slots/${id}`);
                   Swal.fire({
                   title: 'Slot Removed',
                   text: "Slot deleted successfully.",
@@ -114,8 +114,7 @@ const AvailableSlots = () => {
     const fetchSlots = async (user = 'All', status = 'All') => {
       setIsLoading(true);
     try {
-    let url = 'http://localhost:4100/admin/slots';
-
+    let url = `${import.meta.env.VITE_API_URL}/admin/slots`;
 
     const query = [];
     if (user !== 'All') query.push(`user=${user}`);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { publicApi } from '../../lib/api'; 
+import { api } from '../../lib/api'; 
 import Loader from '../../components/loaders/loader';
 
 const ForgotPassword = () => {
@@ -18,7 +18,7 @@ const ForgotPassword = () => {
         e.preventDefault();
         setIsLoading(true)
         try{
-            const res = await publicApi.post('/reset-password', {email});
+            const res = await api.post('/reset-password', {email});
             Swal.fire('Success', res.data.message, 'success');
             setEmail('');
 

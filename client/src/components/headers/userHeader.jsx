@@ -34,7 +34,7 @@ const handleLogout = () => {
             icon: 'success',
             confirmButtonText: 'OK'
             }).then(async() => {
-                await api.post('http://localhost:4100/logout', {});
+                await api.post('/logout', {});
                 logout();
             });
         }

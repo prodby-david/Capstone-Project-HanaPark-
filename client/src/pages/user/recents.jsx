@@ -115,6 +115,22 @@ const Recents = () => {
         {loading && <Loader text="Loading reservations..." />}
 
         {/* Reservation Table */}
+        {/* Status Title */}
+        <div className="flex items-center gap-x-2 mb-3">
+          <div
+            className={`w-3 h-3 rounded-full ${
+              selectedStatus === 'Pending'
+                ? 'bg-yellow-400'
+                : selectedStatus === 'Active'
+                ? 'bg-blue-500'
+                : selectedStatus === 'Completed'
+                ? 'bg-green-500'
+                : 'bg-red-500'
+            }`}
+          ></div>
+          <h2 className="text-lg font-semibold text-color-3">{selectedStatus} Reservations</h2>
+        </div>
+
         <div className="overflow-x-auto">
           <div className="min-w-[900px] flex flex-col gap-3">
             <div className="grid grid-cols-8 w-full font-semibold text-color-3 text-center bg-white p-5 rounded-md sticky top-0 z-10">

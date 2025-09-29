@@ -40,7 +40,7 @@ const AdminSignInForm = () => {
 
       setLoading(true);
 
-      const res = await AdminAPI.post('http://localhost:4100/admin/sign-in', adminData);
+      const res = await AdminAPI.post('/admin/sign-in', adminData);
       
       if(res.data.success){
         Login({ verified: true });

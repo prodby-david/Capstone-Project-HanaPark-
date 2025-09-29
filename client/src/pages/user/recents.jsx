@@ -12,9 +12,9 @@ const Recents = () => {
   const [reservations, setReservations] = useState([])
   const [latestReservation, setLatestReservation] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState('Pending')
-  const [showQR, setShowQR] = useState(false)
   const [loading, setLoading] = useState(false)
   const [selectedReservation, setSelectedReservation] = useState(null)
+  const [showQRReservation, setShowQRReservation] = useState(null)
   const [counts, setCounts] = useState({ Pending: 3, Active: 3, Completed: 3, Cancelled: 3 })
   const increment = 3
   const navigate = useNavigate()
@@ -114,7 +114,6 @@ const Recents = () => {
         {/* Loader */}
         {loading && <Loader text="Loading reservations..." />}
 
-        {/* Reservation Table */}
         {/* Status Title */}
         <div className="flex items-center gap-x-2 mb-3">
           <div
@@ -132,7 +131,6 @@ const Recents = () => {
         </div>
 
         <div className="overflow-x-auto">
-          
           <div className="min-w-[900px] flex flex-col gap-3">
             <div className="grid grid-cols-8 w-full font-semibold text-color-3 text-center bg-white p-5 rounded-md sticky top-0 z-10">
               <h2>Reservation Code</h2>
@@ -162,12 +160,22 @@ const Recents = () => {
                   <p>{res.vehicleType}</p>
                   <p>{res.plateNumber}</p>
                   <div className="flex justify-center gap-2">
+                    {/* Cancel for Pending */}
                     {selectedStatus === 'Pending' && (
                       <button onClick={() => handleCancelReservation(res._id)}>
                         <XMarkIcon className="w-5 h-5 bg-red-500 text-white rounded-md cursor-pointer opacity-75 hover:opacity-100" title="Cancel Reservation"/>
                       </button>
                     )}
-                    <button onClick={() => setSelectedReservation(res)}>
+
+                    {/* QR Button for Pending & Active */}
+                    {(selectedStatus === 'Pending' || selectedStatus === 'Active') && (
+                      <button onClick={() => setShowQRReservation(res)} title="View QR Code">
+                        <QrCodeIcon className="w-5 h-5 cursor-pointer text-blue-500 hover:text-blue-700"/>
+                      </button>
+                    )}
+
+                    {/* Details Button */}
+                    <button onClick={() => setSelectedReservation(res)} title="View Details">
                       <ChevronRightIcon className="w-5 h-5 cursor-pointer" />
                     </button>
                   </div>
@@ -191,22 +199,22 @@ const Recents = () => {
           </div>
         </div>
 
-        {/* QR Code Modal */}
-       {selectedReservation && (
+        {/* QR Modal */}
+        {showQRReservation && (
           <div className="fixed inset-0 flex items-center justify-center bg-white/50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-6 relative max-w-md w-full">
               <button
                 className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-                onClick={() => setSelectedReservation(null)}
+                onClick={() => setShowQRReservation(null)}
               >
                 <XMarkIcon className="w-6 h-6 cursor-pointer" />
               </button>
-              <Step5 reservationResult={selectedReservation} navigate={navigate} />
+              <Step5 reservationResult={showQRReservation} navigate={navigate} />
             </div>
           </div>
         )}
 
-        {/* Reservation Details Modal */}
+        {/* Details Modal */}
         {selectedReservation && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full relative">

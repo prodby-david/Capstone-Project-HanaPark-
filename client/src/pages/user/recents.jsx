@@ -119,7 +119,7 @@ const Recents = () => {
 
 
         {/* Tabs */}
-        <div className="flex gap-3 justify-center mb-5">
+        <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
           {statusTabs.map(status => (
             <button
               key={status}

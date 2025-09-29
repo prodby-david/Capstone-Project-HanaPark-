@@ -217,7 +217,7 @@ const AccountSettings = () => {
         <div className='flex justify-around p-5 gap-x-10 w-full bg-white max-w-4xl shadow-xs shadow-black'>
           
           {/*--------------- Setting Sidebar --------------- */}
-          <div className='flex flex-col gap-y-5 sticky top-20 self-start'>
+          <div className='hidden md:flex flex-col gap-y-5 sticky top-20 self-start'>
 
             <h2 className='text-lg font-semibold text-color'>Settings</h2>
 
@@ -253,7 +253,7 @@ const AccountSettings = () => {
           
 
           {/* --------------- Vertical Divider --------------- */}
-          <div className='w-px bg-gray-300'></div>
+          <div className='w-px bg-gray-300 hidden md:block'></div>
 
           {/* --------------- Account Settings --------------- */}
           <div className='w-full max-w-md h-[500px]'>

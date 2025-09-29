@@ -25,7 +25,7 @@ const AdminDashboard = () => {
    useEffect(() => {
     const fetchSlots = async () => {
       try {
-        const res = await AdminAPI.get('http://localhost:4100/admin/slots', {withCredentials: true});
+        const res = await AdminAPI.get('/admin/slots', {withCredentials: true});
         setShowSlots(res.data);
       } catch (err) {
         console.error('Error fetching slots:', err);
@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const countUsers = async () => {
       try {
-        const res = await AdminAPI.get('http://localhost:4100/admin/users', {withCredentials: true});
+        const res = await AdminAPI.get('/admin/users', {withCredentials: true});
         const activeUsers = res.data.filter(user => user.status === 'Active');
         setCountUser(activeUsers);
       } catch (err) {

@@ -269,6 +269,14 @@ const handleViewLess = (section) => {
           </div>
 
           <div className="flex justify-end gap-2">
+          {showCompleted < completeReservation.length && (
+            <button
+              onClick={() => handleViewMore('Completed')}
+              className="text-sm underline text-color-2 hover:text-color-3 flex items-center gap-x-1 cursor-pointer"
+            >
+              View More <ArrowUpRightIcon className="w-4 h-4" />
+            </button>
+          )}
           {showCompleted > increment && (
             <button
               onClick={() => handleViewLess('Completed')}

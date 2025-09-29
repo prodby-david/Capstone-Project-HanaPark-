@@ -106,6 +106,18 @@ const Recents = () => {
           <p className="text-sm text-color-2">Manage and track all your reservations in one place.</p>
         </div>
 
+        {/* Search Bar */}
+        <div className="flex justify-center mb-5">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, plate number or code"
+            className="px-4 py-2 border rounded-md w-full max-w-md text-color-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+
         {/* Tabs */}
         <div className="flex gap-3 justify-center mb-5">
           {statusTabs.map(status => (

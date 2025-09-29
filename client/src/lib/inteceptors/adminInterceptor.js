@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const AdminAPI = axios.create({
-  baseURL: "http://localhost:4100",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true, 
 });
 

@@ -98,7 +98,7 @@ const handleViewLess = (section) => {
             setPendingReservation(prev => prev.filter(pending => pending._id !== reservationId))
             
           } catch (err) {
-            
+            console.log(err)
           }
         }
     })

@@ -22,7 +22,7 @@ const UserList = () => {
         const fetchUsers = async () => {
           setIsLoading(true);
             try {
-                const res = await api.get('http://localhost:4100/admin/users');
+                const res = await api.get('/admin/users');
                 setUsersList(res.data);
             } catch (err) {
                 console.error(err);

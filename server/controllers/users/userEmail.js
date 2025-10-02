@@ -10,9 +10,24 @@ const UpdateEmail = async (req,res) => {
             return res.status(400).json({message: 'Email is required.'});
         }
 
-        const existingUser = await User.findOne({email: email});
+        
+        const user = await User.findById(userId);
 
-        if(existingUser){
+        if (!user) {
+        return res.status(404).json({ message: "User not found." });
+        }
+
+        if (user.email === email) {
+        return res.status(200).json({
+            message: "No changes made. Email is the same as current.",
+            user,
+            success: true
+        });
+    }
+
+        const existingUser = await User.findOne({ email });
+
+        if(existingUser && existingUser._id.toString() !== userId){
             return res.status(409).json({message: 'Email already used.'});
         }
 

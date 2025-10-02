@@ -117,7 +117,7 @@ const UserList = () => {
             <p>Student ID</p>
             <p>Username</p>
             <p>Email</p>
-            <p>Registered Vehicle</p>
+            <p>Vehicle</p>
             <p>Actions</p>
           </div>
 

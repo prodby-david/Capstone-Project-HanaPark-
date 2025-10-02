@@ -13,7 +13,7 @@ const UserHeader = () => {
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
-  const userId = auth.user?._id.toString();
+  const userId = auth.user?._id;
   useEffect(() => {
   if (!userId) return;
 

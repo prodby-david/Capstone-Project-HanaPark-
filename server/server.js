@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app); 
 
 const allowedOrigins = [
-  'https://hanapark-system.vercel.app', 
+  'https://capstone-project-hana-park.vercel.app',
   'http://localhost:5173', 
 ];
 

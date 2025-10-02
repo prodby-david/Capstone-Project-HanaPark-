@@ -9,13 +9,11 @@ import { socket } from '../../lib/socket'
 
 const UserHeader = () => {
   const { logout, auth } = useAuth(); 
-  const userId = auth.user?._id;
-
   const [isOpen, setIsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
-
+  const userId = auth.user?._id.toString();
   useEffect(() => {
   if (!userId) return;
 

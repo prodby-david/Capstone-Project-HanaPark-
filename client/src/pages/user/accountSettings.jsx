@@ -211,7 +211,17 @@ const AccountSettings = () => {
             </div>
           </div>
 
-          {/* Tabs for mobile */}
+         
+          {/* Divider desktop */}
+          <div className="hidden md:block w-px bg-gray-300"></div>
+
+          {/* Account Settings Content */}
+          <div className="w-full">
+            <h2 className="text-lg font-semibold text-color mb-5 text-center">
+              Account Settings
+            </h2>
+
+             {/* Tabs for mobile */}
           <div className="flex md:hidden justify-around mb-5 gap-2">
             <button
               onClick={() => setActiveSection("profile")}
@@ -233,14 +243,6 @@ const AccountSettings = () => {
             </button>
           </div>
 
-          {/* Divider desktop */}
-          <div className="hidden md:block w-px bg-gray-300"></div>
-
-          {/* Account Settings Content */}
-          <div className="w-full">
-            <h2 className="text-lg font-semibold text-color mb-5 text-center">
-              Account Settings
-            </h2>
 
             {activeSection === 'profile' && (
               <div>

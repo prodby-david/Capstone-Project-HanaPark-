@@ -19,10 +19,11 @@ const UserHeader = () => {
   useEffect(() => {
   if (!userId) return;
 
-  socket.emit("joinUser", userId);
+  socket.emit("joinUser", userId); // must happen after socket connects
 
-  api.get(`/notifications`).then(res => {
-    setNotifications(res.data.notifications || []);
+  socket.on("connect", () => {
+    console.log("Socket connected:", socket.id);
+    socket.emit("joinUser", userId);
   });
 
   const handleNotification = (notif) => {
@@ -36,6 +37,7 @@ const UserHeader = () => {
     socket.off("reservationCancelledByAdmin", handleNotification);
   };
 }, [userId]);
+
 
 
   const toggleMenu = () => setIsOpen(!isOpen);

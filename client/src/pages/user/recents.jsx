@@ -113,7 +113,7 @@ const Recents = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, plate number or code"
-            className="px-4 py-2 border rounded-md w-full max-w-md text-color-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 text-sm border rounded-md w-full max-w-md focus:shadow-md text-color-2"
           />
         </div>
 
@@ -123,7 +123,7 @@ const Recents = () => {
           {statusTabs.map(status => (
             <button
               key={status}
-              className={`px-4 py-2 rounded font-semibold ${
+              className={`px-4 py-2 rounded font-semibold cursor-pointer ${
                 selectedStatus === status
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -135,38 +135,46 @@ const Recents = () => {
           ))}
         </div>
 
-        {/* Loader */}
         {loading && <Loader />}
 
-        {/* Reservation List */}
         <div className="px-5">
           {filteredReservationsByStatus(selectedStatus).length === 0 ? (
-            <div className="text-center text-gray-500 mt-4">
+            <div className="text-center text-gray-500 mt-10">
               No {selectedStatus.toLowerCase()} reservations
             </div>
           ) : (
-            filteredReservationsByStatus(selectedStatus).slice(0, counts[selectedStatus]).map(r => (
-              <div key={r._id} className="grid grid-cols-7 gap-4 items-center w-full text-sm bg-white text-color-2 p-4 mt-2 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold">
-                <div>{r.verificationCode}</div>
-                <div>{r.slotCode}</div>
-                <div>{r.slotId?.slotType}</div>
-                <div>{r.slotId?.slotPrice}</div>
-                <div>{r.vehicleType}</div>
-                <div>{r.plateNumber}</div>
-                <div>
-                  {selectedStatus === 'Pending' && (
-                    <button onClick={() => handleCancelReservation(r._id)}>
-                      <XMarkIcon className="w-6 h-6 cursor-pointer hover:text-red-500" title="Cancel Reservation"/>
-                    </button>
-                  )}
-                  {(selectedStatus === 'Active' || selectedStatus === 'Pending') && latestReservation && r._id === latestReservation._id && (
-                    <button onClick={() => setShowQR(true)}>
-                      <QrCodeIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" title="View QR"/>
-                    </button>
-                  )}
-                </div>
+            <div className="overflow-auto h-80 rounded-lg border border-gray-200">
+              <div className="min-w-[700px]"> 
+                {filteredReservationsByStatus(selectedStatus)
+                  .slice(0, counts[selectedStatus])
+                  .map(r => (
+                    <div 
+                      key={r._id} 
+                      className="grid grid-cols-7 gap-4 items-center text-sm bg-white text-color-2 p-4 mt-2 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"
+                    >
+                      <div className='truncate' title={r.verificationCode}>{r.verificationCode}</div>
+                      <div>{r.slotCode}</div>
+                      <div>{r.slotId?.slotType}</div>
+                      <div>{r.slotId?.slotPrice}</div>
+                      <div>{r.vehicleType}</div>
+                      <div>{r.plateNumber}</div>
+                      <div>
+                        {selectedStatus === 'Pending' && (
+                          <button onClick={() => handleCancelReservation(r._id)}>
+                            <XMarkIcon className="w-6 h-6 cursor-pointer hover:text-red-500" title="Cancel Reservation"/>
+                          </button>
+                        )}
+                        {(selectedStatus === 'Active' || selectedStatus === 'Pending') &&
+                          latestReservation && r._id === latestReservation._id && (
+                            <button onClick={() => setShowQR(true)}>
+                              <QrCodeIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" title="View QR"/>
+                            </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
               </div>
-            ))
+            </div>
           )}
 
           {/* View More/Less */}

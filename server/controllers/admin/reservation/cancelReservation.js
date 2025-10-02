@@ -1,5 +1,8 @@
 import Reservation from '../../../models/reservation.js'
 import Slot from '../../../models/slot.js'
+import Notification from '../../../models/notification.js'
+
+
 
 const cancelReservation = async (req, res) => {
   try {
@@ -24,7 +27,12 @@ const cancelReservation = async (req, res) => {
       .populate('slotId')
       .populate('reservedBy');
 
-    req.io.emit('reservationCancelledByAdmin', populatedReservation);
+      const notif = await Notification.create({
+      userId: populatedReservation.reservedBy._id,
+      message: `Your reservation for slot ${populatedReservation.slotId.slotCode} has been cancelled by admin.`
+      });
+
+    req.io.to(populatedReservation.reservedBy._id.toString()).emit('reservationCancelledByAdmin', notif);
 
     res.status(200).json({ message: 'Reservation cancelled successfully' });
 

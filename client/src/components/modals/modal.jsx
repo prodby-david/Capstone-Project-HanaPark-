@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 const Modal = ({onOpen, onClose, title, message, actions}) => {
     
   return (

@@ -45,6 +45,7 @@ const studentSignInController = async (req,res) => {
             user: {
             firstname: user.firstname,
             userType: user.userType,
+            userId: user._id
             }
         });
 

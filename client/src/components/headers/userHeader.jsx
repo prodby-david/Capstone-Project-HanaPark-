@@ -19,12 +19,8 @@ const UserHeader = () => {
   useEffect(() => {
   if (!userId) return;
 
-  socket.emit("joinUser", userId); // must happen after socket connects
-
-  socket.on("connect", () => {
-    console.log("Socket connected:", socket.id);
-    socket.emit("joinUser", userId);
-  });
+  socket.emit("joinUser", userId);
+  console.log("Joining room:", userId);
 
   const handleNotification = (notif) => {
     console.log("Notification received:", notif);
@@ -37,6 +33,7 @@ const UserHeader = () => {
     socket.off("reservationCancelledByAdmin", handleNotification);
   };
 }, [userId]);
+
 
 
 

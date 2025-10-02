@@ -145,6 +145,10 @@ const AccountSettings = () => {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
+    if (!password.currentpassword || !password.newpassword || !password.confirmnewpassword) {
+      toast.error("Field must not be empty.", toastOptions);
+      return;
+    }
     if (password.newpassword !== password.confirmnewpassword) {
       toast.error("New password and confirm new password doesn't match", toastOptions);
       return;
@@ -180,7 +184,7 @@ const AccountSettings = () => {
     <>
       <UserHeader />
 
-      <div className="flex items-center justify-center px-5 mt-5">
+      <div className="flex items-center justify-center px-5">
         <div className="flex flex-col md:flex-row justify-around p-5 gap-5 w-full bg-white max-w-3xl shadow-xs shadow-black rounded-md min-h-[550px] my-5">
 
           {/* Sidebar for desktop */}

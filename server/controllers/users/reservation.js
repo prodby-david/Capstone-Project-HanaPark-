@@ -60,7 +60,7 @@ const CreateReservation = async(req,res) => {
             const slotVehicleType = normalizeVehicleType(slot.slotType);
 
             if (!userVehicleType || !slotVehicleType) {
-            return res.status(400).json({ message: 'Invalid vehicle type.' });
+            return res.status(400).json({ message: 'Vehicle and Slot Type must be same.' });
             }
 
             if (userVehicleType !== slotVehicleType) {

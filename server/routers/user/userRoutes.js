@@ -17,6 +17,7 @@ import ChangePasswordController from '../../controllers/users/changepassword.js'
 import UpdateEmail from '../../controllers/users/userEmail.js';
 import UpdateVehicleController from '../../controllers/users/updateVehicle.js';
 import GetUserNotification from '../../controllers/users/getNotification.js';
+import { getUserNotifications, markAsRead } from '../../controllers/users/notification.js';
 import FetchOneSlot from '../../controllers/admin/slots/fetchOneSlot.js';
 
 
@@ -40,8 +41,9 @@ UserRouter.get('/profile', authUserToken, GetUserInfo)
 UserRouter.put('/change-password', authUserToken, ChangePasswordController);
 UserRouter.put('/update-email', authUserToken, UpdateEmail)
 UserRouter.put('/vehicle-information', authUserToken, UpdateVehicleController);
-UserRouter.get('/notifications', authUserToken, GetUserNotification);
-
+UserRouter.get('/notifications', GetUserNotification)
+UserRouter.get('/', authUserToken, getUserNotifications)
+UserRouter.patch('/read/:id', authUserToken, markAsRead)
 
 
 

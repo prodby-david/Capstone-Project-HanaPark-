@@ -13,12 +13,25 @@ const UserHeader = () => {
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
-  const userId = auth.user?._id;
   useEffect(() => {
-  if (!userId) return;
+  if (!auth.user?._id) return;
 
+  const userId = auth.user._id.toString();
+
+  // Join room
   socket.emit("joinUser", userId);
   console.log("Joining room:", userId);
+
+  // Fetch existing notifications from DB
+  const fetchNotifications = async () => {
+    try {
+      const res = await api.get('/notifications');
+      setNotifications(res.data.notifications);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  fetchNotifications();
 
   const handleNotification = (notif) => {
     console.log("Notification received:", notif);
@@ -30,9 +43,7 @@ const UserHeader = () => {
   return () => {
     socket.off("reservationCancelledByAdmin", handleNotification);
   };
-}, [userId]);
-
-
+}, [auth.user]);
 
 
   const toggleMenu = () => setIsOpen(!isOpen);

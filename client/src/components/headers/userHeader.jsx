@@ -91,7 +91,7 @@ const UserHeader = () => {
       </Link>
 
       {/* Right-side Actions */}
-      <div className="flex items-center">
+      <div className="flex items-center gap-x-3">
         {/* Notifications */}
         <div className="relative">
           <BellIcon
@@ -124,7 +124,7 @@ const UserHeader = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white shadow-xl z-50 overflow-hidden fixed top-16 right-2 w-[90%] max-w-sm h-[60vh] sm:h-auto sm:w-80 rounded-xl"
+                  className="bg-white shadow-xl z-50 overflow-hidden fixed top-16 right-3 w-[90%] max-w-sm h-[60vh] sm:h-auto sm:w-80 rounded-xl"
                 >
                   <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
                     Notifications

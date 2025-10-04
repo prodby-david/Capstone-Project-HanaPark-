@@ -153,7 +153,7 @@ const UserHeader = () => {
                             key={index}
                             className="p-3 text-sm border-b last:border-none hover:bg-gray-100"
                           >
-                            {notif.message || notif}
+                            {notif.message}
                           </div>
                         ))
                       )}

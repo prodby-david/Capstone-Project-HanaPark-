@@ -124,8 +124,7 @@ const UserHeader = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white shadow-xl z-50 overflow-hidden
-                             fixed top-16 right-2 w-[90%] max-w-sm h-[60vh] sm:h-auto sm:w-80 rounded-xl"
+                  className="bg-white shadow-xl z-50 overflow-hidden fixed top-16 right-2 w-[90%] max-w-sm h-[60vh] sm:h-auto sm:w-80 rounded-xl"
                 >
                   <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
                     Notifications
@@ -138,7 +137,7 @@ const UserHeader = () => {
                       notifications.map((notif) => (
                         <div
                           key={notif._id}
-                          className={`p-4 text-sm border-b last:border-none hover:bg-gray-50 transition ${
+                          className={`p-4 text-sm border-b border-color-2 last:border-none hover:bg-gray-50 transition ${
                             !notif.read ? "bg-blue-50" : "bg-white"
                           }`}
                         >

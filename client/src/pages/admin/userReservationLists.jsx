@@ -238,9 +238,6 @@ const UserReservationLists = () => {
                             <button onClick={() => handleComplete(res._id)}>
                               <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" />
                             </button>
-                            <button onClick={() => handleCancelAdminReservation(res._id)}>
-                              <XCircleIcon className="w-6 h-6 cursor-pointer hover:text-red-500" />
-                            </button>
                           </div>
                         )}
                       </div>

@@ -41,8 +41,7 @@ UserRouter.get('/profile', authUserToken, GetUserInfo)
 UserRouter.put('/change-password', authUserToken, ChangePasswordController);
 UserRouter.put('/update-email', authUserToken, UpdateEmail)
 UserRouter.put('/vehicle-information', authUserToken, UpdateVehicleController);
-UserRouter.get('/notifications', GetUserNotification)
-UserRouter.get('/', authUserToken, getUserNotifications)
+UserRouter.get('/notifications', authUserToken, getUserNotifications)
 UserRouter.patch('/read/:id', authUserToken, markAsRead)
 
 

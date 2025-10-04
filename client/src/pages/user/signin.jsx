@@ -63,6 +63,7 @@ const [showPassword, setShowPassword] = useState(false);
           confirmButtonText: 'Confirm'
         }).then(() => {
           setAuth({ user: { userId: res.data.userId } });
+          console.log(res.data.userId)
           navigate('/dashboard')
         });
 

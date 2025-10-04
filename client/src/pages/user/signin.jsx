@@ -62,8 +62,12 @@ const [showPassword, setShowPassword] = useState(false);
           confirmButtonColor: '#00509e',
           confirmButtonText: 'Confirm'
         }).then(() => {
-          setAuth({ user: { userId: res.data.userId } });
-          console.log(res.data.userId)
+          const userId = res.data.user.userId;  
+
+          setAuth({ user: { userId } });
+          console.log("UserId after login:", userId);
+
+          socket.emit("joinUser", userId);
           navigate('/dashboard')
         });
 

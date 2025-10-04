@@ -35,7 +35,7 @@ const Recents = () => {
         // Flatten all into one reservations array with status
         const allReservations = [
           ...res.data.pendingReservation.map(r => ({ ...r, status: 'Pending' })),
-          ...res.data.activeReservation.map(r => ({ ...r, status: 'Active' })),
+          ...res.data.activeReservation.map(r => ({ ...r, status: 'Reserved' })),
           ...res.data.completeReservation.map(r => ({ ...r, status: 'Completed' })),
           ...res.data.cancelledReservation.map(r => ({ ...r, status: 'Cancelled' }))
         ]
@@ -100,7 +100,7 @@ const Recents = () => {
   const handleViewMore = (status) => setCounts(prev => ({ ...prev, [status]: filteredReservationsByStatus(status).length }))
   const handleViewLess = (status) => setCounts(prev => ({ ...prev, [status]: increment }))
 
-  const statusTabs = ['Pending', 'Active', 'Completed', 'Cancelled']
+  const statusTabs = ['Pending', 'Reserved', 'Completed', 'Cancelled']
 
   return (
     <>

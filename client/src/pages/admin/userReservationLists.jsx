@@ -231,7 +231,7 @@ const UserReservationLists = () => {
                     >
                       <div>{res.reservedBy ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}` : "Deleted User"}</div>
                       <div>{res.slotCode}</div>
-                      <div>{res.slotType}</div>
+                      <div>{res.slotId?.slotType}</div>
                       <div>{res.slotPrice}</div>
                       <div>{res.vehicleType}</div>
                       <div>{res.plateNumber}</div>

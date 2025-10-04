@@ -14,11 +14,7 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app); 
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://capstone-project-hana-park.vercel.app'
-];
-
+const allowedOrigins = 'https://capstone-project-hana-park.vercel.app'
 
 app.use(cors({
   origin: allowedOrigins,

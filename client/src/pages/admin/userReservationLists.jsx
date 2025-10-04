@@ -5,7 +5,7 @@ import SearchBar from '../../components/search/search'
 import QRScanner from '../../lib/qrscanner'
 import { toast } from 'react-toastify'
 import toastOptions from '../../lib/toastConfig'
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon, BellIcon } from '@heroicons/react/24/outline'
 import Swal from 'sweetalert2'
 import { socket } from '../../lib/socket'
 import Loader from '../../components/loaders/loader'
@@ -21,9 +21,11 @@ const UserReservationLists = () => {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [notifications, setNotifications] = useState([])   // 🔔 store notifications
+  const [showNotifications, setShowNotifications] = useState(false)
   const increment = 3
 
-  // Socket listeners
+  // --- SOCKET LISTENERS ---
   useEffect(() => {
     socket.on('reservationCreated', (newReservation) => {
       setReservations(prev => {
@@ -38,13 +40,35 @@ const UserReservationLists = () => {
       )
     })
 
+    socket.on('reservationApproved', (approvedReservation) => {
+      setReservations(prev =>
+        prev.map(r => (r._id === approvedReservation._id ? approvedReservation : r))
+      )
+    })
+
+    socket.on('reservationUpdated', (updatedReservation) => {
+      setReservations(prev =>
+        prev.map(r => (r._id === updatedReservation._id ? updatedReservation : r))
+      )
+    })
+
+    // 🔔 Listen for new notifications
+    socket.on('newNotification', (notif) => {
+      console.log("📩 New notification received:", notif)
+      setNotifications(prev => [notif, ...prev])
+      toast.info(notif.message, toastOptions)
+    })
+
     return () => {
       socket.off('reservationCreated')
       socket.off('reservationCancelled')
+      socket.off('reservationApproved')
+      socket.off('reservationUpdated')
+      socket.off('newNotification')
     }
   }, [])
 
-  // Fetch reservations
+  // --- FETCH RESERVATIONS ---
   const fetchReservations = async () => {
     setIsLoading(true)
     try {
@@ -61,7 +85,7 @@ const UserReservationLists = () => {
     fetchReservations()
   }, [])
 
-  // Handle Approve
+  // --- HANDLE APPROVE ---
   const handleApprove = async (id) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -87,7 +111,7 @@ const UserReservationLists = () => {
     })
   }
 
-  // Handle Complete
+  // --- HANDLE COMPLETE ---
   const handleComplete = async (id) => {
     Swal.fire({
       title: 'Mark as Completed?',
@@ -110,7 +134,7 @@ const UserReservationLists = () => {
     })
   }
 
-  // Handle Cancel
+  // --- HANDLE CANCEL ---
   const handleCancelAdminReservation = async (reservationId) => {
     Swal.fire({
       title: 'Cancel Reservation?',
@@ -133,7 +157,7 @@ const UserReservationLists = () => {
     })
   }
 
-  // Handle QR Scan
+  // --- HANDLE QR SCAN ---
   const handleQRScan = async (scannedText) => {
     const verificationCode = scannedText.trim().toLowerCase()
     try {
@@ -145,7 +169,7 @@ const UserReservationLists = () => {
     }
   }
 
-  // Filters
+  // --- FILTERING ---
   const filteredReservations = reservations.filter(res => {
     const query = searchQuery.toLowerCase()
     const reservedByName = res.reservedBy ? `${res.reservedBy.lastname} ${res.reservedBy.firstname}`.toLowerCase() : ''
@@ -171,6 +195,37 @@ const UserReservationLists = () => {
       <AdminHeader />
 
       <div className="py-5 px-5">
+        {/* 🔔 Notification Bell */}
+        <div className="flex justify-end mb-4">
+          <button
+            className="relative"
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            <BellIcon className="w-7 h-7 text-gray-600 hover:text-blue-600" />
+            {notifications.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-2">
+                {notifications.length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* 🔔 Notification Dropdown */}
+        {showNotifications && (
+          <div className="absolute right-10 mt-2 w-80 bg-white border shadow-lg rounded-lg z-50 max-h-80 overflow-auto">
+            {notifications.length === 0 ? (
+              <div className="p-4 text-gray-500 text-sm">No notifications</div>
+            ) : (
+              notifications.map((n, idx) => (
+                <div key={idx} className="p-3 border-b hover:bg-gray-100 text-sm">
+                  <p>{n.message}</p>
+                  <span className="text-xs text-gray-400">{new Date(n.createdAt).toLocaleString()}</span>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
         <div className="text-center my-5">
           <h2 className="text-xl font-semibold text-color">User Reservations List</h2>
           <p className="text-sm text-color-2">Manage and track all user reservations in one place.</p>

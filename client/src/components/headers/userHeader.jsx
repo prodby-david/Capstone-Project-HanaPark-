@@ -45,6 +45,18 @@ const UserHeader = () => {
   };
 }, [auth.user]);
 
+useEffect(() => {
+  socket.on("reservationCancelledByAdmin", (notif) => {
+    console.log("SOCKET RECEIVED:", notif);
+    setNotifications((prev) => [notif, ...prev]);
+  });
+
+  return () => {
+    socket.off("reservationCancelledByAdmin");
+  };
+}, []);
+
+
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleNotif = () => setNotifOpen(!notifOpen);

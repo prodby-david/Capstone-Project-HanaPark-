@@ -29,7 +29,7 @@ const cancelReservation = async (req, res) => {
 
       const notif = await Notification.create({
       userId: populatedReservation.reservedBy._id,
-      message: `Your reservation for slot ${populatedReservation.slotId.slotCode} has been cancelled by admin.`
+      message: `Your reservation for slot ${populatedReservation.slotCode} has been cancelled by admin.`
       });
 
     console.log('Emitting to room:', populatedReservation.reservedBy._id.toString());

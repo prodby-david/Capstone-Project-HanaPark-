@@ -28,7 +28,7 @@ const VerifyReservation = async (req, res) => {
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
-        message: `Your QR code for slot ${reservation.slotId.slotCode} was verified. Reservation is now active.`,
+        message: `Your QR code for slot ${reservation.slotCode} was verified. Reservation is now active.`,
       });
 
       req.io.emit("reservationUpdated", reservation);
@@ -47,7 +47,7 @@ const VerifyReservation = async (req, res) => {
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
-        message: `Exit verified. Your reservation for slot ${reservation.slotId.slotCode} has been completed.`,
+        message: `Exit verified. Your reservation for slot ${reservation.slotCode} has been completed.`,
       });
 
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Completed" });

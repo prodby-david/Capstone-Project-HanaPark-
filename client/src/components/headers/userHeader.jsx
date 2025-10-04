@@ -4,7 +4,7 @@ import { useAuth } from '../../context/authContext';
 import Swal from 'sweetalert2';
 import { ArrowLeftStartOnRectangleIcon, Bars3Icon, BellIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
+import UserAPI from '../../lib/inteceptors/userInterceptor';
 import { socket } from '../../lib/socket'
 
 const UserHeader = () => {
@@ -25,7 +25,7 @@ const UserHeader = () => {
   // Fetch existing notifications from DB
   const fetchNotifications = async () => {
     try {
-      const res = await api.get('/notifications');
+      const res = await UserAPI.get('/notifications');
       setNotifications(res.data.notifications);
     } catch (err) {
       console.error(err);

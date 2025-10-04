@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import Swal from 'sweetalert2';
-import { ArrowLeftStartOnRectangleIcon, Bars3Icon, BellIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftStartOnRectangleIcon, BellIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import UserAPI from '../../lib/inteceptors/userInterceptor';
 import { socket } from '../../lib/socket';
@@ -33,10 +33,10 @@ const UserHeader = () => {
       setNotifications(prev => [notif, ...prev]);
     };
 
-      socket.on("reservationCancelledByAdmin", handleNotification);
-      socket.on("reservationApproved", handleNotification);
-      socket.on("reservationVerified", handleNotification);
-      socket.on("reservationCompleted", handleNotification);
+    socket.on("reservationCancelledByAdmin", handleNotification);
+    socket.on("reservationApproved", handleNotification);
+    socket.on("reservationVerified", handleNotification);
+    socket.on("reservationCompleted", handleNotification);
 
     return () => {
       socket.off("reservationCancelledByAdmin", handleNotification);
@@ -111,35 +111,52 @@ const UserHeader = () => {
           {/* Dropdown */}
           <AnimatePresence>
             {notifOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="absolute right-0 mt-2 w-72 sm:w-80 bg-white shadow-xl rounded-xl z-50 overflow-hidden"
-              >
-                <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
-                  Notifications
-                  <span className="text-xs text-gray-400">{notifications.length} total</span>
-                </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.length === 0 ? (
-                    <div className="p-4 text-sm text-color-3 text-center">No notifications</div>
-                  ) : (
-                    notifications.map((notif) => (
-                      <div
-                        key={notif._id}
-                        className={`p-4 text-sm border-b last:border-none hover:bg-gray-50 transition ${
-                          !notif.read ? "bg-blue-50" : "bg-white"
-                        }`}
-                      >
-                        <p className="text-color-3">{notif.message}</p>
-                        <span className="text-xs text-gray-400">{new Date(notif.createdAt).toLocaleString()}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </motion.div>
+              <>
+                {/* Backdrop for mobile */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.4 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => setNotifOpen(false)}
+                  className="fixed inset-0 bg-black sm:hidden z-40"
+                />
+
+                {/* Notification Panel */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white shadow-xl z-50 overflow-hidden
+                             fixed bottom-0 left-0 w-full h-[60vh] rounded-t-xl
+                             sm:absolute sm:right-0 sm:mt-2 sm:w-80 sm:h-auto sm:rounded-xl"
+                >
+                  <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
+                    Notifications
+                    <span className="text-xs text-gray-400">{notifications.length} total</span>
+                  </div>
+                  <div className="max-h-full sm:max-h-80 overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <div className="p-4 text-sm text-color-3 text-center">No notifications</div>
+                    ) : (
+                      notifications.map((notif) => (
+                        <div
+                          key={notif._id}
+                          className={`p-4 text-sm border-b last:border-none hover:bg-gray-50 transition ${
+                            !notif.read ? "bg-blue-50" : "bg-white"
+                          }`}
+                        >
+                          <p className="text-color-3">{notif.message}</p>
+                          <span className="text-xs text-gray-400">
+                            {new Date(notif.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </div>

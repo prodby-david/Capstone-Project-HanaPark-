@@ -28,7 +28,7 @@ const ApproveReservation = async (req, res) => {
       // Save notification
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
-        message: `Your reservation for slot ${reservation.slotId.slotCode} has been approved.`,
+        message: `Your reservation for slot ${reservation.slotCode} has been approved.`,
       });
 
       // Emit to everyone (admin dashboard updates)
@@ -50,7 +50,7 @@ const ApproveReservation = async (req, res) => {
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
-        message: `Your reservation for slot ${reservation.slotId.slotCode} has been completed. Thank you for using HanaPark!`,
+        message: `Your reservation for slot ${reservation.slotCode} has been completed. Thank you for using HanaPark!`,
       });
 
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Completed" });

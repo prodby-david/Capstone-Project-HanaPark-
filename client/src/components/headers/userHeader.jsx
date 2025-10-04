@@ -9,7 +9,6 @@ import { socket } from '../../lib/socket';
 
 const UserHeader = () => {
   const { logout, auth } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
@@ -45,8 +44,6 @@ const UserHeader = () => {
       socket.off("reservationCompleted", handleNotification);
     };
   }, [auth.user]);
-
-  const toggleMenu = () => setIsOpen(!isOpen);
 
   const toggleNotif = async () => {
     setNotifOpen(!notifOpen);
@@ -84,7 +81,6 @@ const UserHeader = () => {
     });
   };
 
-  // ✅ Count only unread notifications
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
@@ -112,14 +108,14 @@ const UserHeader = () => {
           <AnimatePresence>
             {notifOpen && (
               <>
-                {/* Backdrop for mobile */}
+                {/* Backdrop */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 0.4 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => setNotifOpen(false)}
-                  className="fixed inset-0 bg-black sm:hidden z-40"
+                  className="fixed inset-0 bg-black z-40"
                 />
 
                 {/* Notification Panel */}
@@ -129,8 +125,7 @@ const UserHeader = () => {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                   className="bg-white shadow-xl z-50 overflow-hidden
-                             fixed bottom-0 left-0 w-full h-[60vh] rounded-t-xl
-                             sm:absolute sm:right-0 sm:mt-2 sm:w-80 sm:h-auto sm:rounded-xl"
+                             fixed top-16 right-2 w-[90%] max-w-sm h-[60vh] sm:h-auto sm:w-80 rounded-xl"
                 >
                   <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
                     Notifications

@@ -170,7 +170,7 @@ const Recents = () => {
                             <XMarkIcon className="w-6 h-6 cursor-pointer hover:text-red-500" title="Cancel Reservation"/>
                           </button>
                         )}
-                        {(selectedStatus === 'Active' || selectedStatus === 'Pending') &&
+                        {(selectedStatus === 'Reserved' || selectedStatus === 'Pending') &&
                           latestReservation && r._id === latestReservation._id && (
                             <button onClick={() => setShowQR(true)}>
                               <QrCodeIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" title="View QR"/>

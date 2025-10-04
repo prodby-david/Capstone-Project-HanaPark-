@@ -5,7 +5,7 @@ import SearchBar from '../../components/search/search'
 import QRScanner from '../../lib/qrscanner'
 import { toast } from 'react-toastify'
 import toastOptions from '../../lib/toastConfig'
-import { CheckCircleIcon, XCircleIcon, BellIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import Swal from 'sweetalert2'
 import { socket } from '../../lib/socket'
 import Loader from '../../components/loaders/loader'
@@ -21,8 +21,6 @@ const UserReservationLists = () => {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [notifications, setNotifications] = useState([])   // 🔔 store notifications
-  const [showNotifications, setShowNotifications] = useState(false)
   const increment = 3
 
   // --- SOCKET LISTENERS ---
@@ -52,19 +50,11 @@ const UserReservationLists = () => {
       )
     })
 
-    // 🔔 Listen for new notifications
-    socket.on('newNotification', (notif) => {
-      console.log("📩 New notification received:", notif)
-      setNotifications(prev => [notif, ...prev])
-      toast.info(notif.message, toastOptions)
-    })
-
     return () => {
       socket.off('reservationCreated')
       socket.off('reservationCancelled')
       socket.off('reservationApproved')
       socket.off('reservationUpdated')
-      socket.off('newNotification')
     }
   }, [])
 
@@ -175,7 +165,7 @@ const UserReservationLists = () => {
     const reservedByName = res.reservedBy ? `${res.reservedBy.lastname} ${res.reservedBy.firstname}`.toLowerCase() : ''
     return reservedByName.includes(query) ||
            res.plateNumber?.toLowerCase().includes(query) ||
-           res.verificationCode?.toLowerCase().includes(query)
+           res.reservationCode?.toLowerCase().includes(query)
   })
 
   const filteredReservationsByStatus = (status) =>
@@ -195,37 +185,6 @@ const UserReservationLists = () => {
       <AdminHeader />
 
       <div className="py-5 px-5">
-        {/* 🔔 Notification Bell */}
-        <div className="flex justify-end mb-4">
-          <button
-            className="relative"
-            onClick={() => setShowNotifications(!showNotifications)}
-          >
-            <BellIcon className="w-7 h-7 text-gray-600 hover:text-blue-600" />
-            {notifications.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-2">
-                {notifications.length}
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* 🔔 Notification Dropdown */}
-        {showNotifications && (
-          <div className="absolute right-10 mt-2 w-80 bg-white border shadow-lg rounded-lg z-50 max-h-80 overflow-auto">
-            {notifications.length === 0 ? (
-              <div className="p-4 text-gray-500 text-sm">No notifications</div>
-            ) : (
-              notifications.map((n, idx) => (
-                <div key={idx} className="p-3 border-b hover:bg-gray-100 text-sm">
-                  <p>{n.message}</p>
-                  <span className="text-xs text-gray-400">{new Date(n.createdAt).toLocaleString()}</span>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-
         <div className="text-center my-5">
           <h2 className="text-xl font-semibold text-color">User Reservations List</h2>
           <p className="text-sm text-color-2">Manage and track all user reservations in one place.</p>
@@ -262,13 +221,13 @@ const UserReservationLists = () => {
             </div>
           ) : (
             <div className="overflow-auto h-80 rounded-lg border border-gray-200">
-              <div className="min-w-[900px]">
+              <div className="min-w-[1000px]">
                 {filteredReservationsByStatus(selectedStatus)
                   .slice(0, counts[selectedStatus])
                   .map(res => (
                     <div
                       key={res._id}
-                      className="grid grid-cols-8 gap-4 items-center text-sm bg-white text-color-2 p-4 mt-2 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"
+                      className="grid grid-cols-9 gap-4 items-center text-sm bg-white text-color-2 p-4 mt-2 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"
                     >
                       <div>{res.reservedBy ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}` : "Deleted User"}</div>
                       <div>{res.slotCode}</div>
@@ -276,6 +235,7 @@ const UserReservationLists = () => {
                       <div>{res.slotId?.slotPrice}</div>
                       <div>{res.vehicleType}</div>
                       <div>{res.plateNumber}</div>
+                      <div>{res.reservationCode}</div> {/* ✅ Show reservationCode */}
                       <div>{res.reservationDate} {res.reservationTime}</div>
                       <div>
                         {selectedStatus === 'Pending' && (

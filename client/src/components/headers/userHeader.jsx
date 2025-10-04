@@ -43,7 +43,7 @@ const UserHeader = () => {
     setNotifOpen(!notifOpen);
     if (!notifOpen) {
       try {
-        await UserAPI.patch('/notifications/mark-all-read'); // ✅ backend call
+        await UserAPI.patch('/notifications/mark-all-read');
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       } catch (err) {
         console.error(err);
@@ -109,13 +109,13 @@ const UserHeader = () => {
                 transition={{ duration: 0.3 }}
                 className="absolute right-0 mt-2 w-72 sm:w-80 bg-white shadow-xl rounded-xl z-50 overflow-hidden"
               >
-                <div className="p-4 border-b font-semibold text-sm text-gray-700 flex justify-between">
+                <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
                   Notifications
                   <span className="text-xs text-gray-400">{notifications.length} total</span>
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {notifications.length === 0 ? (
-                    <div className="p-4 text-sm text-gray-400 text-center">No notifications</div>
+                    <div className="p-4 text-sm text-color-3 text-center">No notifications</div>
                   ) : (
                     notifications.map((notif) => (
                       <div
@@ -124,7 +124,7 @@ const UserHeader = () => {
                           !notif.read ? "bg-blue-50" : "bg-white"
                         }`}
                       >
-                        <p className="text-gray-800">{notif.message}</p>
+                        <p className="text-color-3">{notif.message}</p>
                         <span className="text-xs text-gray-400">{new Date(notif.createdAt).toLocaleString()}</span>
                       </div>
                     ))

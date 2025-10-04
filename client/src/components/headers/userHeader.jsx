@@ -18,9 +18,13 @@ const UserHeader = () => {
 
   const userId = auth.user._id.toString();
 
-  // Join room
-  socket.emit("joinUser", userId);
-  console.log("Joining room:", userId);
+  // When socket connects, then join user room
+  const handleConnect = () => {
+    socket.emit("joinUser", userId);
+    console.log("Joined user room after connect:", userId);
+  };
+
+  socket.on("connect", handleConnect);
 
   // Fetch existing notifications from DB
   const fetchNotifications = async () => {
@@ -33,17 +37,20 @@ const UserHeader = () => {
   };
   fetchNotifications();
 
+  // Listen for real-time notifications
   const handleNotification = (notif) => {
-    console.log("Notification received:", notif);
-    setNotifications(prev => [notif, ...prev]);
+    console.log("SOCKET RECEIVED:", notif);
+    setNotifications((prev) => [notif, ...prev]);
   };
 
   socket.on("reservationCancelledByAdmin", handleNotification);
 
   return () => {
+    socket.off("connect", handleConnect);
     socket.off("reservationCancelledByAdmin", handleNotification);
   };
 }, [auth.user]);
+
 
 useEffect(() => {
   socket.on("reservationCancelledByAdmin", (notif) => {

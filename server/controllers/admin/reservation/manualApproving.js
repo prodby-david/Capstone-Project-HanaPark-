@@ -1,12 +1,14 @@
-// controllers/admin/approveReservation.js
 import Reservation from "../../../models/reservation.js";
 import Slot from "../../../models/slot.js";
+import Notification from "../../../models/notification.js";
 
 const ApproveReservation = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const reservation = await Reservation.findById(id).populate("reservedBy").populate("slotId");
+    const reservation = await Reservation.findById(id)
+      .populate("reservedBy")
+      .populate("slotId");
 
     if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
@@ -16,26 +18,44 @@ const ApproveReservation = async (req, res) => {
       return res.status(400).json({ message: "Reservation expired" });
     }
 
+    // ✅ Approve & Occupy
     if (!reservation.isEntryUsed) {
       reservation.status = "Reserved";
       reservation.isEntryUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Occupied" });
       await reservation.save();
 
+      // Save notification
+      const notif = await Notification.create({
+        userId: reservation.reservedBy._id,
+        message: `Your reservation for slot ${reservation.slotId.slotCode} has been approved.`,
+      });
+
+      // Emit to everyone (admin dashboard updates)
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Reserved" });
       req.io.emit("slotUpdated", { id: reservation.slotId, slotStatus: "Occupied" });
+
+      // Emit to specific user
+      req.io.to(reservation.reservedBy._id.toString()).emit("reservationApproved", notif);
 
       return res.status(200).json({ message: "Reservation approved. Slot is now occupied." });
     }
 
+    // ✅ Complete Reservation (Exit)
     if (reservation.isEntryUsed && !reservation.isExitUsed) {
       reservation.status = "Completed";
       reservation.isExitUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Available" });
       await reservation.save();
 
+      const notif = await Notification.create({
+        userId: reservation.reservedBy._id,
+        message: `Your reservation for slot ${reservation.slotId.slotCode} has been completed. Thank you for using HanaPark!`,
+      });
+
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Completed" });
       req.io.emit("slotUpdated", { id: reservation.slotId, slotStatus: "Available" });
+      req.io.to(reservation.reservedBy._id.toString()).emit("reservationCompleted", notif);
 
       return res.status(200).json({ message: "Reservation completed." });
     }

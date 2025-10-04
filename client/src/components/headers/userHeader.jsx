@@ -33,8 +33,17 @@ const UserHeader = () => {
       setNotifications(prev => [notif, ...prev]);
     };
 
-    socket.on("reservationCancelledByAdmin", handleNotification);
-    return () => socket.off("reservationCancelledByAdmin", handleNotification);
+      socket.on("reservationCancelledByAdmin", handleNotification);
+      socket.on("reservationApproved", handleNotification);
+      socket.on("reservationVerified", handleNotification);
+      socket.on("reservationCompleted", handleNotification);
+
+    return () => {
+      socket.off("reservationCancelledByAdmin", handleNotification);
+      socket.off("reservationApproved", handleNotification);
+      socket.off("reservationVerified", handleNotification);
+      socket.off("reservationCompleted", handleNotification);
+    };
   }, [auth.user]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -86,7 +95,7 @@ const UserHeader = () => {
       </Link>
 
       {/* Right-side Actions */}
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center">
         {/* Notifications */}
         <div className="relative">
           <BellIcon

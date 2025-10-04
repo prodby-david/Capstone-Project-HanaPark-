@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'  
 import toastOptions from '../../../lib/toastConfig'
-import { api, publicApi } from '../../../lib/api';
+import { api } from '../../../lib/api';
 
 
 
@@ -20,8 +20,8 @@ const CreateSlot = () => {
   const [existingSlots, setExistingSlots] = useState([]);
 
   const MAX_SLOTS = {
-  Student: 40,
-  Staff: 20,
+  Student: 80,
+  Staff: 50,
   Visitor: 20
   };
 

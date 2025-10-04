@@ -50,21 +50,21 @@ const Recents = () => {
     getUserHistory()
   }, [])
 
-  // Socket listener for admin-cancelled reservations
-  // Socket listener for reservation updates
   useEffect(() => {
-    const handleReservationUpdate = (updatedReservation) => {
-      setReservations(prev =>
-        prev.map(r =>
-          r._id === updatedReservation._id ? { ...updatedReservation, status: updatedReservation.status } : r
-        )
-      );
-    };
+  const handleReservationUpdate = (updatedReservation) => {
+    setReservations(prev =>
+      prev.map(r =>
+        r._id === (updatedReservation._id || updatedReservation.id)
+          ? { ...r, ...updatedReservation }
+          : r
+      )
+    );
+  };
 
-    socket.on('reservationUpdated', handleReservationUpdate);
+  socket.on('reservationUpdated', handleReservationUpdate);
 
-    return () => socket.off('reservationUpdated', handleReservationUpdate);
-  }, []);
+  return () => socket.off('reservationUpdated', handleReservationUpdate);
+}, []);
 
   // Filter by search query
   const filteredReservations = reservations.filter(r => {

@@ -14,9 +14,9 @@ const UserHeader = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-  if (!auth.user?._id) return;
+  if (!auth.user?.userId) return;
 
-  const userId = auth.user._id.toString();
+  const userId = auth.user.userId.toString();
 
   // Join room
   socket.emit("joinUser", userId);

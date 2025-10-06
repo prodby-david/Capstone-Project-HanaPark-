@@ -118,7 +118,7 @@ const UserList = () => {
 
                 {/* Scrollable Body */}
                 <div className="max-h-[400px] overflow-y-auto mt-2 pr-2">
-                  {filteredUsers.slice(0, visibleCount).map((user) => (
+                  {filteredUsers.map((user) => (
                     <div
                       key={user._id}
                       className="grid grid-cols-8 gap-4 items-center bg-white text-color-2 my-2 p-3 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"

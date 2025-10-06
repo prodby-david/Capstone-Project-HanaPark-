@@ -59,7 +59,7 @@ const UserRegistration = () => {
     {/* Regex Validations */}
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     const nameRegex = /^[a-zA-Z\s]+$/;
-    const studentIdRegex = /^2000\d{6}$/;
+    const studentIdRegex = /^02000\d{6}$/;
     const usernameRegex = /^[a-zA-Z]+\.[0-9]{6}$/;
     const plateNumberRegex = /^(?:([A-Z]{3}\d{3}|\d{3}[A-Z]{3}|(?=(?:.*[A-Z]){3})(?=(?:.*\d){3})[A-Z0-9]{6})|([A-Z]{3}\d{4})|(\d{4}-\d{9,11}))$/;
     const mvFileRegex = /^[0-9]{4}-[0-9]{11,12}$/;  
@@ -114,8 +114,8 @@ const step1Validations = () => {
         return false;
     }
 
-    if(formData.studentId.length <= 9){
-        toast.error('Student ID should be at least 10 digits long.', toastOptions);
+    if(formData.studentId.length < 11){
+        toast.error('Student ID should be at least 11 digits long.', toastOptions);
         return;
     }
 
@@ -390,7 +390,7 @@ const handleChange = (e) => {
                                 <input type="text"
                                 name="studentId"
                                 id="StudentId"
-                                maxLength={10}
+                                maxLength={11}
                                 inputMode="numeric"
                                 pattern="[0-9]*"
                                 onChange={handleChange}

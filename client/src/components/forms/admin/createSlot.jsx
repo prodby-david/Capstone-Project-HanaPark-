@@ -20,8 +20,8 @@ const CreateSlot = () => {
   const [existingSlots, setExistingSlots] = useState([]);
 
   const MAX_SLOTS = {
-  Student: 80,
-  Staff: 50,
+  Student: 40,
+  Staff: 30,
   Visitor: 20
   };
 

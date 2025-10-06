@@ -5,12 +5,14 @@ import toastOptions from '../../lib/toastConfig';
 import { useNavigate } from 'react-router-dom';
 import { useAdminContext } from '../../context/adminContext';
 import AdminAPI from '../../lib/inteceptors/adminInterceptor';
+import Loader from '../loaders/loader';
 
 
 
 const PasswordPrompt = () => {
 
     const [password, setPassword] = useState('');
+    const [ isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const { verifyPasscode } = useAdminContext();
@@ -25,6 +27,7 @@ const PasswordPrompt = () => {
       return;
     }
 
+    setIsLoading(true);
 
       try{
 
@@ -32,7 +35,7 @@ const PasswordPrompt = () => {
 
           if(res.data.success){
             Swal.fire({
-              title: 'Password Confirmed.',
+              title: 'Passcode Validated',
               text: res.data.message,
               icon: 'success',
               confirmButtonColor: '#00509e',
@@ -53,6 +56,10 @@ const PasswordPrompt = () => {
               confirmButtonColor: '#00509e',
               confirmButtonText: 'OK'
           });
+      }
+      finally {
+        setIsLoading(false);
+        setPassword('');
       }
 
     }
@@ -92,6 +99,8 @@ const PasswordPrompt = () => {
           </div>
           
         </div>
+
+        {isLoading ? <Loader text='Validating admin passcode...'/> : null}
       </>
     )
 }

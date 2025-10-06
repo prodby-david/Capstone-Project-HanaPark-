@@ -41,7 +41,7 @@ useEffect(() => {
 
       <div className='flex flex-col items-center justify-center mt-15 lg:mt-20'>
         <h2 className='text-[26px] lg:text-[32px] font-semibold text-color'>
-          Hello, {auth.user.userId.firstname}!
+          Hello, {auth.user.firstname}!
         </h2>
         <p className='text-sm text-color-2 mt-3 max-w-3xl text-center px-5'>Your parking experience just got easier. Reserve a spot, View your recent activities, and manage your account.</p>
       </div>

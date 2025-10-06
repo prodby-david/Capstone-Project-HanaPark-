@@ -5,14 +5,14 @@ const CreateSlot = async (req,res) => {
 
     try {
 
-        const {slotUser, slotNumber, slotType, slotPrice, slotStatus, slotDescription } = req.body;
+        const {slotUser, slotNumber, slotType, slotPrice, slotStatus } = req.body;
 
         const verifySlot = await Slot.findOne({slotNumber});
         if(verifySlot){
             return res.status(409).json({message: 'Slot Number already exist.'});
         }
 
-        const newSlot= new Slot({slotUser, slotNumber, slotType, slotPrice, slotStatus, slotDescription});
+        const newSlot= new Slot({slotUser, slotNumber, slotType, slotPrice, slotStatus});
         await newSlot.save();
         
         req.io.emit('slotCreated', newSlot);

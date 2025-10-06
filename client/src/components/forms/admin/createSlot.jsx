@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'  
 import toastOptions from '../../../lib/toastConfig'
-import { api } from '../../../lib/api';
+import Loader from '../../loaders/loader'
 import AdminAPI from '../../../lib/inteceptors/adminInterceptor'; 
 
 
@@ -19,6 +19,7 @@ const CreateSlot = () => {
   });
 
   const [existingSlots, setExistingSlots] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const MAX_SLOTS = {
   Student: 40,
@@ -82,12 +83,13 @@ const CreateSlot = () => {
     if( !slotData.slotUser ||
         !slotData.slotNumber ||
         !slotData.slotType ||
-        !slotData.slotStatus ||
-        !slotData.slotDescription
+        !slotData.slotStatus
       ){
         toast.error('Fields should not be empty.', toastOptions);
         return;
       }
+
+      setIsLoading(true);
 
     try{
 
@@ -120,6 +122,9 @@ const CreateSlot = () => {
           icon: 'error',
           confirmButtonText: 'Try Again'
         });
+    }
+    finally{
+      setIsLoading(false)
     }
   }
 
@@ -274,7 +279,7 @@ const CreateSlot = () => {
             </div>
 
             <div>
-              <p className='text-xs text-color-2'><span className='font-semibold text-color-3'>NOTE: </span>Max slots: Students: 40, Staff: 20 and Visitors: 20.</p>
+              <p className='text-xs text-color-2'><span className='font-semibold text-color-3'>NOTE: </span>Max slots: Students: 40, Staff: 30 and Visitors: 20.</p>
             </div>
 
             <button 
@@ -290,6 +295,8 @@ const CreateSlot = () => {
         </div>
         
       </div>
+
+      {isLoading ? <Loader text='Creating slot...' /> : null}
     </>
   )
 }

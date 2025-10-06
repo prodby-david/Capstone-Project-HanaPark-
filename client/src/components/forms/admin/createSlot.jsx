@@ -3,6 +3,7 @@ import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'  
 import toastOptions from '../../../lib/toastConfig'
 import { api } from '../../../lib/api';
+import AdminAPI from '../../../lib/inteceptors/adminInterceptor'; 
 
 
 
@@ -49,7 +50,7 @@ const CreateSlot = () => {
     if (name === 'slotUser') {
       
       try {
-        const res = await api.get(`http://localhost:4100/admin/slots?user=${value}`, {withCredentials:true});
+        const res = await AdminAPI.get(`/admin/slots?user=${value}`);
 
         const slots = res.data;
         setExistingSlots(slots);
@@ -90,7 +91,7 @@ const CreateSlot = () => {
 
     try{
 
-      const res = await api.post('http://localhost:4100/admin/slots', slotData);
+      const res = await AdminAPI.post('/admin/slots', slotData);
 
       if(res.data.success){
 

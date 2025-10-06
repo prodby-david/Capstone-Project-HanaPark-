@@ -10,7 +10,6 @@ import Loader from '../../components/loaders/loader';
 const UserList = () => {
   const [usersList, setUsersList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [visibleCount, setVisibleCount] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

@@ -1,21 +1,20 @@
+import { Resend } from 'resend';
 
-import nodemailer from 'nodemailer';
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendResetEmail = async (to, subject, html) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GOOGLE_EMAIL, 
-      pass: process.env.GOOGLE_APP_PASSWORD, 
-    },
-  });
-
-  await transporter.sendMail({
-    from: `"HanaPark" <${process.env.GOOGLE_EMAIL}>`,
-    to,
-    subject,
-    html,
-  });
+const sendResetEmail = async (to, subject, html) => {
+  try {
+    await resend.emails.send({
+      from: 'Hanapark <no-reply@hanapark.com>', 
+      to,
+      subject,
+      html,
+    });
+    console.log('Email sent successfully to:', to);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    throw new Error('Email sending failed');
+  }
 };
 
 export default sendResetEmail;

@@ -16,7 +16,7 @@ const ForgotPasswordController =  async (req,res) => {
            const token = jwt.sign({ id:user._id, email: user.email}, process.env.FORGOT_PASSWORD_KEY, { expiresIn: '15m' });
 
 
-            const resetLink = `https://hanapark.vercel.app/reset-password/${token}`;
+            const resetLink = `https://www.hanapark.online/reset-password/${token}`;
 
             const html = `
                 <h3>Password Reset</h3>

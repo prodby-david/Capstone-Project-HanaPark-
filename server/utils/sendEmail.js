@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendResetEmail = async (to, subject, html) => {
   try {
     await resend.emails.send({
-      from: 'Hanapark <onboarding@resend.dev>', 
+      from: 'Hanapark <no-reply@hanapark.vercel.app>', 
       to,
       subject,
       html,

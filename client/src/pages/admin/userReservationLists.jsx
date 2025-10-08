@@ -181,100 +181,148 @@ const UserReservationLists = () => {
   const statusTabs = ['Pending', 'Reserved', 'Completed', 'Cancelled']
 
   return (
-    <>
-      <AdminHeader />
+  <>
+    <AdminHeader />
 
-      <div className="py-5 px-5">
-        <div className="text-center my-5">
-          <h2 className="text-xl font-semibold text-color">User Reservations List</h2>
-          <p className="text-sm text-color-2">Manage and track all user reservations in one place.</p>
-        </div>
+    <div className="py-5 px-5">
+      <div className="text-center my-5">
+        <h2 className="text-xl font-semibold text-color">User Reservations List</h2>
+        <p className="text-sm text-color-2">Manage and track all user reservations in one place.</p>
+      </div>
 
-        <div className="flex justify-between items-center w-full px-5 mb-5">
-          <QRScanner onScanSuccess={handleQRScan} />
-          <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Name, Reservation Code or Plate Number"/>
-        </div>
+      <div className="flex justify-between items-center w-full px-5 mb-5">
+        <QRScanner onScanSuccess={handleQRScan} />
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Name, Reservation Code or Plate Number"
+        />
+      </div>
 
-        {/* Tabs */}
-        <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
-          {statusTabs.map(status => (
-            <button
-              key={status}
-              className={`px-4 py-2 rounded font-semibold cursor-pointer ${
-                selectedStatus === status
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-              onClick={() => setSelectedStatus(status)}
-            >
-              {status}
-            </button>
-          ))}
-        </div>
+      {/* Tabs */}
+      <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
+        {statusTabs.map((status) => (
+          <button
+            key={status}
+            className={`px-4 py-2 rounded font-semibold cursor-pointer ${
+              selectedStatus === status
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+            onClick={() => setSelectedStatus(status)}
+          >
+            {status}
+          </button>
+        ))}
+      </div>
 
-        {isLoading && <Loader />}
+      {isLoading && <Loader />}
 
-        <div className="px-5">
-          {filteredReservationsByStatus(selectedStatus).length === 0 ? (
-            <div className="text-center text-gray-500 mt-10">
-              No {selectedStatus.toLowerCase()} reservations
-            </div>
-          ) : (
-            <div className="overflow-auto h-80 rounded-lg border border-gray-200">
-              <div className="min-w-[1000px]">
-                {filteredReservationsByStatus(selectedStatus)
-                  .slice(0, counts[selectedStatus])
-                  .map(res => (
-                    <div
-                      key={res._id}
-                      className="grid grid-cols-9 gap-4 items-center text-sm bg-white text-color-2 p-4 mt-2 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"
-                    >
-                      <div>{res.reservedBy ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}` : "Deleted User"}</div>
-                      <div>{res.slotCode}</div>
-                      <div>{res.slotId?.slotType}</div>
-                      <div>{res.slotPrice}</div>
-                      <div>{res.vehicleType}</div>
-                      <div>{res.plateNumber}</div>
-                      <div>{res.verificationCode}</div> 
-                      <div>{res.reservationDate} {res.reservationTime}</div>
-                      <div>
-                        {selectedStatus === 'Pending' && (
-                          <div className='flex justify-center gap-2'>
-                            <button onClick={() => handleApprove(res._id)}>
-                              <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-green-500" />
-                            </button>
-                            <button onClick={() => handleCancelAdminReservation(res._id)}>
-                              <XCircleIcon className="w-6 h-6 cursor-pointer hover:text-red-500" />
-                            </button>
-                          </div>
-                        )}
-                        {selectedStatus === 'Reserved' && (
-                          <div className='flex justify-center gap-2'>
-                            <button onClick={() => handleComplete(res._id)}>
-                              <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {/* View More/Less */}
-          <div className="flex justify-end gap-2 mt-2">
-            {counts[selectedStatus] < filteredReservationsByStatus(selectedStatus).length && (
-              <button onClick={() => handleViewMore(selectedStatus)} className="text-sm underline text-color-2 hover:text-color-3">View More</button>
-            )}
-            {counts[selectedStatus] > increment && (
-              <button onClick={() => handleViewLess(selectedStatus)} className="text-sm underline text-color-2 hover:text-color-3">View Less</button>
-            )}
+      <div className="px-5">
+        {filteredReservationsByStatus(selectedStatus).length === 0 ? (
+          <div className="text-center text-gray-500 mt-10">
+            No {selectedStatus.toLowerCase()} reservations
           </div>
+        ) : (
+          <div className="overflow-auto h-80 rounded-lg border border-gray-200">
+            <div className="min-w-[1000px] flex flex-col gap-2 p-4">
+              
+              {/* 🔹 Header Row */}
+              <div className={`grid gap-4 bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
+              selectedStatus === "Pending" || selectedStatus === "Reserved"
+                  ? "grid-cols-9"
+                  : "grid-cols-8"
+              }`}>
+                <div>Name</div>
+                <div>Slot Code</div>
+                <div>Slot Type</div>
+                <div>Price</div>
+                <div>Vehicle Type</div>
+                <div>Plate Number</div>
+                <div>Verification Code</div>
+                <div>Date & Time</div>
+                {(selectedStatus === "Pending" || selectedStatus === "Reserved") && <div>Actions</div>}
+              </div>
+
+              {/* 🔹 Reservation Rows */}
+              {filteredReservationsByStatus(selectedStatus)
+                .slice(0, counts[selectedStatus])
+                .map((res) => (
+                  <div
+                    key={res._id}
+                    className={`grid gap-4 bg-white text-color-2 font-semibold text-sm p-4 rounded-t-lg text-center ${
+                    selectedStatus === "Pending" || selectedStatus === "Reserved"
+                      ? "grid-cols-9"
+                      : "grid-cols-8"
+                  }`}
+                  >
+                    <div>
+                      {res.reservedBy
+                        ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}`
+                        : "Deleted User"}
+                    </div>
+                    <div>{res.slotCode}</div>
+                    <div>{res.slotId?.slotType}</div>
+                    <div>{res.slotPrice}</div>
+                    <div>{res.vehicleType}</div>
+                    <div>{res.plateNumber}</div>
+                    <div>{res.verificationCode}</div>
+                    <div>
+                      {res.reservationDate} {res.reservationTime}
+                    </div>
+                    {(selectedStatus === "Pending" || selectedStatus === "Reserved") && (
+                  <div>
+                    {selectedStatus === "Pending" && (
+                      <div className="flex justify-center gap-2">
+                        <button onClick={() => handleApprove(res._id)}>
+                          <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-green-500" />
+                        </button>
+                        <button onClick={() => handleCancelAdminReservation(res._id)}>
+                          <XCircleIcon className="w-6 h-6 cursor-pointer hover:text-red-500" />
+                        </button>
+                      </div>
+                    )}
+                    {selectedStatus === "Reserved" && (
+                      <div className="flex justify-center gap-2">
+                        <button onClick={() => handleComplete(res._id)}>
+                          <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* View More/Less */}
+        <div className="flex justify-end gap-2 mt-2">
+          {counts[selectedStatus] <
+            filteredReservationsByStatus(selectedStatus).length && (
+            <button
+              onClick={() => handleViewMore(selectedStatus)}
+              className="text-sm underline text-color-2 hover:text-color-3"
+            >
+              View More
+            </button>
+          )}
+          {counts[selectedStatus] > increment && (
+            <button
+              onClick={() => handleViewLess(selectedStatus)}
+              className="text-sm underline text-color-2 hover:text-color-3"
+            >
+              View Less
+            </button>
+          )}
         </div>
       </div>
-    </>
-  )
+    </div>
+  </>
+);
+
 }
 
 export default UserReservationLists

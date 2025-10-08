@@ -26,7 +26,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     socket.connect();
-    socket.emit("joinRoom", "admins");
+    socket.emit("joinAdmin", "admins");
 
     socket.on("newReservation", (reservation) => {
       console.log("📦 New reservation received:", reservation);

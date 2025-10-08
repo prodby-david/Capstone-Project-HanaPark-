@@ -19,7 +19,7 @@ const Hero = () => {
           variants={container}
           initial='hidden'
           animate='show'
-          className='flex flex-col justify-center items-center min-h-90 px-5'
+          className='flex flex-col justify-center items-center flex-grow px-5 min-h-[60vh] lg:min-h-[70vh]'
         >
 
         <motion.h2

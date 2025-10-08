@@ -26,7 +26,14 @@ const AccountSettings = () => {
     newpassword: '',
     confirmnewpassword: ''
   });
-  const [vehicleInformation, setVehicleInformation] = useState({});
+  const [vehicleInformation, setVehicleInformation] = useState({
+    vehicleType: '',
+    brand: '',
+    model: '',
+    plateNumber: '',
+    transmission: '',
+    color: ''
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -333,10 +340,10 @@ const AccountSettings = () => {
                     <select
                       name="vehicleType"
                       className="outline-0 border-b p-2 text-sm text-color-2 w-full"
-                      value={vehicleInformation.vehicleType || ""}
+                      value={vehicleInformation?.vehicleType || ""}
                       onChange={handleVehicleChange}
                     >
-                      <option value="">Select Vehicle Type</option>
+                      <option value=''>Select Vehicle Type</option>
                       {Object.keys(brandsByType).map((type) => (
                         <option key={type} value={type}>
                           {type}
@@ -351,7 +358,7 @@ const AccountSettings = () => {
                     <select
                       name="brand"
                       className="outline-0 border-b p-2 text-sm text-color-2 w-full"
-                      value={vehicleInformation.brand || ""}
+                      value={vehicleInformation?.brand || ""}
                       onChange={handleVehicleChange}
                       disabled={!vehicleInformation.vehicleType}
                     >

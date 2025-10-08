@@ -1,12 +1,7 @@
 const brandsByType = {
-  "Small Motorcycle": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
-  "Bigbike Motorcycle": ["Honda", "Yamaha", "Suzuki", "Kawasaki", "Ducati", "BMW", "KTM", "Triumph"],
-  "Sedan": ["Toyota","Honda","Mitsubishi","Nissan","Hyundai","Mazda","Chevrolet","Ford"],
-  "Hatchback": ["Toyota", "Honda", "Suzuki", "Kia", "Hyundai", "Chevrolet"],
-  "SUV": ["Toyota", "Honda", "Ford", "Mitsubishi", "Nissan", "Isuzu", "Hyundai", "Chevrolet"],
-  "Pickup": ["Ford", "Isuzu", "Toyota", "Nissan", "Mitsubishi", "Mazda"],
-  "MPV": ["Toyota", "Mitsubishi", "Suzuki", "Honda", "Nissan"],
-  "Van": ["Toyota", "Nissan", "Hyundai", "Foton"],
+    "2-Wheels (399cc below)": ["Honda", "Yamaha", "Suzuki", "Kawasaki", "Others"],
+    "2-Wheels (400cc up)": ["Harley-Davidson", "BMW", "Ducati", "Others"],
+    "4-Wheels": ["Toyota", "Honda", "Ford", "Nissan", "Hyundai", "Chevrolet", "Kia", "Mazda", "Mitsubishi", "Subaru", "Others"]
 };
 
 export default brandsByType;

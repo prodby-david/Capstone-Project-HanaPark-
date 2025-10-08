@@ -28,7 +28,7 @@ const VerifyReservation = async (req, res) => {
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
-        message: `Your QR code for slot ${reservation.slotCode} was verified. Reservation is now active.`,
+        message: `Entrance verified. Your QR code for slot ${reservation.slotCode} was verified. Reservation is now active.`,
       });
 
       req.io.emit("reservationUpdated", reservation);

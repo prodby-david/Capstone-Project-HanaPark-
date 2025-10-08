@@ -18,6 +18,7 @@ import UpdateEmail from '../../controllers/users/userEmail.js';
 import UpdateVehicleController from '../../controllers/users/updateVehicle.js';
 import { getUserNotifications, markAsRead, markAllAsRead } from '../../controllers/users/notification.js';
 import FetchOneSlot from '../../controllers/admin/slots/fetchOneSlot.js';
+import GetVisitorSlots from '../../controllers/users/visitorSlot.js';
 
 
 
@@ -43,6 +44,7 @@ UserRouter.put('/vehicle-information', authUserToken, UpdateVehicleController);
 UserRouter.get('/notifications', authUserToken, getUserNotifications)
 UserRouter.patch('/read/:id', authUserToken, markAsRead)
 UserRouter.patch('/notifications/mark-all-read', authUserToken, markAllAsRead)
+UserRouter.get('/visitors', GetVisitorSlots);
 
 
 

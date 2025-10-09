@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-color text-white w-full py-10">
       {/* Main Content */}
-      <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start gap-10 px-5">
+      <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-10 px-5">
 
         {/* About Section */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">

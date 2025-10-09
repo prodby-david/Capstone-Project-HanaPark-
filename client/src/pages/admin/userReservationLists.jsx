@@ -25,7 +25,8 @@ const UserReservationLists = () => {
 
   // --- SOCKET LISTENERS ---
   useEffect(() => {
-    socket.on('reservationCreated', (newReservation) => {
+    socket.connect();
+    socket.on('newReservation', (newReservation) => {
       setReservations(prev => {
         const exists = prev.some(r => r._id === newReservation._id)
         return exists ? prev : [...prev, newReservation]
@@ -261,8 +262,8 @@ const UserReservationLists = () => {
                         ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}`
                         : "Deleted User"}
                     </div>
-                    <div>{res.slotCode}</div>
-                    <div>{res.slotId?.slotType}</div>
+                    <div>{res.slotId?.slotNumber}</div>
+                    <div>{res.slotId?.slotUser}</div>
                     <div>{res.slotPrice}</div>
                     <div>{res.vehicleType}</div>
                     <div>{res.plateNumber}</div>

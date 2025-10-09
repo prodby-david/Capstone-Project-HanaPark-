@@ -6,7 +6,7 @@ const fetchReservation = async (req,res) => {
     try {
         const reservations = await Reservation.find()
         .populate("reservedBy", "firstname lastname userType studentId")
-        .populate("slotId", "slotCode slotType").sort({ createdAt: -1 });
+        .populate("slotId", "slotNumber slotUser slotType slotPrice").sort({ createdAt: -1 });
         
         res.status(200).json(reservations);
         

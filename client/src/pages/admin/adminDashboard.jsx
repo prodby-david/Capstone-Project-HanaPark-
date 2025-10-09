@@ -7,6 +7,7 @@ import DashboardCard from '../../components/cards/dashboardCards';
 import { UsersIcon, MapPinIcon, CalendarIcon, ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
 import AdminAPI from '../../lib/inteceptors/adminInterceptor'
 import { socket } from '../../lib/socket';
+import UserFooter from '../../components/footers/userFooter';
 
 
 const AdminDashboard = () => {
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
   const [showSlots, setShowSlots] = useState([]);
   const [countUser, setCountUser] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [unseenCount, setUnseenCount] = useState(0);
   const [countReservation, setCountReservation] = useState([]);
   const navigate = useNavigate();
 
@@ -25,19 +27,34 @@ const AdminDashboard = () => {
   }, [navigate]);
 
   useEffect(() => {
-    socket.connect();
-    socket.emit("joinAdmin");
+  const fetchNotifications = async () => {
+    try {
+      const res = await AdminAPI.get('/admin/reservations'); // fetch all reservations
+      // Sort newest first
+      const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setNotifications(sorted);
+    } catch (err) {
+      console.error("Error fetching notifications:", err.response?.data || err.message);
+    }
+  };
 
-    socket.on("newReservation", (reservation) => {
-      console.log("📦 New reservation received:", reservation);
-      setNotifications((prev) => [reservation, ...prev]);
-    });
+  fetchNotifications();
 
-    return () => {
-      socket.off("newReservation");
-      socket.disconnect();
-    };
-  }, []);
+  socket.connect();
+  socket.emit("joinAdmin");
+
+  socket.on("newReservation", (reservation) => {
+  setNotifications((prev) => [reservation, ...prev]);
+  setUnseenCount(prev => prev + 1); 
+});
+
+
+  return () => {
+    socket.off("newReservation");
+    socket.disconnect();
+  };
+}, []);
+
 
 
    useEffect(() => {
@@ -130,30 +147,48 @@ const AdminDashboard = () => {
             </motion.div>
 
             {/* ✅ Real-Time Notification Stack */}
-              <div className="px-10 mt-10">
-                <h2 className="text-lg font-semibold text-color mb-3">Users Activities</h2>
-                <div className="bg-white shadow-md rounded-xl p-4 h-72 overflow-y-auto border border-gray-200">
-                  {notifications.length === 0 ? (
-                    <p className="text-gray-500 text-sm text-center">No activities yet.</p>
-                  ) : (
-                    notifications.map((notif, index) => (
-                      <div key={index} className="p-3 border-b border-gray-200 text-sm">
+             <div className="flex flex-col items-center justify-center my-10 w-full px-5">
+            <div className="w-full max-w-4xl">
+              <h2 className="text-lg font-semibold text-color mb-3 text-center relative">
+                  Users Activities
+              </h2>
+              <div className="bg-white shadow-md rounded-xl p-4 h-96 overflow-y-auto border border-gray-200">
+                {notifications.length === 0 ? (
+                  <p className="text-gray-500 text-sm text-center">Loading activities...</p>
+                ) : (
+                  notifications.map((notif, index) => {
+                    const isLatest = index === 0 && unseenCount > 0; 
+                    return (
+                      <div
+                        key={notif._id || index}
+                        className="p-3 border-b border-gray-200 text-sm relative"
+                      >
+
+                        {isLatest && (
+                          <span className="absolute top-1/2 left-[-6px] -translate-y-1/2 w-2 h-2 bg-color-3 rounded-full animate-pulse"></span>
+                        )}
+
                         <p className="font-semibold text-color">
                           {notif.reservedBy?.firstname} {notif.reservedBy?.lastname}
                         </p>
                         <p className="text-gray-600">
-                          Reserved slot <strong>{notif.slotId?.slotCode}</strong> for a {notif.vehicleType}.
+                          Reserved on slot <span className='font-semibold'>{notif.slotCode}</span> with {notif.vehicleType} vehicle.
                         </p>
                         <p className="text-xs text-gray-400">
                           {new Date(notif.createdAt).toLocaleString()}
                         </p>
                       </div>
-                    ))
-                  )}
-                </div>
+                    );
+                  })
+                )}
               </div>
 
+            </div>
+          </div>
+
         </div>
+
+        <UserFooter />
     </>
   )
 }

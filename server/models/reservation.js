@@ -61,7 +61,7 @@ const reservationSchema = mongoose.Schema({
     isExitUsed: {
         type: Boolean, 
         default: false 
-    } ,   
+    },   
     expiresAt: { 
         type: Date, 
         required: true 

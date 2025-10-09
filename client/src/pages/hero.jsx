@@ -12,6 +12,7 @@ const Hero = () => {
 
   return (
     <>
+      <div className='flex flex-col min-h-screen'>
 
       <Header />
 
@@ -59,7 +60,7 @@ const Hero = () => {
       </motion.div>
       
     <Footer />
-
+ </div>
     </>
   );
 }

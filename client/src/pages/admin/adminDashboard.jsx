@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { container } from '../../lib/motionConfigs';
 import AdminHeader from '../../components/headers/adminHeader';
 import DashboardCard from '../../components/cards/dashboardCards';
-import { UsersIcon, MapPinIcon, CalendarIcon, ChatBubbleOvalLeftIcon } from '@heroicons/react/24/solid'
+import { UsersIcon, MapPinIcon, CalendarIcon, ChatBubbleOvalLeftIcon, UserIcon, AcademicCapIcon, IdentificationIcon } from '@heroicons/react/24/solid'
 import AdminAPI from '../../lib/inteceptors/adminInterceptor'
 import { socket } from '../../lib/socket';
 import UserFooter from '../../components/footers/userFooter';
@@ -25,6 +25,19 @@ const AdminDashboard = () => {
       navigate('/admin/passcode'); 
     }
   }, [navigate]);
+
+  const getUserTypeIcon = (type) => {
+  switch (type) {
+    case 'Student':
+      return <AcademicCapIcon className="w-5 h-5 text-blue-500 inline mr-1" />;
+    case 'Staff':
+      return <IdentificationIcon className="w-5 h-5 text-green-500 inline mr-1" />;
+    case 'Visitor':
+      return <UserIcon className="w-5 h-5 text-yellow-500 inline mr-1" />;
+    default:
+      return <UserIcon className="w-5 h-5 text-gray-400 inline mr-1" />;
+  }
+};
 
   useEffect(() => {
   const fetchNotifications = async () => {
@@ -168,9 +181,11 @@ const AdminDashboard = () => {
                           <span className="absolute top-1/2 left-[-6px] -translate-y-1/2 w-2 h-2 bg-color-3 rounded-full animate-pulse"></span>
                         )}
 
-                        <p className="font-semibold text-color">
+                        <p className="font-semibold text-color flex items-center gap-1">
+                          {getUserTypeIcon(notif.reservedBy?.userType)}
                           {notif.reservedBy?.firstname} {notif.reservedBy?.lastname}
                         </p>
+
                         <p className="text-gray-600">
                           Reserved on slot <span className='font-semibold'>{notif.slotCode}</span> with {notif.vehicleType} vehicle.
                         </p>

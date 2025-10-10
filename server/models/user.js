@@ -54,6 +54,10 @@ const userSchema = new mongoose.Schema({
     status:{
         type: String,
         default:'Active'
+    },
+    currentToken:{
+        type: String,
+        default: null
     }
 });
 

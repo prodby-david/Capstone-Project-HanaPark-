@@ -31,14 +31,15 @@ const studentSignInController = async (req,res) => {
         res.cookie('user_token', user_token, {
             httpOnly: true,
             secure: true,
-            maxAge: 30 * 60 * 1000,
+            maxAge: 60 * 60 * 1000,
             sameSite: 'None'
         });
 
         res.cookie('user_refresh_token', user_refresh_token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'None'
+            sameSite: 'None',
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         res.status(200).json({message: "Sign in successful", success: true, 

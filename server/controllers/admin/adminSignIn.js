@@ -31,14 +31,15 @@ const AdminSignInController = async (req,res) => {
         res.cookie('admin_token', admin_token, {
             httpOnly: true,
             secure: true,   
-            maxAge: 30 * 60 * 1000, 
-            sameSite: 'None'
+            sameSite: 'None',
+            maxAge: 60 * 60 * 1000, 
         });
 
         res.cookie('admin_refresh_token', adminrefreshtoken, {
             httpOnly: true,
             secure: true,
-            sameSite: 'None'
+            sameSite: 'None',
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         res.status(200).json({message: 'Admin Sign in success.', success: true});

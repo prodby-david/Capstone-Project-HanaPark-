@@ -20,13 +20,24 @@ UserAPI.interceptors.response.use(
       }
 
       try {
+
+        if (message.includes('logged in elsewhere')) {
+          toast.error('You have been logged out because your account was logged in on another device.', toastOptions);
+        } else if (message.includes('expired')) {
+          toast.error('Your session has expired. Please log in again.', toastOptions);
+        } else {
+          toast.error('Session expired. Please log in again.', toastOptions);
+        }
+
         await UserAPI.post("/logout");
         toast.error('Session expired. Please log in again.', toastOptions);
       } catch (err) {
         console.error("Error clearing cookies:", err);
       }
       sessionStorage.clear();
-      window.location.href = "/";
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
     }
     return Promise.reject(error);
   }

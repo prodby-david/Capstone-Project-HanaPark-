@@ -6,11 +6,13 @@ import { ArrowLeftStartOnRectangleIcon, BellIcon } from '@heroicons/react/24/out
 import { motion, AnimatePresence } from 'framer-motion';
 import UserAPI from '../../lib/inteceptors/userInterceptor';
 import { socket } from '../../lib/socket';
+import { useNavigate } from 'react-router-dom';
 
 const UserHeader = () => {
   const { logout, auth } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!auth.user?.userId) return;
@@ -76,6 +78,7 @@ const UserHeader = () => {
         }).then(async () => {
           await UserAPI.post('/logout', {});
           logout();
+          navigate('/');
         });
       }
     });

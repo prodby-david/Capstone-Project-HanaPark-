@@ -12,6 +12,7 @@ UserAPI.interceptors.response.use(
   async (error) => {
 
     const originalRequest = error.config;
+    const message = error.response?.data?.message || "";
     
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
 

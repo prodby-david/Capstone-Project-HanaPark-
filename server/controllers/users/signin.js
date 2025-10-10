@@ -26,6 +26,9 @@ const studentSignInController = async (req,res) => {
         };
 
         const user_token = jwt.sign(payload, process.env.USER_ACCESS_KEY, {expiresIn: "1h"});
+        user.currentToken = user_token;
+        await user.save();
+        
         const user_refresh_token = jwt.sign(payload, process.env.USER_REFRESH_KEY, {expiresIn: "7d"});
         
         res.cookie('user_token', user_token, {

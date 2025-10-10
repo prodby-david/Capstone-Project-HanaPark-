@@ -88,7 +88,7 @@ const CreateReservation = async(req,res) => {
             .populate('slotId', 'slotType slotCode');
 
             req.io.emit('slotUpdated', updatedSlot);
-            req.io.to("admins").emit("newReservation", populatedReservation);
+            req.io.to("admins").emit("reservationCreated", populatedReservation);
             
             res.status(201).json({message: 'Reservation created successfully.', 
                 success: true, 

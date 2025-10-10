@@ -31,7 +31,7 @@ UserRouter.post('/reset-password/:token', ResetPasswordController);
 UserRouter.get('/slots', FetchSlots);
 UserRouter.get('/user-vehicle', authUserToken, GetUserVehicleController );
 UserRouter.get('/refresh', VerifyUserRefreshToken, UserRefreshTokenController );
-UserRouter.post('/logout', Logout);
+UserRouter.post('/logout', authUserToken, Logout);
 UserRouter.get('/reset-password/:token', VerifyResetToken);
 UserRouter.post('/reservation-form/:slotId', authUserToken, CreateReservation);
 UserRouter.get('/user/vehicle-type', authUserToken, GetUserVehicleController);

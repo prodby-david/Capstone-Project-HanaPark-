@@ -51,7 +51,7 @@ const UserReservationLists = () => {
     })
 
     return () => {
-      socket.off('reservationCreated')
+      socket.off('newReservation')
       socket.off('reservationCancelled')
       socket.off('reservationApproved')
       socket.off('reservationUpdated')

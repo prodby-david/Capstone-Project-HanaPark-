@@ -7,6 +7,9 @@ import { Server } from 'socket.io';
 import connectDB from './config/db.js';
 import UserRouter from './routers/user/userRoutes.js';
 import AdminRoute from './routers/admin/adminRoutes.js';
+import Reservation from './models/reservation.js';
+import Slot from './models/slot.js';
+import cron from 'node-cron';
 
 
 dotenv.config();
@@ -20,7 +23,6 @@ const allowedOrigins = [
   'http://localhost:5173',
   'https://hanapark.vercel.app'
 ];
-
 
 app.use(cors({
   origin: allowedOrigins,
@@ -66,6 +68,29 @@ app.use((req, res, next) => {
 
 app.use('/admin', AdminRoute);  
 app.use('/', UserRouter);       
+
+cron.schedule('* * * * *', async () => {
+  console.log('🕒 Running cron job: checking expired reservations...');
+  try {
+    const now = new Date();
+
+    const expiredReservations = await Reservation.find({
+      status: 'Pending',
+      expiresAt: { $lte: now }
+    });
+
+    for (const res of expiredReservations) {
+      await Slot.findByIdAndUpdate(res.slotId, { slotStatus: 'Available' });
+      await Reservation.findByIdAndDelete(res._id);
+    }
+
+    if (expiredReservations.length > 0) {
+      console.log(`🧹 Cleaned up ${expiredReservations.length} expired reservations.`);
+    }
+  } catch (err) {
+    console.error('Error cleaning expired reservations:', err);
+  }
+});
 
 
 server.listen(process.env.PORT, () => {

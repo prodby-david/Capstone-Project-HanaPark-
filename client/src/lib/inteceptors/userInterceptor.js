@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 
-let hasShownSessionToast = false; // prevent repeated toasts
+let hasShownSessionToast = false;
 
 const UserAPI = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -15,14 +15,12 @@ UserAPI.interceptors.response.use(
     const originalRequest = error.config;
     const message = error.response?.data?.message || "";
 
-    // Handle 401 / 403 errors
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      // Prevent recursion and infinite loop
+
       if (originalRequest.url.includes('/sign-in') || originalRequest.url.includes('/logout')) {
         return Promise.reject(error);
       }
 
-      // Only show one toast per session expiration
       if (!hasShownSessionToast) {
         hasShownSessionToast = true;
 
@@ -34,7 +32,6 @@ UserAPI.interceptors.response.use(
           toast.error('Session expired. Please log in again.', toastOptions);
         }
 
-        // try logging out only once
         try {
           await UserAPI.post("/logout").catch(() => {});
         } catch (err) {
@@ -45,8 +42,8 @@ UserAPI.interceptors.response.use(
 
         setTimeout(() => {
           window.location.href = "/";
-          hasShownSessionToast = false; // reset after redirect
-        }, 3000);
+          hasShownSessionToast = false; 
+        }, 1000);
       }
     }
 

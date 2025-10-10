@@ -25,7 +25,22 @@ const UserReservationLists = () => {
 
   // --- SOCKET LISTENERS ---
   useEffect(() => {
+    if (socket.connected) {
+      socket.emit("joinAdmin");
+    } else {
+      socket.on("connect", () => {
+        socket.emit("joinAdmin");
+      });
+    }
+
+    return () => {
+      socket.off("connect");
+    };
+  }, []);
+
+  useEffect(() => {
     socket.on('reservationCreated', (newReservation) => {
+      console.log("📩 Received reservationCreated:", newReservation);
       setReservations(prev => {
         const exists = prev.some(r => r._id === newReservation._id)
         return exists ? prev : [...prev, newReservation]

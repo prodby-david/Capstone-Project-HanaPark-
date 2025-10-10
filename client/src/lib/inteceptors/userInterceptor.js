@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import toastOptions from '../toastConfig';
+import toastOptions from '../../lib/toastConfig';
 
 const UserAPI = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

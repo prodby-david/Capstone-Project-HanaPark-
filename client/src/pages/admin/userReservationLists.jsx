@@ -25,7 +25,7 @@ const UserReservationLists = () => {
 
   // --- SOCKET LISTENERS ---
   useEffect(() => {
-    socket.on('reservationCreated', (newReservation) => {
+    socket.on('newReservation', (newReservation) => {
       setReservations(prev => {
         const exists = prev.some(r => r._id === newReservation._id)
         return exists ? prev : [...prev, newReservation]

@@ -22,7 +22,7 @@ import ApproveReservation from '../../controllers/admin/reservation/manualApprov
 import GetCompletedReservation from '../../controllers/admin/reservation/completedReservations.js';
 import ArchiveUser from '../../controllers/admin/accounts/archived.js';
 import cancelReservation from '../../controllers/admin/reservation/cancelReservation.js';
-import CreateStaffAccount from '../../controllers/admin/accounts/registerStaff.js';
+
 
 
 const AdminRoute = express.Router();
@@ -41,8 +41,6 @@ AdminRoute.use(authRoles('admin'));
 AdminRoute.post('/student-registration', studentRegistrationController);
 AdminRoute.post('/account', AdminRegistrationController);
 AdminRoute.post('/slots', CreateSlot);
-
-AdminRoute.post('/create-account/staff', CreateStaffAccount);
 
 AdminRoute.post('/verify-reservation', VerifyReservation);
 AdminRoute.post("/approve-reservation/:id", ApproveReservation);

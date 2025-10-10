@@ -32,13 +32,13 @@ const UserHeader = () => {
       setNotifications(prev => [notif, ...prev]);
     };
 
-    socket.on("reservationCancelledByAdmin", handleNotification);
+    socket.on("cancelledReservationByAdmin", handleNotification);
     socket.on("reservationApproved", handleNotification);
     socket.on("reservationVerified", handleNotification);
     socket.on("reservationCompleted", handleNotification);
 
     return () => {
-      socket.off("reservationCancelledByAdmin", handleNotification);
+      socket.off("cancelledReservationByAdmin", handleNotification);
       socket.off("reservationApproved", handleNotification);
       socket.off("reservationVerified", handleNotification);
       socket.off("reservationCompleted", handleNotification);

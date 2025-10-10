@@ -32,9 +32,8 @@ const cancelReservation = async (req, res) => {
       message: `Your reservation for slot ${populatedReservation.slotCode} has been cancelled by admin.`
       });
 
-    console.log('Emitting to room:', populatedReservation.reservedBy._id.toString());
-
-   req.io.to(populatedReservation.reservedBy._id.toString()).emit('reservationUpdated', populatedReservation);
+      req.io.to(populatedReservation.reservedBy._id.toString()).emit('cancelledReservationByAdmin', notif);
+      req.io.to(populatedReservation.reservedBy._id.toString()).emit('reservationUpdated', populatedReservation);
    
     res.status(200).json({ message: 'Reservation cancelled successfully' });
 

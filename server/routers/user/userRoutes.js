@@ -3,7 +3,6 @@ import studentSignInController from '../../controllers/users/signin.js';
 import FetchSlots from '../../controllers/admin/slots/fetchSlots.js';
 import UserRefreshTokenController from '../../controllers/users/userRefreshToken.js';
 import VerifyUserRefreshToken from '../../middlewares/verifyUserRefreshToken.js';
-import ClearUserCookies from '../../controllers/users/clearCookies.js';
 import VerifyResetToken from '../../controllers/auth/verifyResetToken.js';
 import ForgotPasswordController from '../../controllers/auth/forgot-password.js';
 import ResetPasswordController from '../../controllers/auth/reset-password.js';
@@ -19,6 +18,7 @@ import UpdateVehicleController from '../../controllers/users/updateVehicle.js';
 import { getUserNotifications, markAsRead, markAllAsRead } from '../../controllers/users/notification.js';
 import FetchOneSlot from '../../controllers/admin/slots/fetchOneSlot.js';
 import GetVisitorSlots from '../../controllers/users/visitorSlot.js';
+import Logout from '../../controllers/users/logout.js';
 
 
 
@@ -31,7 +31,7 @@ UserRouter.post('/reset-password/:token', ResetPasswordController);
 UserRouter.get('/slots', FetchSlots);
 UserRouter.get('/user-vehicle', authUserToken, GetUserVehicleController );
 UserRouter.get('/refresh', VerifyUserRefreshToken, UserRefreshTokenController );
-UserRouter.post('/logout', ClearUserCookies);
+UserRouter.post('/logout', Logout);
 UserRouter.get('/reset-password/:token', VerifyResetToken);
 UserRouter.post('/reservation-form/:slotId', authUserToken, CreateReservation);
 UserRouter.get('/user/vehicle-type', authUserToken, GetUserVehicleController);

@@ -53,13 +53,13 @@ const AdminDashboard = () => {
   socket.connect();
   socket.emit("joinAdmin");
 
-  socket.on("newReservation", (reservation) => {
+  socket.on("reservationCreated", (reservation) => {
   setNotifications((prev) => [reservation, ...prev]);
   setUnseenCount(prev => prev + 1); 
 });
 
   return () => {
-    socket.off("newReservation");
+    socket.off("reservationCreated");
     socket.disconnect();
   };
 }, []);

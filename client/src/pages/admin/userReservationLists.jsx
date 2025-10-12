@@ -25,17 +25,13 @@ const UserReservationLists = () => {
 
   // --- SOCKET LISTENERS ---
   useEffect(() => {
-    if (socket.connected) {
+    socket.on("connect", () => {
       socket.emit("joinAdmin");
-    } else {
-      socket.on("connect", () => {
-        socket.emit("joinAdmin");
-      });
-    }
+    });
 
-    return () => {
-      socket.off("connect");
-    };
+  return () => {
+    socket.off("connect");
+  };
   }, []);
 
   useEffect(() => {

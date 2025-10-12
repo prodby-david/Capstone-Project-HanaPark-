@@ -38,6 +38,7 @@ const AccountSettings = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const inputRef = useRef(null);
 
@@ -50,6 +51,8 @@ const AccountSettings = () => {
 
   const togglePassword = () => setShowPassword(prev => !prev);
   const toggleNewPassword = () => setShowNewPassword(prev => !prev);
+  const toggleConfirmPassword = () => setShowConfirmPassword(prev => !prev);
+
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -203,21 +206,21 @@ const AccountSettings = () => {
                 className={`flex items-center w-full px-3 py-2 rounded-md cursor-pointer ${activeSection === "profile" ? "bg-blue-200" : "hover:bg-gray-100"}`}
               >
                 <UserIcon className="w-5 h-5 mr-2 text-color" />
-                <span className="text-sm font-semibold">Profile Information</span>
+                <span className="text-xs font-semibold text-color-3">Profile Information</span>
               </button>
               <button
                 onClick={() => setActiveSection("password")}
                 className={`flex items-center w-full px-3 py-2 rounded-md cursor-pointer ${activeSection === "password" ? "bg-blue-200" : "hover:bg-gray-100"}`}
               >
                 <KeyIcon className="w-5 h-5 mr-2 text-color" />
-                <span className="text-sm font-semibold">Change Password</span>
+                <span className="text-xs font-semibold text-color-3">Change Password</span>
               </button>
               <button
                 onClick={() => setActiveSection("vehicle")}
                 className={`flex items-center w-full px-3 py-2 rounded-md cursor-pointer ${activeSection === "vehicle" ? "bg-blue-200" : "hover:bg-gray-100"}`}
               >
                 <IdentificationIcon className="w-5 h-5 mr-2 text-color" />
-                <span className="text-sm font-semibold">Vehicle Information</span>
+                <span className="text-xs font-semibold text-color-3">Vehicle Information</span>
               </button>
             </div>
           </div>
@@ -262,19 +265,19 @@ const AccountSettings = () => {
                 <form className="h-[350px] overflow-y-auto">
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Last Name</label>
-                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" value={userInfo.lastname} readOnly />
+                    <input type="text" className="outline-0 p-2 text-sm text-color-2 w-full" value={userInfo.lastname} readOnly />
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">First Name</label>
-                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" value={userInfo.firstname} readOnly />
+                    <input type="text" className="outline-0  p-2 text-sm text-color-2 w-full" value={userInfo.firstname} readOnly />
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Middle Name</label>
-                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" value={userInfo.middlename} readOnly />
+                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" value={userInfo.middlename} />
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Student ID</label>
-                    <input type="number" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" value={userInfo.studentId} readOnly />
+                    <input type="number" className="outline-0 p-2 text-sm text-color-2 w-full" value={userInfo.studentId} readOnly />
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Email</label>
@@ -321,8 +324,28 @@ const AccountSettings = () => {
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Confirm New Password</label>
-                    <input type="password" name="confirmnewpassword" value={password.confirmnewpassword} onChange={handlePasswordChange} className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" />
+                    <div className="relative">
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        name="confirmnewpassword"
+                        value={password.confirmnewpassword}
+                        onChange={handlePasswordChange}
+                        className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full"
+                      />
+                      {showConfirmPassword ? (
+                        <EyeIcon
+                          className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer"
+                          onClick={toggleConfirmPassword}
+                        />
+                      ) : (
+                        <EyeSlashIcon
+                          className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer"
+                          onClick={toggleConfirmPassword}
+                        />
+                      )}
+                    </div>
                   </div>
+
                   <SaveChanges />
                 </form>
               </div>
@@ -352,7 +375,6 @@ const AccountSettings = () => {
                     </select>
                   </div>
 
-                  {/* Brand Dropdown */}
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Brand</label>
                     <select
@@ -375,20 +397,26 @@ const AccountSettings = () => {
                     </select>
                   </div>
 
-                  {/* Model */}
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Year Model</label>
-                    <input
-                      type="number"
+                    <select
                       name="model"
                       className="outline-0 border-b p-2 text-sm text-color-2 w-full"
                       value={vehicleInformation.model || ""}
                       onChange={handleVehicleChange}
-                      placeholder="e.g. 2024, 2025, etc."
-                    />
+                    >
+                      <option value="">Select Year</option>
+                      {Array.from({ length: 40 }, (_, i) => {
+                        const year = new Date().getFullYear() - i;
+                        return (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        );
+                      })}
+                    </select>
                   </div>
 
-                  {/* Plate Number */}
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Plate Number</label>
                     <input
@@ -401,19 +429,28 @@ const AccountSettings = () => {
                     />
                   </div>
 
-                  {/* Color */}
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Color</label>
-                    <input
-                      type="text"
+                    <select
                       name="color"
                       className="outline-0 border-b p-2 text-sm text-color-2 w-full"
                       value={vehicleInformation.color || ""}
                       onChange={handleVehicleChange}
-                    />
+                    >
+                      <option value="">Select Color</option>
+                      <option value="White">White</option>
+                      <option value="Black">Black</option>
+                      <option value="Gray">Gray</option>
+                      <option value="Silver">Silver</option>
+                      <option value="Red">Red</option>
+                      <option value="Blue">Blue</option>
+                      <option value="Green">Green</option>
+                      <option value="Yellow">Yellow</option>
+                      <option value="Other">Other</option>
+                    </select>
+
                   </div>
 
-                  {/* Transmission Dropdown */}
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Transmission (Optional)</label>
                     <select

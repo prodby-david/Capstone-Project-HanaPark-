@@ -14,6 +14,7 @@ const AdminDashboard = () => {
 
   const [showSlots, setShowSlots] = useState([]);
   const [countUser, setCountUser] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [unseenCount, setUnseenCount] = useState(0);
   const [countReservation, setCountReservation] = useState([]);
@@ -63,6 +64,19 @@ const AdminDashboard = () => {
     socket.disconnect();
   };
 }, []);
+
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        const res = await AdminAPI.get("/admin/feedbacks");
+        setFeedbacks(res.data);
+      } catch (err) {
+        console.error("Failed to fetch feedbacks:", err);
+      }
+    };
+
+    fetchFeedbacks();
+  }, []);
 
 
 
@@ -149,7 +163,7 @@ const AdminDashboard = () => {
                 <DashboardCard 
                 icon={ChatBubbleOvalLeftIcon}
                 title={'Feedbacks'}
-                value={0}
+                value={feedbacks.length}
                 to={'/feedbacks'} 
                 />
                    

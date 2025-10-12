@@ -191,7 +191,7 @@ const Recents = () => {
                                   className='flex items-center justify-center gap-1 bg-red-500 text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-[140px] text-sm sm:text-base transition-all duration-200'
                                 >
                                   <XMarkIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                  Cancel
+                                  <span className="hidden md:inline">Cancel</span>
                                 </button>
                               )}
 
@@ -201,10 +201,11 @@ const Recents = () => {
                                   className='flex items-center justify-center gap-1 bg-color text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-[140px] text-sm sm:text-base transition-all duration-200'
                                 >
                                   <QrCodeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                  View QR Code
+                                  <span className="hidden md:inline">View QR Code</span>
                                 </button>
                               )}
                             </div>
+
 
                           ) : (
                             <span className="text-gray-400 text-xs">—</span>

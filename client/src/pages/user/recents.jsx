@@ -184,7 +184,7 @@ const Recents = () => {
                         <div>{r.plateNumber}</div>
                         <div className="flex flex-col items-center justify-center gap-y-1">
                           {(r.status === 'Pending' || r.status === 'Reserved') ? (
-                            <div className="flex flex-col sm:flex-row gap-2 items-center justify-center w-full">
+                            <div className="flex flex-row md:flex-col gap-2 items-center justify-center w-full">
                               {r.status === 'Pending' && (
                                 <button 
                                   onClick={() => handleCancelReservation(r._id)}

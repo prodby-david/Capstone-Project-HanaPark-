@@ -243,18 +243,18 @@ const UserReservationLists = () => {
             <div className="min-w-[1000px] flex flex-col gap-2 p-4">
               
               {/* 🔹 Header Row */}
-              <div className={`grid gap-4 bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
+              <div className={`grid gap-4 items-center bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
               selectedStatus === "Pending" || selectedStatus === "Reserved"
                   ? "grid-cols-9"
                   : "grid-cols-8"
               }`}>
                 <div>Name</div>
+                <div>Verification Code</div>
                 <div>Slot Code</div>
                 <div>Slot Type</div>
                 <div>Price</div>
                 <div>Vehicle Type</div>
                 <div>Plate Number</div>
-                <div>Verification Code</div>
                 <div>Date & Time</div>
                 {(selectedStatus === "Pending" || selectedStatus === "Reserved") && <div>Actions</div>}
               </div>
@@ -265,7 +265,7 @@ const UserReservationLists = () => {
                 .map((res) => (
                   <div
                     key={res._id}
-                    className={`grid gap-4 bg-white text-color-2 font-semibold text-sm p-4 rounded-t-lg text-center ${
+                    className={`grid gap-4 items-center bg-white text-color-2 text-sm p-4 rounded-t-lg text-center ${
                     selectedStatus === "Pending" || selectedStatus === "Reserved"
                       ? "grid-cols-9"
                       : "grid-cols-8"
@@ -276,31 +276,34 @@ const UserReservationLists = () => {
                         ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}`
                         : "Deleted User"}
                     </div>
+                    <div>{res.verificationCode}</div>
                     <div>{res.slotCode}</div>
                     <div>{res.slotId?.slotType}</div>
                     <div>{res.slotPrice}</div>
                     <div>{res.vehicleType}</div>
                     <div>{res.plateNumber}</div>
-                    <div>{res.verificationCode}</div>
                     <div>
                       {res.reservationDate} {res.reservationTime}
                     </div>
                     {(selectedStatus === "Pending" || selectedStatus === "Reserved") && (
                   <div>
                     {selectedStatus === "Pending" && (
-                      <div className="flex justify-center gap-2">
-                        <button onClick={() => handleApprove(res._id)}>
-                          <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-green-500" />
+                      <div className="flex flex-col justify-center gap-2">
+                        <button onClick={() => handleApprove(res._id)} className='flex items-center justify-center gap-x-1 cursor-pointer bg-green-500  text-white px-2 py-1 rounded hover:bg-green-600'>
+                          <CheckCircleIcon className="w-5 h-5 " />
+                          Approve
                         </button>
-                        <button onClick={() => handleCancelAdminReservation(res._id)}>
-                          <XCircleIcon className="w-6 h-6 cursor-pointer hover:text-red-500" />
+                        <button onClick={() => handleCancelAdminReservation(res._id)} className='flex items-center justify-center gap-x-1 cursor-pointer bg-red-500  text-white px-2 py-1 rounded hover:bg-red-600'>
+                          <XCircleIcon className="w-5 h-5 " />
+                          Cancel
                         </button>
                       </div>
                     )}
                     {selectedStatus === "Reserved" && (
                       <div className="flex justify-center gap-2">
-                        <button onClick={() => handleComplete(res._id)}>
-                          <CheckCircleIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" />
+                        <button onClick={() => handleComplete(res._id)} className='flex items-center justify-center gap-x-1 cursor-pointer bg-green-500  text-white px-2 py-1 rounded hover:bg-green-600'>
+                          <CheckCircleIcon className="w-5 h-5 " />
+                          Complete
                         </button>
                       </div>
                     )}

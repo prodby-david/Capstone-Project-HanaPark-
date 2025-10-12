@@ -19,6 +19,7 @@ import { getUserNotifications, markAsRead, markAllAsRead } from '../../controlle
 import FetchOneSlot from '../../controllers/admin/slots/fetchOneSlot.js';
 import GetVisitorSlots from '../../controllers/users/visitorSlot.js';
 import Logout from '../../controllers/users/logout.js';
+import createFeedback from '../../controllers/users/feedbackController.js';
 
 
 
@@ -45,6 +46,7 @@ UserRouter.get('/notifications', authUserToken, getUserNotifications)
 UserRouter.patch('/read/:id', authUserToken, markAsRead)
 UserRouter.patch('/notifications/mark-all-read', authUserToken, markAllAsRead)
 UserRouter.get('/visitors', GetVisitorSlots);
+UserRouter.post('/feedback', authUserToken, createFeedback);
 
 
 

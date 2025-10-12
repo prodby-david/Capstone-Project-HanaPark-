@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { ChatBubbleLeftEllipsisIcon, XMarkIcon, StarIcon } from "@heroicons/react/24/solid";
+import UserAPI from "../../lib/inteceptors/userInterceptor";
+import Swal from "sweetalert2";
 
 
 const FeedbackWidget = () => {
@@ -7,10 +9,32 @@ const FeedbackWidget = () => {
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: send to backend (e.g., axios.post('/feedback', { rating, message }))
-    setOpen(false);
+
+    try {
+      await UserAPI.post("/feedback", {
+        rating,
+        message,
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Thank you for your feedback!',
+        showConfirmButton: false,
+        timer: 1000
+      })
+      setOpen(false);
+      setMessage("");
+      setRating(0);
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.response?.data?.message || 'Something went wrong. Please try again later.',
+        showConfirmButton: true,
+      });
+    }
   };
 
   return (
@@ -33,7 +57,7 @@ const FeedbackWidget = () => {
             {[1, 2, 3, 4, 5].map((star) => (
               <StarIcon
                 key={star}
-                className={`w-6 h-6 cursor-pointer ${
+                className={`w-6 h-6 cursor-pointer hover:text-color-3 ${
                   star <= rating ? "text-color-3" : "text-gray-300"
                 }`}
                 onClick={() => setRating(star)}
@@ -51,7 +75,7 @@ const FeedbackWidget = () => {
 
           <button
             onClick={handleSubmit}
-            className="mt-3 w-full bg-color-3 text-white rounded-lg py-2 text-sm hover:scale-105 transition"
+            className="mt-3 w-full bg-color-3 text-white rounded-lg py-2 text-sm cursor-pointer hover:scale-105 transition"
           >
             Submit
           </button>

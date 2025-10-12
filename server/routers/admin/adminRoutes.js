@@ -22,6 +22,7 @@ import ApproveReservation from '../../controllers/admin/reservation/manualApprov
 import GetCompletedReservation from '../../controllers/admin/reservation/completedReservations.js';
 import ArchiveUser from '../../controllers/admin/accounts/archived.js';
 import cancelReservation from '../../controllers/admin/reservation/cancelReservation.js';
+import GetAllFeedbacks from '../../controllers/users/getFeedback.js';
 
 
 
@@ -47,6 +48,7 @@ AdminRoute.post("/approve-reservation/:id", ApproveReservation);
 
 AdminRoute.get('/reservations', fetchReservation);
 AdminRoute.get('/reservations/completed', GetCompletedReservation);
+AdminRoute.get('/feedbacks', GetAllFeedbacks);
 
 AdminRoute.put('/slots/:id', EditSlot);
 

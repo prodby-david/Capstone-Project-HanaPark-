@@ -185,6 +185,17 @@ const Recents = () => {
                         <div className="flex flex-col items-center justify-center gap-y-1">
                           {(r.status === 'Pending' || r.status === 'Reserved') ? (
                             <div className="flex flex-row md:flex-col gap-2 items-center justify-center w-full">
+                              
+                              {latestReservation && r._id === latestReservation._id && (
+                                <button 
+                                  onClick={() => setShowQR(true)}
+                                  className='flex items-center justify-center gap-1 bg-color text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-[140px] text-sm sm:text-base transition-all duration-200'
+                                >
+                                  <QrCodeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                                  <span className="hidden md:inline">View QR</span>
+                                </button>
+                              )}
+
                               {r.status === 'Pending' && (
                                 <button 
                                   onClick={() => handleCancelReservation(r._id)}
@@ -195,15 +206,6 @@ const Recents = () => {
                                 </button>
                               )}
 
-                              {latestReservation && r._id === latestReservation._id && (
-                                <button 
-                                  onClick={() => setShowQR(true)}
-                                  className='flex items-center justify-center gap-1 bg-color text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-[140px] text-sm sm:text-base transition-all duration-200'
-                                >
-                                  <QrCodeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                  <span className="hidden md:inline">View QR</span>
-                                </button>
-                              )}
                             </div>
 
 

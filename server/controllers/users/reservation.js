@@ -89,7 +89,6 @@ const CreateReservation = async(req,res) => {
 
             req.io.emit('slotUpdated', updatedSlot);
             req.io.to("admins").emit("reservationCreated", populatedReservation);
-            console.log("✅ Sent reservationCreated to admins:", populatedReservation._id);
             
             res.status(201).json({message: 'Reservation created successfully.', 
                 success: true, 

@@ -31,6 +31,7 @@ import GuestRoute from './routes/guestRoute'
 import UserType from './pages/admin/userType'
 import StaffRegistration from './components/forms/admin/staffRegistration'
 import UserRegistration from './pages/admin/registration/userRegistration'
+import AdminFeedbacks from './pages/admin/userFeedback'
 
 function App() {
 
@@ -180,6 +181,15 @@ function App() {
           element={ 
           <AdminRoute>
             <StaffRegistration />
+          </AdminRoute> 
+          } 
+          />
+
+          <Route 
+          path='/feedbacks' 
+          element={ 
+          <AdminRoute>
+            <AdminFeedbacks />
           </AdminRoute> 
           } 
           />

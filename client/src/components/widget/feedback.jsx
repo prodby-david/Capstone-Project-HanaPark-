@@ -26,8 +26,8 @@ const FeedbackWidget = () => {
       Swal.fire({
         icon: "success",
         title: "Thank you for your feedback!",
-        showConfirmButton: false,
-        timer: 1000,
+        showConfirmButton: true,
+        confirmButtonText: "Close"
       });
       setOpen(false);
       setFeedbacks({ rating: 0, message: "" });
@@ -76,6 +76,7 @@ const FeedbackWidget = () => {
             className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-color-3 resize-none"
             rows="3"
             placeholder="Write your feedback..."
+            maxLength={150}
             value={feedbacks.message}
             onChange={handleChange}
           ></textarea>

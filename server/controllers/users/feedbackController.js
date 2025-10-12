@@ -15,8 +15,8 @@ const createFeedback = async (req, res) => {
       return res.status(400).json({ message: "Rating and message are required." });
     }
 
-     const user = await User.findById(userId).select("firstname lastname");
-      const name = `${user.firstname} ${user.lastname}`;
+    const user = await User.findById(userId).select("firstname lastname");
+    const name = `${user.firstname} ${user.lastname}`;
 
     const newFeedback = new Feedback({
       userId,

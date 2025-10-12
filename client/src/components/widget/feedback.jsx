@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 const FeedbackWidget = () => {
   const [open, setOpen] = useState(false);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [rating, setRating] = useState(0);
   const [message, setMessage] = useState("");
 
@@ -13,7 +14,7 @@ const FeedbackWidget = () => {
     e.preventDefault();
 
     try {
-      await UserAPI.post("/feedback", {
+      const res = await UserAPI.post("/feedback", {
         rating,
         message,
       });
@@ -30,7 +31,7 @@ const FeedbackWidget = () => {
     } catch (err) {
       Swal.fire({
         icon: 'error',
-        title: 'Oops...',
+        title: 'Feedback Failed',
         text: err.response?.data?.message || 'Something went wrong. Please try again later.',
         showConfirmButton: true,
       });

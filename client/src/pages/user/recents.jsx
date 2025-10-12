@@ -112,7 +112,7 @@ const Recents = () => {
         <BackButton onClick={handleBack}/>
       </div>
 
-      <div className="py-5 px-5">
+      <div className="pb-5 px-5">
         <div className="text-center my-5">
           <h2 className="text-xl font-semibold text-color">Your Recent Reservations</h2>
           <p className="text-sm text-color-2">Manage and track all your reservations in one place.</p>
@@ -185,7 +185,7 @@ const Recents = () => {
                         <div className="flex flex-col items-center justify-center gap-y-1">
                           {(r.status === 'Pending' || r.status === 'Reserved') ? (
                             <div className="flex flex-row md:flex-col gap-2 items-center justify-center w-full">
-                              
+
                               {latestReservation && r._id === latestReservation._id && (
                                 <button 
                                   onClick={() => setShowQR(true)}

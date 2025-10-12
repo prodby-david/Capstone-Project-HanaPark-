@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import UserHeader from '../../components/headers/userHeader'
 import UserAPI from '../../lib/inteceptors/userInterceptor'
 import { XMarkIcon, QrCodeIcon, ChevronRightIcon, ArrowUpRightIcon } from '@heroicons/react/24/outline'
@@ -7,6 +7,7 @@ import Step5 from '../../components/reservation/step5/step5'
 import Loader from '../../components/loaders/loader'
 import Swal from 'sweetalert2'
 import { socket } from '../../lib/socket'
+import BackButton from '../../components/buttons/backbutton'
 
 const Recents = () => {
   const navigate = useNavigate()
@@ -26,13 +27,11 @@ const Recents = () => {
   const [showQR, setShowQR] = useState(false)
   const [selectedReservation, setSelectedReservation] = useState(null)
 
-  // Fetch user reservations
   useEffect(() => {
     const getUserHistory = async () => {
       setLoading(true)
       try {
         const res = await UserAPI.get('/recents')
-        // Flatten all into one reservations array with status
         const allReservations = [
           ...res.data.pendingReservation.map(r => ({ ...r, status: 'Pending' })),
           ...res.data.activeReservation.map(r => ({ ...r, status: 'Reserved' })),
@@ -66,7 +65,6 @@ const Recents = () => {
   return () => socket.off('reservationUpdated', handleReservationUpdate);
 }, []);
 
-  // Filter by search query
   const filteredReservations = reservations.filter(r => {
     const query = searchQuery.toLowerCase()
     const reservedByName = r.reservedBy ? `${r.reservedBy.lastname} ${r.reservedBy.firstname}`.toLowerCase() : ''
@@ -102,9 +100,17 @@ const Recents = () => {
 
   const statusTabs = ['Pending', 'Reserved', 'Completed', 'Cancelled']
 
+   const handleBack = () => {
+      navigate('/dashboard');
+  }
+
   return (
     <>
       <UserHeader />
+
+      <div className='hidden md:block p-5'>
+        <BackButton onClick={handleBack}/>
+      </div>
 
       <div className="py-5 px-5">
         <div className="text-center my-5">
@@ -149,36 +155,58 @@ const Recents = () => {
               No {selectedStatus.toLowerCase()} reservations
             </div>
           ) : (
-            <div className="overflow-auto h-80 rounded-lg border border-gray-200">
-              <div className="min-w-[700px]"> 
-                {filteredReservationsByStatus(selectedStatus)
-                  .slice(0, counts[selectedStatus])
-                  .map(r => (
-                    <div 
-                      key={r._id} 
-                      className="grid grid-cols-7 gap-4 items-center text-sm bg-white text-color-2 p-4 mt-2 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"
-                    >
-                      <div className='truncate' title={r.verificationCode}>{r.verificationCode}</div>
-                      <div>{r.slotCode}</div>
-                      <div>{r.slotId?.slotType}</div>
-                      <div>{r.slotId?.slotPrice}</div>
-                      <div>{r.vehicleType}</div>
-                      <div>{r.plateNumber}</div>
-                      <div>
-                        {selectedStatus === 'Pending' && (
-                          <button onClick={() => handleCancelReservation(r._id)}>
-                            <XMarkIcon className="w-6 h-6 cursor-pointer hover:text-red-500" title="Cancel Reservation"/>
-                          </button>
-                        )}
-                        {(selectedStatus === 'Reserved' || selectedStatus === 'Pending') &&
-                          latestReservation && r._id === latestReservation._id && (
-                            <button onClick={() => setShowQR(true)}>
-                              <QrCodeIcon className="w-6 h-6 cursor-pointer hover:text-blue-500" title="View QR"/>
-                            </button>
-                        )}
+           <div className="overflow-x-auto rounded-lg border border-gray-200">
+              <div className="min-w-[700px] w-full">
+                {/* Table Header */}
+                <div className="grid grid-cols-7 gap-4 bg-gray-100 text-sm font-semibold text-gray-700 p-4 text-center sticky top-0 z-10">
+                  <div>Reservation Code</div>
+                  <div>Slot Code</div>
+                  <div>Slot Type</div>
+                  <div>Price (₱)</div>
+                  <div>Vehicle Type</div>
+                  <div>Plate Number</div>
+                  <div>Actions</div>
+                </div>
+
+                <div className="max-h-[400px] overflow-y-auto">
+                  {filteredReservationsByStatus(selectedStatus)
+                    .slice(0, counts[selectedStatus])
+                    .map(r => (
+                      <div 
+                        key={r._id} 
+                        className="grid grid-cols-7 gap-4 items-center text-sm bg-white text-color-2 p-4 border-t border-gray-100 hover:bg-gray-50 transition text-center"
+                      >
+                        <div className="truncate" title={r.verificationCode}>{r.verificationCode}</div>
+                        <div>{r.slotCode}</div>
+                        <div>{r.slotId?.slotType}</div>
+                        <div>{r.slotId?.slotPrice}</div>
+                        <div>{r.vehicleType}</div>
+                        <div>{r.plateNumber}</div>
+                        <div className="flex flex-col items-center justify-center gap-y-1">
+                          {(r.status === 'Pending' || r.status === 'Reserved') ? (
+                            <>
+                              {r.status === 'Pending' && (
+                                <button onClick={() => handleCancelReservation(r._id)}
+                                className='flex items-center gap-1 bg-red-500 text-white p-2 rounded-full cursor-pointer hover:opacity-90 w-[140px] justify-center'>
+                                  <XMarkIcon className="w-5 h-5" />
+                                  Cancel
+                                </button>
+                              )}
+                              {latestReservation && r._id === latestReservation._id && (
+                                <button onClick={() => setShowQR(true)}
+                                className='flex items-center gap-1 bg-color text-white p-2 rounded-full cursor-pointer hover:opacity-90'>
+                                  <QrCodeIcon className="w-5 h-5"/>
+                                  View QR Code
+                                </button>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-gray-400 text-xs">—</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                </div>
               </div>
             </div>
           )}
@@ -210,7 +238,6 @@ const Recents = () => {
         </div>
       )}
 
-      {/* Selected Reservation Details */}
       {selectedReservation && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full relative">

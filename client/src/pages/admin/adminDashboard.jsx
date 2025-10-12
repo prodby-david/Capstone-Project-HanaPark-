@@ -32,8 +32,6 @@ const AdminDashboard = () => {
       return <AcademicCapIcon className="w-5 h-5 text-blue-500 inline mr-1" />;
     case 'Staff':
       return <IdentificationIcon className="w-5 h-5 text-green-500 inline mr-1" />;
-    case 'Visitor':
-      return <UserIcon className="w-5 h-5 text-yellow-500 inline mr-1" />;
     default:
       return <UserIcon className="w-5 h-5 text-gray-400 inline mr-1" />;
   }
@@ -42,8 +40,7 @@ const AdminDashboard = () => {
   useEffect(() => {
   const fetchNotifications = async () => {
     try {
-      const res = await AdminAPI.get('/admin/reservations'); // fetch all reservations
-      // Sort newest first
+      const res = await AdminAPI.get('/admin/reservations');
       const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setNotifications(sorted);
     } catch (err) {
@@ -60,7 +57,6 @@ const AdminDashboard = () => {
   setNotifications((prev) => [reservation, ...prev]);
   setUnseenCount(prev => prev + 1); 
 });
-
 
   return () => {
     socket.off("newReservation");
@@ -159,8 +155,7 @@ const AdminDashboard = () => {
                    
             </motion.div>
 
-            {/* ✅ Real-Time Notification Stack */}
-             <div className="flex flex-col items-center justify-center my-10 w-full px-5">
+            <div className="flex flex-col items-center justify-center my-10 w-full px-5">
             <div className="w-full max-w-4xl">
               <h2 className="text-lg font-semibold text-color mb-3 text-center relative">
                   Users Activities

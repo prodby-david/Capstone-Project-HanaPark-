@@ -186,19 +186,25 @@ const Recents = () => {
                           {(r.status === 'Pending' || r.status === 'Reserved') ? (
                             <>
                               {r.status === 'Pending' && (
-                                <button onClick={() => handleCancelReservation(r._id)}
-                                className='flex items-center gap-1 bg-red-500 text-white p-2 rounded-full cursor-pointer hover:opacity-90 w-[140px] justify-center'>
-                                  <XMarkIcon className="w-5 h-5" />
+                                <button 
+                                  onClick={() => handleCancelReservation(r._id)}
+                                  className='flex items-center justify-center gap-1 bg-red-500 text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-[140px] text-sm sm:text-base transition-all duration-200'
+                                >
+                                  <XMarkIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                   Cancel
                                 </button>
                               )}
+
                               {latestReservation && r._id === latestReservation._id && (
-                                <button onClick={() => setShowQR(true)}
-                                className='flex items-center gap-1 bg-color text-white p-2 rounded-full cursor-pointer hover:opacity-90'>
-                                  <QrCodeIcon className="w-5 h-5"/>
+                                <button 
+                                  onClick={() => setShowQR(true)}
+                                  className='flex items-center justify-center gap-1 bg-color text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-auto text-sm sm:text-base transition-all duration-200'
+                                >
+                                  <QrCodeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                   View QR Code
                                 </button>
                               )}
+
                             </>
                           ) : (
                             <span className="text-gray-400 text-xs">—</span>

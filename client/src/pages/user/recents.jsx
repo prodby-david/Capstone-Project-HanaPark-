@@ -201,7 +201,7 @@ const Recents = () => {
                                   className='flex items-center justify-center gap-1 bg-color text-white px-3 py-2 rounded-full cursor-pointer hover:opacity-90 w-full sm:w-[140px] text-sm sm:text-base transition-all duration-200'
                                 >
                                   <QrCodeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                  <span className="hidden md:inline">View QR Code</span>
+                                  <span className="hidden md:inline">View QR</span>
                                 </button>
                               )}
                             </div>

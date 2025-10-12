@@ -8,6 +8,7 @@ import UserHeader from '../../components/headers/userHeader';
 import UserFooter from '../../components/footers/userFooter';
 import { socket } from '../../lib/socket';
 import Swal from 'sweetalert2';
+import FeedbackWidget from '../../components/widget/feedback';
 
 
 
@@ -36,10 +37,10 @@ useEffect(() => {
   return (
 
     <>
+    <div className='min-h-screen flex flex-col justify-between'>
 
-      <UserHeader />
-
-      <div className='flex flex-col items-center justify-center mt-15 lg:mt-20'>
+    <UserHeader />
+      <div className='flex flex-col items-center justify-center mt-10 md:mt-5'>
         <h2 className='text-[26px] lg:text-[32px] font-semibold text-color'>
           Hello, {auth.user.firstname}!
         </h2>
@@ -52,7 +53,7 @@ useEffect(() => {
         variants={container}
         initial='hidden'
         animate='show'
-        className='flex flex-col lg:flex-row gap-4 items-center justify-center px-5 mt-10'>
+        className='flex flex-col lg:flex-row gap-4 items-center justify-center px-5 mt-5'>
 
           <motion.div 
           className='flex flex-col items-center justify-center gap-y-5 py-10 bg-white shadow-md rounded-lg text-center w-full max-w-sm'
@@ -122,7 +123,13 @@ useEffect(() => {
 
         </motion.div>
 
-        <UserFooter />
+    
+      </div>
+
+          <UserFooter />
+
+      <FeedbackWidget />
+
       </div>
 
     </>

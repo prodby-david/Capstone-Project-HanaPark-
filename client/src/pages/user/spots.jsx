@@ -1,18 +1,19 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { socket } from '../../lib/socket';
 import ShowMore from '../../components/buttons/showmore';
 import { motion } from 'framer-motion';
 import { container, fadeUp } from '../../lib/motionConfigs';
 import UserAPI from '../../lib/inteceptors/userInterceptor';
 import Swal from 'sweetalert2';
-import { ArrowPathIcon, EyeIcon, ListBulletIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, EyeIcon, ListBulletIcon, ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
 import carimg from '../../assets/carimg.png'
 import smallbikeimg from '../../assets/smallbikeimg.png'
 import bigbikeimg from '../../assets/bigbikeimg.png'
 import Loader from '../../components/loaders/loader';
 import UserHeader from '../../components/headers/userHeader'
 import { useAuth } from '../../context/authContext';
+import BackButton from '../../components/buttons/backbutton';
 
 
 
@@ -141,40 +142,36 @@ const Spots = () => {
         fetchSlots();
     }, []);
 
+    const handleBack = () => {
+      navigate('/dashboard');
+    }
+
 
   return (
     <>
         <UserHeader />
     
    <div className='p-5'>
+    
+    <div className='hidden md:block'>
+      <BackButton onClick={handleBack}/>
+    </div>
+     
 
-      <div className='flex flex-col sm:flex-row items-center justify-between p-5'>
+      <div className='flex flex-col sm:flex-row items-center justify-between p-5 mt-3'>
 
-        <h2 className='text-xl font-semibold mb-4 text-color'>Parking Slots</h2>
+          <h2 className='text-xl font-semibold text-color mb-3 md:mb-0'>Parking Slots</h2>
 
-        <div className='flex justify-center items-center gap-x-2'>
-          <select
-            value={selectedType}
-            onChange={(e) => {
-              setSelectedType(e.target.value);
-              setVisibleSlot(9); 
-            }}
-            className="shadow-sm border rounded p-2 "
-          >
-            {slotTypeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-
+        <div className='flex flex-col md:flex-row justify-center items-center gap-2'>
+      
           <button
             onClick={handleRandomSlot}
-            className="text-color-3 cursor-pointer hidden sm:block"
+            className="flex item-center gap-x-1 text-color-3 text-sm cursor-pointer bg-white p-2 rounded"
           >
             <ArrowPathIcon
             title='Select random slot' 
             className="w-5 h-5" />
+            Get Random Slot
           </button>
 
           {randomSlot && (
@@ -182,9 +179,12 @@ const Spots = () => {
               onClick={handleShowAllSlots}
               className="text-color-3 rounded cursor-pointer text-md"
             >
-              <ListBulletIcon
+              <div className='flex items-center gap-x-1 bg-color-3 text-sm text-white p-2 rounded'>
+                <ListBulletIcon
                 title='Show all slots' 
-                className="w-6 h-6 text-md text-color-3"/>
+                className="w-5 h-5 text-md text-white"
+                />  Show all slots
+              </div>
             </button>
           )}
 
@@ -194,18 +194,41 @@ const Spots = () => {
                 setShowAvailableOnly(prev => !prev);
                 setVisibleSlot(9); 
               }}
-              className="text-white rounded cursor-pointer text-sm hidden sm:block"
+              className="text-white rounded cursor-pointer text-sm "
               >
                 {
-                showAvailableOnly ? <ListBulletIcon
-                title='Show all slots' 
-                className="w-6 h-6 text-md text-color-3"/> : 
-                <EyeIcon 
-                title='Show available slots only'
-                className="w-6 h-6 text-md text-color-3"/>
+                showAvailableOnly ? 
+                <div className='flex items-center gap-x-1 bg-color-3 text-white p-2 rounded'>
+                  <ListBulletIcon
+                  title='Show all slots' 
+                  className="w-5 h-5 text-md text-white"
+                  />  Show all slots
+                </div>
+                : 
+                <div className='flex items-center gap-x-1 bg-color-3 text-white p-2 rounded'>
+                  <EyeIcon
+                  title='Show all slots' 
+                  className="w-5 h-5 text-md text-white"
+                  />  Show available
+                </div>
                 }
             </button>
           )}
+
+           <select
+            value={selectedType}
+            onChange={(e) => {
+              setSelectedType(e.target.value);
+              setVisibleSlot(9); 
+            }}
+            className="shadow-sm border rounded p-2 text-sm w-[150px]"
+          >
+            {slotTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
            
 
         </div>

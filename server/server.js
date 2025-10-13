@@ -70,7 +70,7 @@ app.use('/admin', AdminRoute);
 app.use('/', UserRouter);       
 
 cron.schedule('* * * * *', async () => {
-  console.log('🕒 Running cron job: checking expired reservations...');
+  console.log('Checking expired reservations...');
   try {
     const now = new Date();
 

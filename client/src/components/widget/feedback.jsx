@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { ChatBubbleLeftEllipsisIcon, XMarkIcon, StarIcon } from "@heroicons/react/24/solid";
 import UserAPI from "../../lib/inteceptors/userInterceptor";
 import Swal from "sweetalert2";
+import Loader from '../../components/loaders/loader'
 
 const FeedbackWidget = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [feedbacks, setFeedbacks] = useState({
     rating: 0,
     message: ""
@@ -21,6 +23,7 @@ const FeedbackWidget = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await UserAPI.post("/feedback", feedbacks);
       Swal.fire({
@@ -38,6 +41,8 @@ const FeedbackWidget = () => {
         text: err.response?.data?.message || "Something went wrong. Please try again later.",
         showConfirmButton: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,7 +81,7 @@ const FeedbackWidget = () => {
             className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-color-3 resize-none"
             rows="3"
             placeholder="Write your feedback..."
-            maxLength={150}
+            maxLength={100}
             value={feedbacks.message}
             onChange={handleChange}
           ></textarea>
@@ -96,7 +101,12 @@ const FeedbackWidget = () => {
           <ChatBubbleLeftEllipsisIcon className="w-6 h-6" title="User Feedback" />
         </button>
       )}
+
+      {loading ? <Loader text="Submitting feedback..."/> : null}
+
     </div>
+
+    
   );
 };
 

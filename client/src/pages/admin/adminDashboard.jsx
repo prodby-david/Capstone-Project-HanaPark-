@@ -169,7 +169,7 @@ const AdminDashboard = () => {
                    
             </motion.div>
 
-            <div className="flex flex-col items-center justify-center my-10 w-full px-5">
+            <div className="flex flex-col items-center justify-center my-5 w-full px-5">
             <div className="w-full max-w-4xl">
               <h2 className="text-lg font-semibold text-color mb-3 text-center relative">
                   Users Activities

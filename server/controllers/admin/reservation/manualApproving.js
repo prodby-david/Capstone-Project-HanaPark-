@@ -26,7 +26,7 @@ const ApproveReservation = async (req, res) => {
 
       await reservation.save();
 
-      await activitylog.create({
+      await Activity.create({
       reservationId: reservation._id,
       reservedBy: reservation.reservedBy._id,
       slotCode: reservation.slotCode,
@@ -53,7 +53,7 @@ const ApproveReservation = async (req, res) => {
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Available" });
       await reservation.save();
 
-      await activitylog.create({
+      await Activity.create({
       reservationId: reservation._id,
       reservedBy: reservation.reservedBy._id,
       slotCode: reservation.slotCode,

@@ -36,7 +36,6 @@ const UserReservationLists = () => {
 
   useEffect(() => {
     socket.on('reservationCreated', (newReservation) => {
-      console.log("📩 Received reservationCreated:", newReservation);
       setReservations(prev => {
         const exists = prev.some(r => r._id === newReservation._id)
         return exists ? prev : [...prev, newReservation]
@@ -49,11 +48,13 @@ const UserReservationLists = () => {
       )
     })
 
-    socket.on('reservationCancelledByUser', (cancelledReservation) => {
-      setReservations(prev =>
-        prev.map(r => (r._id === cancelledReservation._id ? cancelledReservation : r))
-      )
-    })
+     socket.on("reservationCancelledByUser", (cancelledReservation) => {
+    setReservations(prev => {
+      const exists = prev.some(r => r._id === cancelledReservation._id);
+      if (!exists) return prev;
+      return prev.map(r => (r._id === cancelledReservation._id ? cancelledReservation : r));
+    });
+  });
 
     socket.on('reservationApproved', (approvedReservation) => {
       setReservations(prev =>

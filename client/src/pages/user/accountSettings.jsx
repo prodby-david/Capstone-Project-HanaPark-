@@ -225,17 +225,14 @@ const AccountSettings = () => {
             </div>
           </div>
 
-         
-          {/* Divider desktop */}
+
           <div className="hidden md:block w-px bg-gray-300"></div>
 
-          {/* Account Settings Content */}
           <div className="w-full">
             <h2 className="text-lg font-semibold text-color mb-5 text-center">
               Account Settings
             </h2>
 
-             {/* Tabs for mobile */}
           <div className="flex md:hidden justify-around mb-5 gap-2">
             <button
               onClick={() => setActiveSection("profile")}
@@ -273,7 +270,7 @@ const AccountSettings = () => {
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Middle Name</label>
-                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" value={userInfo.middlename} />
+                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" name="middlename" value={userInfo.middlename} onChange={handleChange}/>
                   </div>
                   <div className="mt-3">
                     <label className="font-semibold text-color-3">Student ID</label>

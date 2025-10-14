@@ -43,7 +43,6 @@ const reservationSchema = mongoose.Schema({
     status:{
         type: String,
         enum: ['Reserved', 'Pending', 'Completed', 'Cancelled'],
-        default: 'Reserved',
         required: true
     },
     verificationCode: { 
@@ -65,12 +64,8 @@ const reservationSchema = mongoose.Schema({
     expiresAt: { 
         type: Date, 
         required: true 
-    },
-    createdAt:{
-        type: Date,
-        default: Date.now
     }
-});
+}, {timestamps: true});
 
 const Reservation = mongoose.model('Reservation', reservationSchema);
 

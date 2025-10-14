@@ -4,6 +4,7 @@ import User from "../../models/user.js";
 import crypto from 'crypto'
 import QRCode from 'qrcode';
 import { normalizeVehicleType } from "../../utils/vehicleTypes.js";
+import activitylog from "../../models/activitylog.js";
 
 
 const CreateReservation = async(req,res) => {
@@ -76,7 +77,15 @@ const CreateReservation = async(req,res) => {
             const userReservation = new Reservation({ reservedBy: userId, verificationCode, slotId, slotCode, qrCode: qrCodeDataURL,  slotPrice,reservationDate, reservationTime, arrivalTime, plateNumber, vehicleType, status: 'Pending', isEntryUsed: false, isExitUsed: false, expiresAt });
 
             await userReservation.save();
-            
+
+            await activitylog.create({
+            reservationId: userReservation._id,
+            reservedBy: userReservation.reservedBy,
+            slotCode: userReservation.slotCode,
+            vehicleType: userReservation.vehicleType,
+            status: userReservation.status,
+            });
+                        
             const updatedSlot = await Slot.findByIdAndUpdate(
                 slotId,
                 { slotStatus: 'Reserved' },

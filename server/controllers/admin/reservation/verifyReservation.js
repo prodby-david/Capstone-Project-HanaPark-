@@ -26,6 +26,14 @@ const VerifyReservation = async (req, res) => {
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Occupied" });
       await reservation.save();
 
+      await activitylog.create({
+        reservationId: reservation._id,
+        reservedBy: reservation.reservedBy._id,
+        slotCode: reservation.slotCode,
+        vehicleType: reservation.vehicleType,
+        status: reservation.status, 
+      });
+
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
         message: `Entrance verified. Your QR code for slot ${reservation.slotCode} was verified. Reservation is now active.`,
@@ -44,6 +52,14 @@ const VerifyReservation = async (req, res) => {
       reservation.isExitUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Available" });
       await reservation.save();
+
+      await activitylog.create({
+        reservationId: reservation._id,
+        reservedBy: reservation.reservedBy._id,
+        slotCode: reservation.slotCode,
+        vehicleType: reservation.vehicleType,
+        status: reservation.status, 
+      });
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,

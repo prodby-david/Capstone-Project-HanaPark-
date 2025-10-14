@@ -12,11 +12,8 @@ const CancelReservation = async (req,res) => {
             return;
         }
 
-        const reservation = await Reservation.findByIdAndUpdate(
-            id,
-            {status: 'Cancelled'},
-            {new: true}
-        )
+        const reservation = await Reservation.findByIdAndUpdate(id,{status: 'Cancelled'},{new: true})
+        .populate('reservedBy', 'firstname lastname userType studentId staffId').populate('slotId', 'slotType slotCode');
 
         if (!reservation) {
             return res.status(404).json({ message: "Reservation not found" });
@@ -27,10 +24,6 @@ const CancelReservation = async (req,res) => {
             {slotStatus: 'Available'}, 
             {new: true}
         );
-
-        await reservation.save();
-        
-        req.io.emit('reservationCancelled', reservation);
 
         res.status(200).json({ message: "Reservation cancelled successfully", reservation });
 

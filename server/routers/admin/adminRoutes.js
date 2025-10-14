@@ -23,6 +23,7 @@ import GetCompletedReservation from '../../controllers/admin/reservation/complet
 import ArchiveUser from '../../controllers/admin/accounts/archived.js';
 import cancelReservation from '../../controllers/admin/reservation/cancelReservation.js';
 import GetAllFeedbacks from '../../controllers/users/getFeedback.js';
+import getActivityLogs from '../../controllers/admin/activitylogs.js';
 
 
 
@@ -49,6 +50,7 @@ AdminRoute.post("/approve-reservation/:id", ApproveReservation);
 AdminRoute.get('/reservations', fetchReservation);
 AdminRoute.get('/reservations/completed', GetCompletedReservation);
 AdminRoute.get('/feedbacks', GetAllFeedbacks);
+AdminRoute.get('/activities', getActivityLogs)
 
 AdminRoute.put('/slots/:id', EditSlot);
 

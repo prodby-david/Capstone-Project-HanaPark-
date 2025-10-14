@@ -10,6 +10,7 @@ import Step2 from '../../reservation/step2/step2';
 import Step3 from '../../reservation/step3/step3';
 import Step4 from '../../reservation/step4/step4';
 import Step5 from '../../reservation/step5/step5';
+import Loader from '../../../components/loaders/loader'
 
 const UserReservationForm = () => {
 
@@ -19,14 +20,14 @@ const UserReservationForm = () => {
     
     const [reservationDate, setReservationDate] = useState('');
     const [reservationTime, setReservationTime] = useState('');
+    const [loading, setLoading] = useState(false);
     const [arrivalTime, setArrivalTime] = useState(''); 
 
     const [trackRadioBox, setTrackRadioBox] = useState(false);
     const navigate  = useNavigate();
     const [reservationResult, setReservationResult] = useState(null);
 
-    const [modalOpen, setModalOpen] = useState(false);
-
+    
     {/* State use to hold all reservation form data */}
     const [reservationData, setReservationData] = useState({
         slotId,
@@ -39,13 +40,11 @@ const UserReservationForm = () => {
         vehicleType: ''
     })
 
-    {/* State use to get value in the vehicle input */}
     const [userVehicle, setUserVehicle] = useState({
         vehicleNumber: '',
         vehicleType: ''
     });
 
-    {/* State use to hold user regstered vehicle into their account */}
     const [registeredVehicle, setRegisteredVehicle] = useState({
         vehicleNumber: '',
         vehicleType: ''
@@ -171,13 +170,15 @@ const UserReservationForm = () => {
         const handleSubmit = async (e) => {
             e.preventDefault();
 
+            setLoading(true);
+
             try {
                 const res = await UserAPI.post(`/reservation-form/${slotId}`, reservationData);
                 setReservationResult(res.data);
 
                 Swal.fire({
-                    title: 'Slot reservation success!',
-                    text: 'Press OK to continue.',
+                    title: 'Reservation Confirm',
+                    text: 'Thank you for reserving at HanaPark.',
                     icon: 'success',
                     showConfirmButton: true,
                 })
@@ -191,6 +192,8 @@ const UserReservationForm = () => {
                     icon: 'error',
                     confirmButtonText: 'Check reservations'
                 })
+            } finally {
+                setLoading(false);
             }
             
         }
@@ -302,6 +305,8 @@ const UserReservationForm = () => {
             </div>
 
        </div>
+
+       {loading ? <Loader text='Confirming reservation...' /> : null}
     </>
   )
 }

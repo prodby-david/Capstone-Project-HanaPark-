@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   const [showSlots, setShowSlots] = useState([]);
   const [countUser, setCountUser] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
-  const [notifications, setNotifications] = useState([]);
+  const [reservation, setReservation] = useState([]);
   const [unseenCount, setUnseenCount] = useState(0);
   const [countReservation, setCountReservation] = useState([]);
   const navigate = useNavigate();
@@ -39,28 +39,34 @@ const AdminDashboard = () => {
 };
 
   useEffect(() => {
-  const fetchNotifications = async () => {
-    try {
-      const res = await AdminAPI.get('/admin/reservations');
-      const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setNotifications(sorted);
+  const fetchActivities = async () => {
+  try {
+    const res = await AdminAPI.get('/admin/activities');
+    setReservation(res.data); 
     } catch (err) {
-      console.error("Error fetching notifications:", err.response?.data || err.message);
+      console.error("Error fetching activities:", err.response?.data || err.message);
     }
   };
 
-  fetchNotifications();
+  fetchActivities();
 
   socket.connect();
   socket.emit("joinAdmin");
 
   socket.on("reservationCreated", (reservation) => {
-  setNotifications((prev) => [reservation, ...prev]);
-  setUnseenCount(prev => prev + 1); 
-});
+    setReservation((prev) => [reservation, ...prev]);
+    setUnseenCount(prev => prev + 1); 
+  });
+
+  socket.on("reservationCancelled", (reservation) => {
+    setReservation((prev) => [reservation, ...prev]);
+    setUnseenCount(prev => prev + 1); 
+  });
+
 
   return () => {
     socket.off("reservationCreated");
+    socket.off("reservationCancelled");
     socket.disconnect();
   };
 }, []);
@@ -111,8 +117,7 @@ const AdminDashboard = () => {
     const getReservation = async () => {
       try {
         const res = await AdminAPI.get('/admin/reservations');
-        setCountReservation(res.data);
-        
+        setCountReservation(res.data); 
       } catch (err) {
         console.error("Error fetching reservations:", err.response?.data || err.message);
 
@@ -175,10 +180,10 @@ const AdminDashboard = () => {
                   Users Activities
               </h2>
               <div className="bg-white shadow-md rounded-xl p-4 h-96 overflow-y-auto border border-gray-200">
-                {notifications.length === 0 ? (
+                {reservation.length === 0 ? (
                   <p className="text-gray-500 text-sm text-center">Loading activities...</p>
                 ) : (
-                  notifications.map((notif, index) => {
+                  reservation.map((notif, index) => {
                     const isLatest = index === 0 && unseenCount > 0; 
                     return (
                       <div
@@ -194,10 +199,31 @@ const AdminDashboard = () => {
                           {getUserTypeIcon(notif.reservedBy?.userType)}
                           {notif.reservedBy?.firstname} {notif.reservedBy?.lastname}
                         </p>
+                        
+                        <div className="text-gray-600">
+                          {notif.status === 'Pending' && (
+                            <>Requested a reservation for slot <span className="font-semibold">{notif.slotCode}</span>.</>
+                          )}
 
-                        <p className="text-gray-600">
-                          Reserved on slot <span className='font-semibold'>{notif.slotCode}</span> with {notif.vehicleType} vehicle.
-                        </p>
+                          {notif.status === 'Reserved' && (
+                            <>Confirmed a reservation on slot <span className="font-semibold">{notif.slotCode}</span> for a {notif.vehicleType} vehicle.</>
+                          )}
+
+                          {notif.status === 'Cancelled' && (
+                            <>Cancelled their reservation on slot <span className="font-semibold">{notif.slotCode}</span>.</>
+                          )}
+
+                          {notif.status === 'Completed' && (
+                            <>Completed their reservation on slot <span className="font-semibold">{notif.slotCode}</span>.</>
+                          )}
+                        </div>
+
+
+
+                        
+
+                        
+
                         <p className="text-xs text-gray-400">
                           {new Date(notif.createdAt).toLocaleString()}
                         </p>

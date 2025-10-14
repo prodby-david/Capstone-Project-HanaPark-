@@ -22,7 +22,16 @@ const ApproveReservation = async (req, res) => {
       reservation.status = "Reserved";
       reservation.isEntryUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Occupied" });
+
       await reservation.save();
+
+      await activitylog.create({
+      reservationId: reservation._id,
+      reservedBy: reservation.reservedBy._id,
+      slotCode: reservation.slotCode,
+      vehicleType: reservation.vehicleType,
+      status: reservation.status, 
+    });
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,
@@ -42,6 +51,14 @@ const ApproveReservation = async (req, res) => {
       reservation.isExitUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Available" });
       await reservation.save();
+
+      await activitylog.create({
+      reservationId: reservation._id,
+      reservedBy: reservation.reservedBy._id,
+      slotCode: reservation.slotCode,
+      vehicleType: reservation.vehicleType,
+      status: reservation.status, 
+    });
 
       const notif = await Notification.create({
         userId: reservation.reservedBy._id,

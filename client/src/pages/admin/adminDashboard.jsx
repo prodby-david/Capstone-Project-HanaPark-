@@ -50,7 +50,6 @@ const AdminDashboard = () => {
 
   fetchActivities();
 
-  socket.connect();
   socket.emit("joinAdmin");
 
   socket.on("reservationCreated", (reservation) => {
@@ -73,7 +72,6 @@ const AdminDashboard = () => {
     socket.off("reservationCreated");
     socket.off("reservationCancelled");
     socket.off('reservationCancelledByUser');
-    socket.disconnect();
   };
 }, []);
 

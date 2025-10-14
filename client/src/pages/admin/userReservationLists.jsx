@@ -49,6 +49,12 @@ const UserReservationLists = () => {
       )
     })
 
+    socket.on('reservationCancelledByUser', (cancelledReservation) => {
+      setReservations(prev =>
+        prev.map(r => (r._id === cancelledReservation._id ? cancelledReservation : r))
+      )
+    })
+
     socket.on('reservationApproved', (approvedReservation) => {
       setReservations(prev =>
         prev.map(r => (r._id === approvedReservation._id ? approvedReservation : r))
@@ -64,6 +70,7 @@ const UserReservationLists = () => {
     return () => {
       socket.off('reservationCreated')
       socket.off('reservationCancelled')
+      socket.off('reservationCancelledByUser')
       socket.off('reservationApproved')
       socket.off('reservationUpdated')
     }

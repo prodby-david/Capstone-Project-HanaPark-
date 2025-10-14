@@ -1,7 +1,7 @@
 import Reservation from "../../../models/reservation.js";
 import Slot from "../../../models/slot.js";
 import Notification from "../../../models/notification.js";
-import Activity from "../../../models/activitylogs.js";
+import Activity from "../../../models/activitylog.js";
 
 const ApproveReservation = async (req, res) => {
   try {

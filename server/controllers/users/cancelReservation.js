@@ -7,22 +7,21 @@ const CancelReservation = async (req, res) => {
     const userId = req.user?.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
+      return res.status(401).json({ message: "Unauthorized access. Please log in." });
     }
-    const reservation = await Reservation.findByIdAndUpdate(
-      id,
-      { status: 'Cancelled' },
-      { new: true }
-    )
-      .populate('reservedBy', 'firstname lastname userType studentId staffId')
-      .populate('slotId', 'slotType slotCode');
+
+    await Reservation.findByIdAndUpdate(id, { status: "Cancelled" });
+
+    const reservation = await Reservation.findById(id)
+      .populate("reservedBy", "firstname lastname userType studentId staffId")
+      .populate("slotId", "slotType slotCode");
 
     if (!reservation) {
-      return res.status(404).json({ message: 'Reservation not found' });
+      return res.status(404).json({ message: "Reservation not found" });
     }
 
     const updatedSlot = await Slot.findByIdAndUpdate(
-      reservation.slotId,
+      reservation.slotId._id,
       { slotStatus: "Available" },
       { new: true }
     );
@@ -30,16 +29,21 @@ const CancelReservation = async (req, res) => {
     const payload = {
       _id: reservation._id,
       reservedBy: reservation.reservedBy,
-      slotCode: reservation.slotId?.slotCode,
-      slotType: reservation.slotId?.slotType,
+      slotCode: reservation.slotId.slotCode,
+      slotType: reservation.slotId.slotType,
+      vehicleType: reservation.vehicleType,
       status: reservation.status,
-      createdAt: new Date(),
+      createdAt: reservation.createdAt,
     };
 
     req.io.to("admins").emit("reservationCancelledByUser", payload);
     req.io.emit("slotUpdated", updatedSlot);
 
-    res.status(200).json({ message: "Reservation cancelled successfully", reservation });
+    res.status(200).json({
+      message: "Reservation cancelled successfully",
+      reservation: payload,
+    });
+
   } catch (err) {
     console.error("Error cancelling reservation:", err);
     res.status(500).json({ message: "Error cancelling reservation", err });

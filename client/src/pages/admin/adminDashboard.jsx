@@ -63,10 +63,16 @@ const AdminDashboard = () => {
     setUnseenCount(prev => prev + 1); 
   });
 
+   socket.on("reservationCancelledByUser", (reservation) => {
+    setReservation((prev) => [reservation, ...prev]);
+    setUnseenCount(prev => prev + 1); 
+  });
+
 
   return () => {
     socket.off("reservationCreated");
     socket.off("reservationCancelled");
+    socket.off('reservationCancelledByUser');
     socket.disconnect();
   };
 }, []);

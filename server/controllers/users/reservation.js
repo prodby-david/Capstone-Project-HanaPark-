@@ -4,7 +4,7 @@ import User from "../../models/user.js";
 import crypto from 'crypto'
 import QRCode from 'qrcode';
 import { normalizeVehicleType } from "../../utils/vehicleTypes.js";
-import activitylog from "../../models/activitylog.js";
+import Activity from "../../models/activitylog.js";
 
 
 const CreateReservation = async(req,res) => {
@@ -78,7 +78,7 @@ const CreateReservation = async(req,res) => {
 
             await userReservation.save();
 
-            await activitylog.create({
+            await Activity.create({
             reservationId: userReservation._id,
             reservedBy: userReservation.reservedBy,
             slotCode: userReservation.slotCode,

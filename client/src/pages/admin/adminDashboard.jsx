@@ -49,7 +49,6 @@ const AdminDashboard = () => {
   };
 
   fetchActivities();
-  socket.connect();
   socket.emit("joinAdmin");
 
   socket.on("reservationCreated", (reservation) => {

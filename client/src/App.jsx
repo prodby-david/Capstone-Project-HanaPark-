@@ -32,6 +32,7 @@ import UserType from './pages/admin/userType'
 import StaffRegistration from './components/forms/admin/staffRegistration'
 import UserRegistration from './pages/admin/registration/userRegistration'
 import AdminFeedbacks from './pages/admin/userFeedback'
+import FAQ from './pages/user/faq'
 
 function App() {
 
@@ -48,9 +49,9 @@ function App() {
           <Route path="/sign-in" element={ <GuestRoute><SignIn /></GuestRoute>} />
           <Route path="/reset-password" element={ <ForgotPassword />} />
           <Route path="/visitors" element={ <Visitors /> } />
+          <Route path='/faq' element={ <FAQ /> }/>
 
           {/* User Routes */}
-
           <Route path='/dashboard'
           element={ 
             <ProtectedRoute>

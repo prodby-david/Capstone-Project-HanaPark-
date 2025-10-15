@@ -7,7 +7,7 @@ const FAQ = () => {
 
     <Header />
 
-        <div className='flex flex-col items-center mt-10 gap-5 px-10'>
+        <div className='flex flex-col items-center my-10 gap-5 px-10'>
 
             <h2 className='font-semibold text-md text-color lg:text-xl'>Frequently Asked Questions</h2>
 

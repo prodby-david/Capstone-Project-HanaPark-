@@ -25,7 +25,7 @@ const CancelReservation = async (req, res) => {
 
     const newActivity = new Activity({
       reservationId: reservation._id,
-      reservedBy: reservation.reservedBy._id,
+      reservedBy: reservation.reservedBy,
       slotCode: reservation.slotCode,  
       status: "Cancelled",
     });
@@ -33,7 +33,7 @@ const CancelReservation = async (req, res) => {
     await newActivity.save();
 
     const populatedActivity = await Activity.findById(newActivity._id)
-    .populate('reservedBy', 'firstname lastname userType studentId staffId');
+    .populate('reservedBy', 'firstname lastname userType studentId');
 
     req.io.to('admins').emit('reservationCancelledByUser', populatedActivity);
  

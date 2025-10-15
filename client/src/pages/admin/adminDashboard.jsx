@@ -215,7 +215,7 @@ const AdminDashboard = () => {
                           )}
 
                           {notif.status === 'Cancelled' && (
-                            <>Cancelled their reservation.</>
+                            <>Cancelled their reservation. The slot status is now available.</>
                           )}
 
                           {notif.status === 'Completed' && (

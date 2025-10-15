@@ -62,7 +62,6 @@ const AdminDashboard = () => {
   });
 
    socket.on("reservationCancelledByUser", (activity) => {
-    console.log("🟠 User cancelled reservation:", activity);
     setReservation((prev) => [activity, ...prev]); 
     setUnseenCount(prev => prev + 1);
   });

@@ -38,6 +38,8 @@ const CancelReservation = async (req, res) => {
     const populatedActivity = await Activity.findById(newActivity._id)
     .populate('reservedBy', 'firstname lastname userType studentId staffId').lean();
 
+    console.log("Populated activity before emit:", populatedActivity);
+
     req.io.to('admins').emit('reservationCancelledByUser', populatedActivity);
  
     res.status(200).json({ message: "Reservation cancelled successfully", reservation });

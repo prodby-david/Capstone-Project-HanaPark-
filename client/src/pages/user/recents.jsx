@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import UserHeader from '../../components/headers/userHeader'
 import UserAPI from '../../lib/inteceptors/userInterceptor'
-import { XMarkIcon, QrCodeIcon, ChevronRightIcon, ArrowUpRightIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, QrCodeIcon } from '@heroicons/react/24/outline'
 import Step5 from '../../components/reservation/step5/step5'
 import Loader from '../../components/loaders/loader'
 import Swal from 'sweetalert2'
 import { socket } from '../../lib/socket'
 import BackButton from '../../components/buttons/backbutton'
+
+
 
 const Recents = () => {
   const navigate = useNavigate()
@@ -23,6 +25,7 @@ const Recents = () => {
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(false)
+  const [cancelLoading, setCancelLoading] = useState(false)
   const [latestReservation, setLatestReservation] = useState(null)
   const [showQR, setShowQR] = useState(false)
   const [selectedReservation, setSelectedReservation] = useState(null)
@@ -84,12 +87,15 @@ const Recents = () => {
       confirmButtonText: 'Yes, cancel it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setCancelLoading(true)
         try {
           const res = await UserAPI.patch(`/cancel/${id}`)
           Swal.fire('Cancelled!', res.data.message, 'success')
           setReservations(prev => prev.map(r => r._id === id ? { ...r, status: 'Cancelled' } : r))
         } catch (err) {
           console.error(err)
+        } finally {
+          setCancelLoading(false)
         }
       }
     })
@@ -267,6 +273,8 @@ const Recents = () => {
           </div>
         </div>
       )}
+      {loading ? <Loader /> : null}
+      {cancelLoading ? <Loader text='Cancelling your reservation...'/> : null}
     </>
   )
 }

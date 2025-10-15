@@ -1,5 +1,6 @@
 import Reservation from "../../models/reservation.js"; 
 import Slot from "../../models/slot.js";
+import Activity from '../../models/activitylogs.js'
 
 const CancelReservation = async (req, res) => {
   try {
@@ -25,7 +26,7 @@ const CancelReservation = async (req, res) => {
 
     const newActivity = new Activity({
       reservationId: reservation._id,
-      reservedBy: reservation.reservedBy,
+      reservedBy: reservation.reservedBy._id,
       slotCode: reservation.slotCode,  
       status: "Cancelled",
     });
@@ -33,7 +34,7 @@ const CancelReservation = async (req, res) => {
     await newActivity.save();
 
     const populatedActivity = await Activity.findById(newActivity._id)
-    .populate('reservedBy', 'firstname lastname userType studentId');
+    .populate('reservedBy', 'firstname lastname userType studentId').lean();
 
     req.io.to('admins').emit('reservationCancelledByUser', populatedActivity);
  

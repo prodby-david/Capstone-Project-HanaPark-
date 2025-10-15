@@ -1,5 +1,6 @@
 import Reservation from "../../models/reservation.js"; 
 import Slot from "../../models/slot.js";
+import Activity from '../../models/activitylog.js'
 
 const CancelReservation = async (req, res) => {
   try {
@@ -23,6 +24,15 @@ const CancelReservation = async (req, res) => {
     }
 
     await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: 'Available' });
+
+    const newActivity = new Activity({
+      reservationId: reservation._id,
+      reservedBy: reservation.reservedBy._id,
+      slotCode: reservation.slotId.slotCode,
+      status: "Cancelled",
+    });
+
+    await newActivity.save();
 
     req.io.to('admins').emit('reservationCancelledByUser', reservation); 
 

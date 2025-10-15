@@ -49,7 +49,7 @@ const AdminDashboard = () => {
   };
 
   fetchActivities();
-
+  socket.connect();
   socket.emit("joinAdmin");
 
   socket.on("reservationCreated", (reservation) => {
@@ -62,10 +62,12 @@ const AdminDashboard = () => {
     setUnseenCount(prev => prev + 1); 
   });
 
-   socket.on("reservationCancelledByUser", (reservation) => {
-    setReservation((prev) => [reservation, ...prev]);
-    setUnseenCount(prev => prev + 1); 
+   socket.on("reservationCancelledByUser", (activity) => {
+    console.log("🟠 User cancelled reservation:", activity);
+    setReservation((prev) => [activity, ...prev]); 
+    setUnseenCount(prev => prev + 1);
   });
+
 
 
   return () => {
@@ -206,11 +208,11 @@ const AdminDashboard = () => {
                         
                         <div className="text-gray-600">
                           {notif.status === 'Pending' && (
-                            <>Requested a reservation for slot <span className="font-semibold">{notif.slotCode}</span>.</>
+                            <>Requested a reservation for slot <span className="font-semibold">{notif.slotCode}</span>. The slot status is now reserved.</>
                           )}
 
                           {notif.status === 'Reserved' && (
-                            <>Confirmed a reservation on slot <span className="font-semibold">{notif.slotCode}</span> for a {notif.vehicleType} vehicle.</>
+                            <>Confirmed a reservation on slot <span className="font-semibold">{notif.slotCode}</span>. The slot status is now occupied.</>
                           )}
 
                           {notif.status === 'Cancelled' && (
@@ -218,7 +220,7 @@ const AdminDashboard = () => {
                           )}
 
                           {notif.status === 'Completed' && (
-                            <>Completed their reservation on slot <span className="font-semibold">{notif.slotCode}</span>.</>
+                            <>Completed their reservation on slot <span className="font-semibold">{notif.slotCode}</span>. The slot status is now available.</>
                           )}
                         </div>
 

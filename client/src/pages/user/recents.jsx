@@ -194,7 +194,7 @@ const Recents = () => {
                           {latestReservation && r._id === latestReservation._id && (
                             <button
                               onClick={() => setShowQR(true)}
-                              className="flex items-center justify-center gap-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-xs hover:opacity-90 transition-all cursor-pointer mx-5"
+                              className="flex items-center justify-center gap-1 bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-2 rounded-full text-xs hover:opacity-90 transition-all cursor-pointer"
                             >
                               <QrCodeIcon className="w-4 h-4" />
                               <span>View QR</span>
@@ -235,7 +235,7 @@ const Recents = () => {
       </div>
 
       {showQR && latestReservation && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 mx-5">
           <div className="bg-white rounded-2xl shadow-xl p-6 relative max-w-md w-full">
             <button
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"

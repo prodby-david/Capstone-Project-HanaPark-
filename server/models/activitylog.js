@@ -16,7 +16,9 @@ const activityLogSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  vehicleType: String,
+  vehicleType: {
+    type:String,
+  },
   status: {
     type: String,
     enum: ['Pending', 'Reserved', 'Cancelled', 'Completed'],

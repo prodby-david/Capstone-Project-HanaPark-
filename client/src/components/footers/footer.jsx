@@ -19,7 +19,7 @@ const Footer = () => {
           <ul className="mt-2 grid grid-cols-2 gap-x-5 gap-y-2 md:flex md:flex-col text-xs">
             <li><Link to='/sign-in' className="hover:text-color-3">Log in</Link></li>
             <li><Link to='/faq' className="hover:text-color-3">FAQ's</Link></li>
-            <li><Link to='/terms-and-conditions' className="hover:text-color-3">Terms and Privacy</Link></li>
+            <li><Link to='/terms' className="hover:text-color-3">Terms and Privacy</Link></li>
           </ul>
         </div>
 

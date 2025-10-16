@@ -224,16 +224,36 @@ const toggleConfirmPassword = () => {
 }
 
 const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    const { name, value } = e.target;
+  const titleCaseFields = ['lastname', 'firstname', 'middlename', 'color'];
+  const upperCaseFields = ['plateNumber'];
 
-    const titleCaseFields = ['lastname', 'firstname', 'middlename', 'color'];
-    const upperCaseFields = ['plateNumber'];
+  let updatedValue = value;
+  if (titleCaseFields.includes(name)) {
+    updatedValue = toTitleCase(value);
+  } else if (upperCaseFields.includes(name)) {
+    updatedValue = value.toUpperCase();
+  }
 
-    setFormData({
-    ...formData,[name]: titleCaseFields.includes(name) ? toTitleCase(value) : upperCaseFields.includes(name) ? value.toUpperCase() : value
-});
+  const updatedFormData = {
+    ...formData,
+    [name]: updatedValue
+  };
+
+  if (
+    (name === 'lastname' || name === 'studentId') &&
+    updatedFormData.lastname &&
+    studentIdRegex.test(updatedFormData.studentId)
+  ) {
+    const lastSixDigits = updatedFormData.studentId.slice(-6);
+    const generatedUsername = `${updatedFormData.lastname.toLowerCase()}.${lastSixDigits}`;
+    updatedFormData.username = generatedUsername;
+  }
+
+  setFormData(updatedFormData);
 };
+
 
   const handleSubmit = async (e) => {
 
@@ -288,7 +308,7 @@ const handleChange = (e) => {
   return (
     <>
         <AdminHeader />
-        <div className='flex flex-col items-center justify-center min-h-screen px-5'>
+        <div className='flex flex-col items-center justify-center mt-2 px-5'>
 
             <div className='flex flex-col border border-gray-300 rounded-lg px-6 py-4 shadow-lg bg-white w-full max-w-xl text-center'>
 
@@ -384,12 +404,13 @@ const handleChange = (e) => {
                             <div className='flex flex-col w-full'>
 
                                 <label htmlFor="StudentId"
-                                className='text-start text-color-3 text-sm font-semibold'>Student ID
+                                className='text-start text-color-3 text-sm font-semibold'>User ID
                                 </label>
 
                                 <input type="text"
                                 name="studentId"
                                 id="StudentId"
+                                placeholder='e.g. 02000123456'
                                 maxLength={11}
                                 inputMode="numeric"
                                 pattern="[0-9]*"
@@ -409,14 +430,15 @@ const handleChange = (e) => {
                                 className='text-start text-color-3 text-sm font-semibold'>Username
                                 </label>
 
-                                <input type="text"
+                                <input
+                                type="text"
                                 name="username"
                                 id="Username"
-                                placeholder='e.g. delacruz.123456'
-                                onChange={handleChange}
                                 value={formData.username}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                />  
+                                readOnly
+                                className="w-full p-2 text-gray-500 rounded text-sm cursor-not-allowed"
+                                />
+ 
                             </div>
         
                         </div>
@@ -508,11 +530,6 @@ const handleChange = (e) => {
 
                             </div>
                             
-                        </div>
-
-                    
-                        <div className='text-center mt-3'>
-                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The username format should be lastname.IdLast6Digits.</h2>
                         </div>
 
                         <div className='mt-3 flex justify-end'>

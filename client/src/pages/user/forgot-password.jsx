@@ -1,96 +1,109 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import { publicApi } from '../../lib/api'; 
-import Loader from '../../components/loaders/loader';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { EnvelopeIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import Swal from "sweetalert2";
+import { publicApi } from "../../lib/api";
+import Loader from "../../components/loaders/loader";
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [email, setEmail] = useState('');
-    const [isLoading, setIsLoading] = useState(false)
+  const handleChange = (e) => setEmail(e.target.value);
 
-    const handleChange = (e) => {
-        setEmail(e.target.value);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const res = await publicApi.post("/reset-password", { email });
+      Swal.fire("Success", res.data.message, "success");
+      setEmail("");
+    } catch (err) {
+      Swal.fire(
+        "Reset Failed",
+        err.response?.data?.message || "Something went wrong",
+        "error"
+      );
+      setEmail("");
+    } finally {
+      setIsLoading(false);
     }
-
-    const handleSubmit = async (e) => {
-
-        e.preventDefault();
-        setIsLoading(true)
-        try{
-            const res = await publicApi.post('/reset-password', {email});
-            Swal.fire('Success', res.data.message, 'success');
-            setEmail('');
-
-        } catch(err){
-            Swal.fire('Reset Failed', err.response?.data?.message || 'Something went wrong', 'error');
-            setEmail('')
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
+  };
 
   return (
-   <>
-
-    <div className='flex items-center justify-center min-h-screen px-5'>
-
-        <div className='flex flex-col items-center justify-center gap-y-5 bg-white p-5 rounded-lg shadow-lg w-full max-w-md'>
-
-            <div className='flex flex-col items-center gap-y-2 text-center'>
-                <h2 className='text-2xl font-bold text-color'>Forgot Your Password?</h2>
-                
-                <p className='text-sm text-color-2 w-full max-w-xs text-center'>Enter your email address below and we'll send you instruction to reset your password.</p>
+    <>
+      <div className="flex items-center justify-center min-h-screen px-5">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md flex flex-col items-center"
+        >
+          <div className="flex flex-col items-center text-center gap-y-3 mb-6">
+            <div className="bg-blue-100 p-3 rounded-full">
+              <EnvelopeIcon className="h-8 w-8 text-blue-700" />
             </div>
-        
-            <form className='w-full'>
+            <h2 className="text-2xl font-bold text-color">
+              Forgot Your Password?
+            </h2>
+            <p className="text-sm text-gray-500 max-w-xs">
+              Enter your registered email address, and we’ll send you a link to
+              reset your password.
+            </p>
+          </div>
 
-                <div className='flex flex-col gap-y-2'>
+          <form onSubmit={handleSubmit} className="w-full space-y-5">
+            <div className="flex flex-col text-left">
+              <label
+                htmlFor="Reset-email"
+                className="text-sm font-semibold text-gray-700 mb-2"
+              >
+                Email Address
+              </label>
+              <div className="relative">
+                <EnvelopeIcon className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                <input
+                  type="email"
+                  required
+                  id="Reset-email"
+                  name="email"
+                  value={email}
+                  onChange={handleChange}
+                  placeholder="samplemail@gmail.com"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring focus:ring-blue-100 outline-none"
+                />
+              </div>
+            </div>
 
-                    <label htmlFor="Reset-email"
-                    className='text-sm font-bold text-color'>
-                        Email Address:
-                    </label>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-2 rounded-md text-sm font-semibold shadow-md hover:from-blue-800 hover:to-blue-600 transition duration-300 cursor-pointer"
+            >
+              Send Reset Instructions
+            </motion.button>
+          </form>
 
-                    <input type="email"
-                    required
-                    name='email'
-                    id='Reset-email'
-                    onChange={handleChange}
-                    value={email}
-                    placeholder='Your email address'
-                    className='w-full p-2 border rounded-md outline-none focus:border-color-3 text-sm text-color-2' 
-                    />
-                    
-                </div>
+          <div className="mt-6 text-sm">
+            <Link
+              to="/sign-in"
+              className="flex items-center gap-1 text-blue-700 hover:text-blue-900 transition"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+              Remembered Your Password?
+            </Link>
+          </div>
+        </motion.div>
+      </div>
 
-                <div className='mt-5 text-center flex flex-col gap-y-3'>
-
-                    <button className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm'
-                    onClick={handleSubmit}>
-                        Send Reset Instruction
-                    </button>
-
-                    <div>
-                        <Link to='/sign-in' className='text-color text-sm hover:text-color-3'>
-                            Remembered Your Password?
-                        </Link>
-                    </div>
-                    
-
-                </div>
-              
-            </form>
-
-        </div>
-
-    </div>
-
-    {isLoading ? <Loader text='Sending instruction on provided email...'/> : null}
-
-   </>
-  )
-}
+      {isLoading && (
+        <Loader text="Sending reset instructions to your email..." />
+      )}
+    </>
+  );
+};
 
 export default ForgotPassword;

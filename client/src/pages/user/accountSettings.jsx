@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import UserHeader from '../../components/headers/userHeader';
 import { UserIcon, KeyIcon, IdentificationIcon, EyeIcon, EyeSlashIcon, PencilIcon } from '@heroicons/react/24/outline';
 import UserAPI from '../../lib/inteceptors/userInterceptor';
-import SaveChanges from '../../components/buttons/savechanges';
-import Loader from '../../components/loaders/loader';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import brandsByType from '../../../utils/brandsByType';
+import Loader from '../../components/loaders/loader';
 
 const AccountSettings = () => {
   const [activeSection, setActiveSection] = useState('profile');
@@ -52,7 +51,6 @@ const AccountSettings = () => {
   const togglePassword = () => setShowPassword(prev => !prev);
   const toggleNewPassword = () => setShowNewPassword(prev => !prev);
   const toggleConfirmPassword = () => setShowConfirmPassword(prev => !prev);
-
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -124,6 +122,7 @@ const AccountSettings = () => {
     }
   };
 
+
   const handleChangeEmail = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -133,7 +132,6 @@ const AccountSettings = () => {
         Swal.fire({
           title: 'Email updated successfully.',
           text: res.data.message,
-          showConfirmButton: true,
           icon: 'success',
           confirmButtonText: 'Back to dashboard'
         }).then((result) => {
@@ -145,7 +143,6 @@ const AccountSettings = () => {
         title: 'Email update error',
         text: err.response?.data?.message || "Something went wrong",
         icon: 'error',
-        showConfirmButton: true,
         confirmButtonText: 'Try again'
       });
     } finally {
@@ -156,11 +153,11 @@ const AccountSettings = () => {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!password.currentpassword || !password.newpassword || !password.confirmnewpassword) {
-      toast.error("Field must not be empty.", toastOptions);
+      toast.error("Fields must not be empty.", toastOptions);
       return;
     }
     if (password.newpassword !== password.confirmnewpassword) {
-      toast.error("New password and confirm new password doesn't match", toastOptions);
+      toast.error("New password and confirm password don't match", toastOptions);
       return;
     }
     try {
@@ -170,10 +167,8 @@ const AccountSettings = () => {
       });
       if (res.data.success) {
         Swal.fire({
-          title: 'Change password success.',
-          text: res.data.message,
+          title: 'Password changed successfully.',
           icon: 'success',
-          showConfirmButton: true,
           confirmButtonText: 'Back to dashboard'
         }).then((result) => {
           if (result.isConfirmed) navigate('/dashboard');
@@ -181,10 +176,9 @@ const AccountSettings = () => {
       }
     } catch (err) {
       Swal.fire({
-        title: 'Change Password failed',
+        title: 'Change password failed',
         text: err.response?.data?.message || "Something went wrong",
         icon: 'error',
-        showConfirmButton: true,
         confirmButtonText: 'Try again'
       });
     }
@@ -194,176 +188,211 @@ const AccountSettings = () => {
     <>
       <UserHeader />
 
-      <div className="flex items-center justify-center px-5">
-        <div className="flex flex-col md:flex-row justify-around p-5 gap-5 w-full bg-white max-w-3xl shadow-xs shadow-black rounded-md min-h-[550px] my-5">
+      <div className="flex justify-center items-center min-h-[90vh] my-5 md:my-0 px-4">
 
-          {/* Sidebar for desktop */}
-          <div className="hidden md:flex flex-col gap-y-5 sticky top-20 self-start w-[220px]">
-            <h2 className="text-lg font-semibold text-color">Settings</h2>
-            <div className="flex flex-col gap-2 items-start">
-              <button
-                onClick={() => setActiveSection("profile")}
-                className={`flex items-center w-full px-3 py-2 rounded-md cursor-pointer ${activeSection === "profile" ? "bg-blue-200" : "hover:bg-gray-100"}`}
-              >
-                <UserIcon className="w-5 h-5 mr-2 text-color" />
-                <span className="text-xs font-semibold text-color-3">Profile Information</span>
-              </button>
-              <button
-                onClick={() => setActiveSection("password")}
-                className={`flex items-center w-full px-3 py-2 rounded-md cursor-pointer ${activeSection === "password" ? "bg-blue-200" : "hover:bg-gray-100"}`}
-              >
-                <KeyIcon className="w-5 h-5 mr-2 text-color" />
-                <span className="text-xs font-semibold text-color-3">Change Password</span>
-              </button>
-              <button
-                onClick={() => setActiveSection("vehicle")}
-                className={`flex items-center w-full px-3 py-2 rounded-md cursor-pointer ${activeSection === "vehicle" ? "bg-blue-200" : "hover:bg-gray-100"}`}
-              >
-                <IdentificationIcon className="w-5 h-5 mr-2 text-color" />
-                <span className="text-xs font-semibold text-color-3">Vehicle Information</span>
-              </button>
-            </div>
-          </div>
+        <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white rounded-2xl shadow-lg h-auto md:h-[80vh] overflow-y-auto md:overflow-hidden p-5">
 
+        <div className="flex flex-col sm:flex-row md:flex-col items-center p-4 gap-2 w-full md:max-w-3xs md:items-start">
+            <h2 className="hidden md:block text-lg font-semibold text-color mb-2">Settings</h2>
 
-          <div className="hidden md:block w-px bg-gray-300"></div>
-
-          <div className="w-full">
-            <h2 className="text-lg font-semibold text-color mb-5 text-center">
-              Account Settings
-            </h2>
-
-          <div className="flex md:hidden justify-around mb-5 gap-2">
             <button
               onClick={() => setActiveSection("profile")}
-              className={`flex-1 py-2 text-sm font-semibold rounded-md ${activeSection === "profile" ? "bg-blue-200" : "bg-gray-100"}`}
+              className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-sm font-medium rounded-lg transition-all ${
+                activeSection === "profile"
+                  ? "bg-blue-100 text-color"
+                  : "hover:bg-gray-100 text-gray-600"
+              }`}
             >
-              Profile
+              <UserIcon className="w-5 h-5" />
+              <span>Profile Information</span>
             </button>
+
             <button
               onClick={() => setActiveSection("password")}
-              className={`flex-1 py-2 text-sm font-semibold rounded-md ${activeSection === "password" ? "bg-blue-200" : "bg-gray-100"}`}
+              className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-sm font-medium rounded-lg transition-all ${
+                activeSection === "password"
+                  ? "bg-blue-100 text-color"
+                  : "hover:bg-gray-100 text-gray-600"
+              }`}
             >
-              Password
+              <KeyIcon className="w-5 h-5" />
+              <span>Password Information</span>
             </button>
+
             <button
               onClick={() => setActiveSection("vehicle")}
-              className={`flex-1 py-2 text-sm font-semibold rounded-md ${activeSection === "vehicle" ? "bg-blue-200" : "bg-gray-100"}`}
+              className={`flex items-center gap-2 px-3 py-2 cursor-pointer text-sm font-medium rounded-lg transition-all ${
+                activeSection === "vehicle"
+                  ? "bg-blue-100 text-color"
+                  : "hover:bg-gray-100 text-gray-600"
+              }`}
             >
-              Vehicle
+              <IdentificationIcon className="w-5 h-5" />
+              <span>Vehicle Information</span>
             </button>
           </div>
 
+          <div className='w-full h-px md:h-full md:w-px bg-color-2'></div>
 
-            {activeSection === 'profile' && (
-              <div>
-                <h2 className="font-semibold text-md text-color-3">Profile Information</h2>
-                <div className="w-full h-px bg-color-3"></div>
-                <form className="h-[350px] overflow-y-auto">
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Last Name</label>
-                    <input type="text" className="outline-0 p-2 text-sm text-color-2 w-full" value={userInfo.lastname} readOnly />
-                  </div>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">First Name</label>
-                    <input type="text" className="outline-0  p-2 text-sm text-color-2 w-full" value={userInfo.firstname} readOnly />
-                  </div>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Middle Name</label>
-                    <input type="text" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" name="middlename" value={userInfo.middlename} onChange={handleChange}/>
-                  </div>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Student ID</label>
-                    <input type="number" className="outline-0 p-2 text-sm text-color-2 w-full" value={userInfo.studentId} readOnly />
-                  </div>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Email</label>
-                    <div className="flex items-center gap-x-2 relative">
-                      <input ref={inputRef} type="email" name="email" className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" onChange={handleChange} readOnly={!isEditable} value={userInfo.email} />
-                      <button type="button" onClick={handleEditClick}>
-                        <PencilIcon className="w-4 h-4 cursor-pointer hover:text-color-3 bottom-2 absolute right-2" title="Edit Email" />
-                      </button>
+
+          <div className="flex flex-col items-center justify-center w-full">
+            <h2 className="text-xl font-semibold text-color text-center my-5">Account Settings</h2>
+
+            {activeSection === "profile" && (
+              <div className="flex flex-col gap-1 px-5">
+                <h3 className="font-semibold text-lg text-color-3">Profile Information</h3>
+                <div className="h-px bg-gray-200 mb-2"></div>
+                <form className="flex flex-col gap-1">
+                  <div className='flex flex-col md:flex-row gap-2'>
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Last Name</label>
+                      <input type="text" value={userInfo.lastname} readOnly className="p-2 border rounded-md text-sm w-full" />
                     </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">First Name</label>
+                      <input type="text" value={userInfo.firstname} readOnly className="p-2 border rounded-md text-sm w-full" />
+                    </div>
+                    
+                  </div>
+                  <div>
+                    
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Middle Name</label>
+                    <input type="text" name="middlename" value={userInfo.middlename} onChange={handleChange} className="p-2 border rounded-md text-sm w-full" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Student ID</label>
+                    <input type="text" value={userInfo.studentId} readOnly className="p-2 border rounded-md text-sm w-full" />
+                  </div>
+                  <div className="col-span-2 relative">
+                    <label className="text-sm font-medium text-gray-700">Email</label>
+                    <input
+                      ref={inputRef}
+                      type="email"
+                      name="email"
+                      onChange={handleChange}
+                      readOnly={!isEditable}
+                      value={userInfo.email}
+                      className="w-full p-2 border rounded-md text-sm pr-10"
+                    />
+                    <PencilIcon onClick={handleEditClick} className="absolute right-3 top-9 w-4 h-4 text-gray-500 cursor-pointer hover:text-color-3" />
                   </div>
                 </form>
-                <button className="w-full bg-color-3 mt-5 p-2 text-white rounded-sm text-sm cursor-pointer hover:opacity-90" onClick={handleChangeEmail}>
-                  Save changes
+                <button onClick={handleChangeEmail} className="w-full bg-color-3 cursor-pointer text-sm text-white py-2 rounded-md hover:opacity-90 transition mt-3">
+                  Save Changes
                 </button>
               </div>
             )}
 
-            {activeSection === 'password' && (
-              <div>
-                <h2 className="font-semibold text-md text-color-3">Change Password</h2>
-                <div className="w-full h-px bg-color-3"></div>
-                <form className="mt-5" onSubmit={handleChangePassword}>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Current Password</label>
-                    <div className="relative">
-                      <input type={showPassword ? 'text' : 'password'} name="currentpassword" value={password.currentpassword} onChange={handlePasswordChange} className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" />
-                      {showPassword ? (
-                        <EyeIcon className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer" onClick={togglePassword} />
-                      ) : (
-                        <EyeSlashIcon className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer" onClick={togglePassword} />
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">New Password</label>
-                    <div className="relative">
-                      <input type={showNewPassword ? 'text' : 'password'} name="newpassword" value={password.newpassword} onChange={handlePasswordChange} className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full" />
-                      {showNewPassword ? (
-                        <EyeIcon className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer" onClick={toggleNewPassword} />
-                      ) : (
-                        <EyeSlashIcon className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer" onClick={toggleNewPassword} />
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Confirm New Password</label>
-                    <div className="relative">
-                      <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        name="confirmnewpassword"
-                        value={password.confirmnewpassword}
-                        onChange={handlePasswordChange}
-                        className="outline-0 border-b focus:border-color-3 p-2 text-sm text-color-2 w-full"
-                      />
-                      {showConfirmPassword ? (
-                        <EyeIcon
-                          className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer"
-                          onClick={toggleConfirmPassword}
-                        />
-                      ) : (
-                        <EyeSlashIcon
-                          className="absolute right-3 top-2 w-5 h-5 text-color-2 cursor-pointer"
-                          onClick={toggleConfirmPassword}
-                        />
-                      )}
-                    </div>
-                  </div>
+            {activeSection === "password" && (
+              <div className="flex flex-col gap-1">
+                <h3 className="font-semibold text-lg text-color-3">Change Password</h3>
+                <div className="h-px bg-gray-200 mb-2"></div>
+                <form className="space-y-3">
+                <div className="relative">
+                  <label className="text-sm font-medium text-gray-700">Current Password</label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="currentpassword"
+                    value={password.currentpassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-2 border rounded-md text-sm pr-10"
+                  />
+                  {showPassword ? (
+                    <EyeIcon
+                      className="absolute right-3 top-9 w-4 h-4 cursor-pointer text-gray-500"
+                      onClick={togglePassword}
+                    />
+                  ) : (
+                    <EyeSlashIcon
+                      className="absolute right-3 top-9 w-4 h-4 cursor-pointer text-gray-500"
+                      onClick={togglePassword}
+                    />
+                  )}
+                </div>
 
-                  <SaveChanges />
+                <div className="relative">
+                  <label className="text-sm font-medium text-gray-700">New Password</label>
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    name="newpassword"
+                    value={password.newpassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-2 border rounded-md text-sm pr-10"
+                  />
+                  {showNewPassword ? (
+                    <EyeIcon
+                      className="absolute right-3 top-9 w-4 h-4 cursor-pointer text-gray-500"
+                      onClick={toggleNewPassword}
+                    />
+                  ) : (
+                    <EyeSlashIcon
+                      className="absolute right-3 top-9 w-4 h-4 cursor-pointer text-gray-500"
+                      onClick={toggleNewPassword}
+                    />
+                  )}
+                </div>
+
+                
+                <div className="relative">
+                  <label className="text-sm font-medium text-gray-700">Confirm New Password</label>
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmnewpassword"
+                    value={password.confirmnewpassword}
+                    onChange={handlePasswordChange}
+                    className="w-full p-2 border rounded-md text-sm pr-10"
+                  />
+                  {showConfirmPassword ? (
+                    <EyeIcon
+                      className="absolute right-3 top-9 w-4 h-4 cursor-pointer text-gray-500"
+                      onClick={toggleConfirmPassword}
+                    />
+                  ) : (
+                    <EyeSlashIcon
+                      className="absolute right-3 top-9 w-4 h-4 cursor-pointer text-gray-500"
+                      onClick={toggleConfirmPassword}
+                    />
+                  )}
+                </div>
+
                 </form>
+                <button
+                  onClick={handleChangePassword}
+                  className="w-full bg-color-3 text-white py-2 rounded-md cursor-pointer text-sm hover:opacity-90 transition mt-3"
+                >
+                  Save Password
+                </button>
               </div>
             )}
 
-              {activeSection === 'vehicle' && (
-              <div>
-                <h2 className="font-semibold text-md text-color-3">Vehicle Information</h2>
-                <div className="w-full h-px bg-color-3"></div>
-                <form className="h-[350px] overflow-y-auto">
+            {activeSection === "vehicle" && (
+              <div className="space-y-4 text-sm px-5">
+                <h3 className="font-semibold text-lg text-color-3">Vehicle Information</h3>
+                <div className="h-px bg-gray-200 mb-2"></div>
 
-                  {/* Vehicle Type Dropdown */}
-                  <div className="mt-3">
+                <form className="flex flex-col gap-2">
+
+                  <div className='flex gap-3 flex-col md:flex-row'>
+                    <div className='w-full'>
                     <label className="font-semibold text-color-3">Vehicle Type</label>
                     <select
                       name="vehicleType"
-                      className="outline-0 border-b p-2 text-sm text-color-2 w-full"
+                      className="outline-0 border rounded-md p-2 text-sm text-color-2 w-full"
                       value={vehicleInformation?.vehicleType || ""}
-                      onChange={handleVehicleChange}
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        setVehicleInformation((prev) => ({
+                          ...prev,
+                          vehicleType: value,
+                          brand: ""
+                        }));
+                      }}
                     >
-                      <option value=''>Select Vehicle Type</option>
+                      <option value="">Select Vehicle Type</option>
                       {Object.keys(brandsByType).map((type) => (
                         <option key={type} value={type}>
                           {type}
@@ -372,11 +401,11 @@ const AccountSettings = () => {
                     </select>
                   </div>
 
-                  <div className="mt-3">
+                  <div className='w-full'>
                     <label className="font-semibold text-color-3">Brand</label>
                     <select
                       name="brand"
-                      className="outline-0 border-b p-2 text-sm text-color-2 w-full"
+                      className="outline-0 border rounded-md p-2 text-sm text-color-2 w-full"
                       value={vehicleInformation?.brand || ""}
                       onChange={handleVehicleChange}
                       disabled={!vehicleInformation.vehicleType}
@@ -394,66 +423,47 @@ const AccountSettings = () => {
                     </select>
                   </div>
 
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Year Model</label>
+                  </div>
+                  
+                  <div className='flex gap-3 flex-col md:flex-row'>
+                    <div className='w-full'>
+                    <label className="font-semibold text-color-3">Model (Year)</label>
                     <select
                       name="model"
-                      className="outline-0 border-b p-2 text-sm text-color-2 w-full"
-                      value={vehicleInformation.model || ""}
+                      className="outline-0 border rounded-md p-2 text-sm text-color-2 w-full"
+                      value={vehicleInformation?.model || ""}
                       onChange={handleVehicleChange}
                     >
                       <option value="">Select Year</option>
-                      {Array.from({ length: 40 }, (_, i) => {
-                        const year = new Date().getFullYear() - i;
-                        return (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        );
-                      })}
+                      {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
-                  <div className="mt-3">
+                  <div className='w-full'>
                     <label className="font-semibold text-color-3">Plate Number</label>
                     <input
                       type="text"
                       name="plateNumber"
-                      className="outline-0 border-b p-2 text-sm text-color-2 w-full"
-                      value={vehicleInformation.plateNumber || ""}
+                      className="outline-0 border rounded-md p-2 text-sm text-color-2 w-full"
+                      placeholder="Enter Plate Number"
+                      value={vehicleInformation?.plateNumber || ""}
                       onChange={handleVehicleChange}
-                      placeholder="e.g. 123ABC or 1234-00000012345"
                     />
                   </div>
 
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Color</label>
-                    <select
-                      name="color"
-                      className="outline-0 border-b p-2 text-sm text-color-2 w-full"
-                      value={vehicleInformation.color || ""}
-                      onChange={handleVehicleChange}
-                    >
-                      <option value="">Select Color</option>
-                      <option value="White">White</option>
-                      <option value="Black">Black</option>
-                      <option value="Gray">Gray</option>
-                      <option value="Silver">Silver</option>
-                      <option value="Red">Red</option>
-                      <option value="Blue">Blue</option>
-                      <option value="Green">Green</option>
-                      <option value="Yellow">Yellow</option>
-                      <option value="Other">Other</option>
-                    </select>
-
                   </div>
-
-                  <div className="mt-3">
-                    <label className="font-semibold text-color-3">Transmission (Optional)</label>
+                  
+                  <div className='flex gap-3 flex-col md:flex-row'>
+                    <div className='w-full'>
+                    <label className="font-semibold text-color-3">Transmission</label>
                     <select
                       name="transmission"
-                      className="outline-0 border-b p-2 text-sm text-color-2 w-full"
-                      value={vehicleInformation.transmission || ""}
+                      className="outline-0 border rounded-md p-2 text-sm text-color-2 w-full"
+                      value={vehicleInformation?.transmission || ""}
                       onChange={handleVehicleChange}
                     >
                       <option value="">Select Transmission</option>
@@ -461,17 +471,46 @@ const AccountSettings = () => {
                       <option value="Manual">Manual</option>
                     </select>
                   </div>
+
+                  <div className="w-full">
+                    <label className="font-semibold text-color-3">Color</label>
+                    <select
+                      name="color"
+                      className="outline-0 border rounded-md p-2 text-sm text-color-2 w-full"
+                      value={vehicleInformation?.color || ""}
+                      onChange={handleVehicleChange}
+                    >
+                      <option value="">Select Color</option>
+                      <option value="Black">Black</option>
+                      <option value="White">White</option>
+                      <option value="Gray">Gray</option>
+                      <option value="Red">Red</option>
+                      <option value="Blue">Blue</option>
+                      <option value="Silver">Silver</option>
+                      <option value="Green">Green</option>
+                      <option value="Yellow">Yellow</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  </div>
+                 
                 </form>
-                <SaveChanges onClick={handleSaveVehicle} />
+
+                <button
+                  onClick={handleSaveVehicle}
+                  className="w-full bg-color-3 text-white py-2 rounded-md cursor-pointer text-sm hover:opacity-90 transition mt-3"
+                >
+                  Save Vehicle Info
+                </button>
               </div>
             )}
-
 
           </div>
         </div>
       </div>
 
-      {loading && <Loader text="Loading information..." />}
+      {loading ? <Loader /> : null}
     </>
   );
 };

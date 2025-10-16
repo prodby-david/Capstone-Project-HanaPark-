@@ -3,12 +3,14 @@ import Swal from 'sweetalert2'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAdminContext } from '../../context/adminContext';
 import { api } from '../../lib/api'
+import Loader from './../../components/loaders/loader'
 
 
 
 
 const AdminHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { Logout } = useAdminContext();
@@ -42,9 +44,22 @@ const AdminHeader = () => {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Confirm',
           }).then(async () => {
-            await api.post('/admin/logout', {});
-            Logout();
-            navigate('/admin/passcode');
+            setIsLoading(true)
+            try {
+              await api.post('/admin/logout', {});
+              Logout();
+              navigate('/admin/passcode');
+            } catch (err) {
+            Swal.fire({
+              title: 'Unexpected error occured.!',
+              icon: 'error',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'OK',
+            });
+            } finally {
+              setIsLoading(false);
+            }
+            
           });
         }
       });
@@ -94,6 +109,7 @@ const AdminHeader = () => {
           </div>
         </div>
       </nav>
+      {isLoading ? <Loader text='Logging out...'/> : null}
     </>
   );
 };

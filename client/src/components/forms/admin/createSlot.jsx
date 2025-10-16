@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import toastOptions from '../../../lib/toastConfig'
 import Loader from '../../loaders/loader'
 import AdminAPI from '../../../lib/inteceptors/adminInterceptor'; 
+import AdminHeader from '../../headers/adminHeader'
 
 
 
@@ -131,7 +132,8 @@ const CreateSlot = () => {
 
   return (
     <>
-      <div className='flex justify-center items-center min-h-screen px-5'>
+    <AdminHeader />
+      <div className='flex justify-center items-center mt-3 px-5'>
 
         <div className='flex flex-col text-center p-5 shadow-md shadow-color-2 w-full max-w-md'>
 

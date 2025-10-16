@@ -11,6 +11,7 @@ const UserHeader = () => {
   const { logout, auth } = useAuth();
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,77 +87,81 @@ const UserHeader = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="flex justify-between items-center py-3 px-5 bg-white shadow-md relative">
+    <div className="flex justify-between items-center py-3 px-5 bg-white shadow-md relative z-50">
 
-      <Link to="/dashboard" className="font-bold text-lg text-color">
+      <Link to="/dashboard" className="font-bold text-lg text-color tracking-wide">
         HanaPark
       </Link>
 
-      <div className="flex items-center gap-x-1 md:gap-x-3">
+      <div className="flex items-center gap-x-3 md:gap-x-5">
 
         <div className="relative">
           <button
             onClick={toggleNotif}
-            className="flex items-center justify-center text-xs text-color-3 hover:text-color cursor-pointer group"
+            className="relative flex items-center justify-center gap-1 text-sm text-color-3 hover:text-color transition cursor-pointer"
           >
-            <BellIcon className="w-5 h-5 text-color-3 group-hover:text-color" />
-            <span className="hidden sm:inline">Notifications</span>
-          </button>
+            <BellIcon className="w-6 h-6" />
+            <span className="hidden sm:inline font-medium">Notifications</span>
 
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 left-3 bg-red-500 text-white text-xs w-3 h-3 flex items-center justify-center rounded-full">
-              {unreadCount}
-            </span>
-          )}
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                {unreadCount}
+              </span>
+            )}
+          </button>
         </div>
 
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center text-xs text-color-3 hover:text-color cursor-pointer group"
+          className="flex items-center gap-1 text-sm text-color-3 hover:text-color transition cursor-pointer"
         >
-          <ArrowLeftStartOnRectangleIcon className="w-5 h-5 text-color-3 group-hover:text-color" />
-          <span className="hidden sm:inline">Log out</span>
+          <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
+          <span className="hidden sm:inline font-medium">Log out</span>
         </button>
       </div>
 
       <AnimatePresence>
         {notifOpen && (
           <>
+
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
+              animate={{ opacity: 0.3 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setNotifOpen(false)}
               className="fixed inset-0 bg-black z-40"
             />
+
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3 }}
-              className="bg-white shadow-xl z-50 overflow-hidden fixed top-16 right-3 w-[90%] max-w-sm h-[60vh] sm:h-auto sm:w-80 rounded-xl"
+              className="fixed top-16 right-3 w-[90%] max-w-sm bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden backdrop-blur-md"
             >
-              <div className="p-4 border-b border-color-2 font-semibold text-sm text-gray-700 flex justify-between">
-                Notifications
+              <div className="p-4 flex justify-between items-center border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <h3 className="text-sm font-semibold text-color-3">Notifications</h3>
                 <span className="text-xs text-gray-400">{notifications.length} total</span>
               </div>
-              <div className="max-h-full sm:max-h-80 overflow-y-auto">
+
+              <div className="max-h-[60vh] overflow-y-auto">
                 {notifications.length === 0 ? (
-                  <div className="p-4 text-sm text-color-3 text-center">No notifications</div>
+                  <div className="p-5 text-center text-gray-500 text-sm">No notifications yet</div>
                 ) : (
                   notifications.map((notif) => (
-                    <div
+                    <motion.div
                       key={notif._id}
-                      className={`p-4 text-sm border-b border-color-3 hover:bg-gray-50 transition ${
-                        !notif.read ? "bg-blue-50" : "bg-white"
+                      whileHover={{ scale: 1.01 }}
+                      className={`p-4 border-b border-gray-100 transition ${
+                        notif.read ? "bg-white" : "bg-blue-50"
                       }`}
                     >
-                      <p className="text-color-3">{notif.message}</p>
-                      <span className="text-xs text-gray-400">
+                      <p className="text-gray-800 text-sm leading-snug">{notif.message}</p>
+                      <span className="text-xs text-gray-400 block mt-1">
                         {new Date(notif.createdAt).toLocaleString()}
                       </span>
-                    </div>
+                    </motion.div>
                   ))
                 )}
               </div>

@@ -33,6 +33,7 @@ import StaffRegistration from './components/forms/admin/staffRegistration'
 import UserRegistration from './pages/admin/registration/userRegistration'
 import AdminFeedbacks from './pages/admin/userFeedback'
 import FAQ from './pages/user/faq'
+import TermsAndConditions from './pages/user/terms'
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/reset-password" element={ <ForgotPassword />} />
           <Route path="/visitors" element={ <Visitors /> } />
           <Route path='/faq' element={ <FAQ /> }/>
+          <Route path='/terms' element={<TermsAndConditions />} />
 
           {/* User Routes */}
           <Route path='/dashboard'

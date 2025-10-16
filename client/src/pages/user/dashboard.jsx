@@ -76,7 +76,6 @@ const Dashboard = () => {
             </Link>
           </motion.div>
 
-          {/* Recent Activities */}
           <motion.div
             variants={fadeUp}
             whileHover={{ scale: 1.05 }}

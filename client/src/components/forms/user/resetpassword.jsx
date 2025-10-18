@@ -41,7 +41,7 @@ const ResetPassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
       <form
         onSubmit={handleReset}
-        className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-gray-100 p-8 md:p-10 flex flex-col gap-4 transition-transform duration-200 hover:scale-[1.01]"
+        className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-gray-100 p-8 md:p-10 flex flex-col gap-4"
       >
         <h2 className="text-xl md:text-2xl font-semibold text-center text-color-3 mb-2">
           Reset Password

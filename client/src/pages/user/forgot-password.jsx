@@ -2,13 +2,20 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { EnvelopeIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import Swal from "sweetalert2";
 import { publicApi } from "../../lib/api";
 import Loader from "../../components/loaders/loader";
+import CustomPopup from "../../components/popups/popup";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
   const handleChange = (e) => setEmail(e.target.value);
 
@@ -18,14 +25,22 @@ const ForgotPassword = () => {
 
     try {
       const res = await publicApi.post("/reset-password", { email });
-      Swal.fire("Success", res.data.message, "success");
+      setPopup({
+        show: true,
+        type: "success",
+        title: "Email Sent!",
+        message: res.data.message,
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
       setEmail("");
     } catch (err) {
-      Swal.fire(
-        "Reset Failed",
-        err.response?.data?.message || "Something went wrong",
-        "error"
-      );
+      setPopup({
+        show: true,
+        type: "error",
+        title: "Reset Failed",
+        message: err.response?.data?.message || "Something went wrong.",
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
       setEmail("");
     } finally {
       setIsLoading(false);
@@ -102,6 +117,15 @@ const ForgotPassword = () => {
       {isLoading && (
         <Loader text="Sending reset instructions to your email..." />
       )}
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup({ ...popup, show: false })}
+        onConfirm={popup.onConfirm}
+      />
     </>
   );
 };

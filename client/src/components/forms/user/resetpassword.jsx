@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import Loader from '../../loaders/loader';
 import { api } from '../../../lib/api';
+import CustomPopup from '../../popups/popup';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -11,27 +11,60 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: 'info',
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
 
   const handleReset = async (e) => {
     e.preventDefault();
 
     if (password.length < 6) {
-      return Swal.fire('Error', 'Password must be at least 6 characters long.', 'error');
+      return setPopup({
+        show: true,
+        type: 'error',
+        title: 'Invalid Password',
+        message: 'Password must be at least 6 characters long.',
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
     }
 
     if (password !== confirmPassword) {
-      return Swal.fire('Error', 'Passwords do not match.', 'error');
+      return setPopup({
+        show: true,
+        type: 'error',
+        title: 'Password Mismatch',
+        message: 'Passwords do not match.',
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
     }
 
     setIsLoading(true);
 
     try {
       const response = await api.post(`/reset-password/${token}`, { password });
-      Swal.fire('Success', response.data.message, 'success');
-      navigate('/sign-in', { replace: true });
+      setPopup({
+        show: true,
+        type: 'success',
+        title: 'Password Reset',
+        message: response.data.message,
+        onConfirm: () => {
+          setPopup({ ...popup, show: false });
+          navigate('/sign-in', { replace: true });
+        },
+      });
     } catch (err) {
       console.error(err);
-      Swal.fire('Error', err.response?.data?.message || 'Failed to reset password', 'error');
+      setPopup({
+        show: true,
+        type: 'error',
+        title: 'Failed to Reset',
+        message: err.response?.data?.message || 'Something went wrong.',
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
     } finally {
       setIsLoading(false);
     }
@@ -87,6 +120,15 @@ const ResetPassword = () => {
       </form>
 
       {isLoading && <Loader text="Resetting your password..." />}
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup({ ...popup, show: false })}
+        onConfirm={popup.onConfirm}
+      />
     </div>
   );
 };

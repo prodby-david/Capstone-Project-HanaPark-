@@ -16,7 +16,6 @@ const VerifyReservation = async (req, res) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    // ✅ Entrance verification
     if (!reservation.isEntryUsed) {
       if (reservation.expiresAt < new Date()) {
         return res.status(400).json({ message: "QR code expired" });
@@ -41,13 +40,13 @@ const VerifyReservation = async (req, res) => {
       });
 
       req.io.emit("reservationUpdated", reservation);
-      req.io.emit("slotUpdated", { id: reservation.slotId, slotStatus: "Occupied" });
+      const updatedSlot = await Slot.findById(reservation.slotId);
+      req.io.emit("slotUpdated", updatedSlot);
       req.io.to(reservation.reservedBy._id.toString()).emit("reservationVerified", notif);
 
       return res.status(200).json({ message: "Entrance verified. Reservation is now active." });
     }
 
-    // ✅ Exit verification
     if (reservation.isEntryUsed && !reservation.isExitUsed) {
       reservation.status = "Completed";
       reservation.isExitUsed = true;
@@ -68,7 +67,8 @@ const VerifyReservation = async (req, res) => {
       });
 
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Completed" });
-      req.io.emit("slotUpdated", { id: reservation.slotId, slotStatus: "Available" });
+      const updatedSlot = await Slot.findById(reservation.slotId);
+      req.io.emit("slotUpdated", updatedSlot);
       req.io.to(reservation.reservedBy._id.toString()).emit("reservationCompleted", notif);
 
       return res.status(200).json({ message: "Exit verified. Reservation completed." });

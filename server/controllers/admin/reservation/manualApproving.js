@@ -69,8 +69,7 @@ const ApproveReservation = async (req, res) => {
 
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Completed" });
       const updatedSlot = await Slot.findById(reservation.slotId);
-req.io.emit("slotUpdated", updatedSlot);
-
+      req.io.emit("slotUpdated", updatedSlot);
       req.io.to(reservation.reservedBy._id.toString()).emit("reservationCompleted", notif);
 
       return res.status(200).json({ message: "Reservation completed." });

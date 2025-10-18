@@ -40,7 +40,8 @@ const ApproveReservation = async (req, res) => {
       });
 
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Reserved" });
-      req.io.emit("slotUpdated", { id: reservation.slotId, slotStatus: "Occupied" });
+      const updatedSlot = await Slot.findById(reservation.slotId);
+      req.io.emit("slotUpdated", updatedSlot);
 
       req.io.to(reservation.reservedBy._id.toString()).emit("reservationApproved", notif);
 
@@ -67,7 +68,9 @@ const ApproveReservation = async (req, res) => {
       });
 
       req.io.emit("reservationUpdated", { id: reservation._id, status: "Completed" });
-      req.io.emit("slotUpdated", { id: reservation.slotId, slotStatus: "Available" });
+      const updatedSlot = await Slot.findById(reservation.slotId);
+req.io.emit("slotUpdated", updatedSlot);
+
       req.io.to(reservation.reservedBy._id.toString()).emit("reservationCompleted", notif);
 
       return res.status(200).json({ message: "Reservation completed." });

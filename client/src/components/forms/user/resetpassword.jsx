@@ -43,10 +43,10 @@ const ResetPassword = () => {
         onSubmit={handleReset}
         className="bg-white w-full max-w-md rounded-2xl shadow-xl border border-gray-100 p-8 md:p-10 flex flex-col gap-4 transition-transform duration-200 hover:scale-[1.01]"
       >
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mb-2">
+        <h2 className="text-xl md:text-2xl font-semibold text-center text-color-3 mb-2">
           Reset Password
         </h2>
-        <p className="text-gray-500 text-sm text-center mb-4">
+        <p className="text-color-2 text-sm text-center mb-4">
           Please enter your new password below.
         </p>
 
@@ -56,7 +56,7 @@ const ResetPassword = () => {
           </label>
           <input
             type="password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full p-3 border border-gray-300 rounded-lg"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter new password"
@@ -70,7 +70,7 @@ const ResetPassword = () => {
           </label>
           <input
             type="password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full p-3 border border-gray-300 rounded-lg"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter new password"

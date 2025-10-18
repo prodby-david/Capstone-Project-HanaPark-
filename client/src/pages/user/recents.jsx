@@ -5,9 +5,9 @@ import UserAPI from '../../lib/inteceptors/userInterceptor';
 import { XMarkIcon, QrCodeIcon } from '@heroicons/react/24/outline';
 import Step5 from '../../components/reservation/step5/step5';
 import Loader from '../../components/loaders/loader';
-import Swal from 'sweetalert2';
 import { socket } from '../../lib/socket';
 import BackButton from '../../components/buttons/backbutton';
+import CustomPopup from '../../components/popups/popup';
 
 const Recents = () => {
   const navigate = useNavigate();
@@ -26,7 +26,13 @@ const Recents = () => {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [latestReservation, setLatestReservation] = useState(null);
   const [showQR, setShowQR] = useState(false);
-  const [selectedReservation, setSelectedReservation] = useState(null);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
   useEffect(() => {
     const getUserHistory = async () => {
@@ -74,27 +80,42 @@ const Recents = () => {
   const filteredReservationsByStatus = status => filteredReservations.filter(r => r.status === status);
 
   const handleCancelReservation = async (id) => {
-    Swal.fire({
-      title: 'Cancel Reservation?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#00509e',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, cancel it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    setPopup({
+      show: true,
+      type: "warning",
+      title: "Cancel Reservation?",
+      message: "You won't be able to revert this action.",
+      onConfirm: async () => {
+        setPopup({ ...popup, show: false });
         setCancelLoading(true);
         try {
           const res = await UserAPI.patch(`/cancel/${id}`);
-          Swal.fire('Cancelled!', res.data.message, 'success');
-          setReservations(prev => prev.map(r => r._id === id ? { ...r, status: 'Cancelled' } : r));
+          setPopup({
+            show: true,
+            type: "success",
+            title: "Cancelled!",
+            message: res.data.message,
+            onConfirm: () => setPopup({ ...popup, show: false }),
+          });
+          setReservations((prev) =>
+            prev.map((r) =>
+              r._id === id ? { ...r, status: "Cancelled" } : r
+            )
+          );
         } catch (err) {
-          console.error(err);
+          setPopup({
+            show: true,
+            type: "error",
+            title: "Error",
+            message:
+              err.response?.data?.message ||
+              "An error occurred while cancelling the reservation.",
+            onConfirm: () => setPopup({ ...popup, show: false }),
+          });
         } finally {
           setCancelLoading(false);
         }
-      }
+      },
     });
   };
 
@@ -248,8 +269,17 @@ const Recents = () => {
         </div>
       )}
 
-      {loading && <Loader />}
+      {loading ? <Loader text='Showing your activities...'/> : null}
       {cancelLoading && <Loader text="Cancelling your reservation..." />}
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup({ ...popup, show: false })}
+        onConfirm={popup.onConfirm}
+      />
     </>
   );
 };

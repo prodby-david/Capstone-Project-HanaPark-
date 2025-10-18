@@ -4,7 +4,11 @@
     --color-color: #003366;
     --color-color-2: #666;
     --color-color-3: #00509e;
-}
+    --color-color-4: #9460C9;
+    --color-gradient-1: #00509E;
+    --color-gradient-2: #9460C9;
+  }
+
 
 @layer components {
   th, td {

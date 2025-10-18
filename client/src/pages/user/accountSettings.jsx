@@ -510,7 +510,7 @@ const AccountSettings = () => {
         </div>
       </div>
 
-      {loading ? <Loader /> : null}
+      {loading ? <Loader text='Loading information...'/> : null}
     </>
   );
 };

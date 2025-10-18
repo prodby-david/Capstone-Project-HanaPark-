@@ -1,10 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 const PlateNumberInput = ({ vehicleNumber, disabled, handleChange }) => (
-
-  <div className='flex flex-col items-baseline w-full max-w-xs gap-1'>
-
-    <label htmlFor="vehicleNumber" className="font-semibold text-color text-sm md:text-md">
+  <div className="flex flex-col w-full max-w-xs gap-2">
+    <label
+      htmlFor="vehicleNumber"
+      className="font-semibold text-color text-sm"
+    >
       Plate Number or MV File
     </label>
 
@@ -15,11 +16,12 @@ const PlateNumberInput = ({ vehicleNumber, disabled, handleChange }) => (
       value={vehicleNumber}
       disabled={disabled}
       onChange={handleChange}
-      className='w-full max-w-sm outline-0 border p-2 border-color-2 rounded-md text-xs md:text-sm text-color-2'
+      placeholder="e.g. ABC123 or 123ABC"
+      className={`w-full outline-none border p-2 rounded-md text-sm text-color-2 transition-all duration-200
+        ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'border-color-2'}
+      `}
     />
-    
   </div>
 );
-
 
 export default PlateNumberInput;

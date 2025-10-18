@@ -6,15 +6,14 @@ import {
   CheckCircleIcon,
   ClipboardDocumentListIcon,
 } from '@heroicons/react/24/outline';
-import AdminAPI from '../../../lib/inteceptors/adminInterceptor';
 import UserAPI from '../../../lib/inteceptors/userInterceptor';
-import Swal from 'sweetalert2';
 import Step1 from '../../reservation/step1/step1';
 import Step2 from '../../reservation/step2/step2';
 import Step3 from '../../reservation/step3/step3';
 import Step4 from '../../reservation/step4/step4';
 import Step5 from '../../reservation/step5/step5';
 import Loader from '../../../components/loaders/loader';
+import CustomPopup from '../../popups/popup';
 
 const UserReservationForm = () => {
   const { slotId } = useParams();
@@ -28,6 +27,14 @@ const UserReservationForm = () => {
   const [trackRadioBox, setTrackRadioBox] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reservationResult, setReservationResult] = useState(null);
+
+  const [popup, setPopup] = useState({
+    show: false,
+    type: '',
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
 
   const [reservationData, setReservationData] = useState({
     slotId,
@@ -94,7 +101,6 @@ const UserReservationForm = () => {
     fetchVehicle();
   }, []);
 
-  // 🔁 Sync data
   useEffect(() => {
     setReservationData((prev) => ({
       ...prev,
@@ -139,31 +145,42 @@ const UserReservationForm = () => {
     try {
       const res = await UserAPI.post(`/reservation-form/${slotId}`, reservationData);
       setReservationResult(res.data);
-      Swal.fire({
+
+      // ✅ Custom popup for success
+      setPopup({
+        show: true,
+        type: 'success',
         title: 'Reservation Confirmed!',
-        text: 'Thank you for reserving a slot at HanaPark.',
-        icon: 'success',
-        confirmButtonColor: '#00509e',
+        message: 'Thank you for reserving a slot at HanaPark.',
+        onConfirm: () => {
+          setPopup({ show: false });
+          nextStep();
+        },
       });
-      nextStep();
     } catch (err) {
-      Swal.fire({
+      // ✅ Custom popup for error
+      setPopup({
+        show: true,
+        type: 'error',
         title: 'Reservation Failed',
-        text: err.response?.data?.message || 'Something went wrong.',
-        icon: 'error',
-        confirmButtonColor: '#00509e',
+        message: err.response?.data?.message || 'Something went wrong.',
+        onConfirm: () => setPopup({ show: false }),
       });
     } finally {
       setLoading(false);
     }
   };
 
+  if (!slot) {
+    return <Loader text="Loading slot information..." />;
+  }
+
   return (
     <>
       <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-6 py-10 gap-8">
-        {/* Sidebar */}
+
         {step !== 5 && (
-          <div className="hidden lg:flex flex-col gap-y-6 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl p-8 w-full max-w-xs border border-gray-100">
+          <div className="hidden lg:flex flex-col gap-y-6 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl p-8 w-full max-w-xs border border-gray-100 h-[75vh]">
             <h2 className="text-lg font-semibold text-[#00509e] text-center">Reservation Steps</h2>
 
             <ul className="space-y-4">
@@ -187,7 +204,6 @@ const UserReservationForm = () => {
           </div>
         )}
 
-        {/* Main Form Container */}
         <div className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl w-full max-w-3xl p-6 sm:p-10 transition-all border border-gray-100">
           <form className="w-full">
             {step === 1 && <Step1 slot={slot} nextStep={nextStep} />}
@@ -222,6 +238,15 @@ const UserReservationForm = () => {
       </div>
 
       {loading && <Loader text="Confirming reservation..." />}
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup({ show: false })}
+        onConfirm={popup.onConfirm}
+      />
     </>
   );
 };

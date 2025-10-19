@@ -40,54 +40,53 @@ const UserReservationLists = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('reservationCreated', (newReservation) => {
-      setReservations((prev) => {
-        const exists = prev.some((r) => r._id === newReservation._id);
-        return exists ? prev : [...prev, newReservation];
-      });
-    });
+    const events = [
+      'reservationCreated',
+      'reservationCancelled',
+      'reservationCancelledByUser',
+      'reservationApproved',
+      'reservationUpdated',
+    ];
 
-    socket.on('reservationCancelled', (cancelledReservation) => {
-      setReservations((prev) =>
-        prev.map((r) =>
-          r._id === cancelledReservation._id ? cancelledReservation : r
-        )
-      );
-    });
-
-    socket.on('reservationCancelledByUser', (cancelledReservation) => {
-      setReservations((prev) => {
-        const exists = prev.some((r) => r._id === cancelledReservation._id);
-        if (!exists) return prev;
-        return prev.map((r) =>
-          r._id === cancelledReservation._id ? cancelledReservation : r
+    const handlers = {
+      reservationCreated: (newReservation) => {
+        setReservations((prev) => {
+          const exists = prev.some((r) => r._id === newReservation._id);
+          return exists ? prev : [...prev, newReservation];
+        });
+      },
+      reservationCancelled: (cancelledReservation) => {
+        setReservations((prev) =>
+          prev.map((r) =>
+            r._id === cancelledReservation._id ? cancelledReservation : r
+          )
         );
-      });
-    });
-
-    socket.on('reservationApproved', (approvedReservation) => {
-      setReservations((prev) =>
-        prev.map((r) =>
-          r._id === approvedReservation._id ? approvedReservation : r
-        )
-      );
-    });
-
-    socket.on('reservationUpdated', (updatedReservation) => {
-      setReservations((prev) =>
-        prev.map((r) =>
-          r._id === updatedReservation._id ? updatedReservation : r
-        )
-      );
-    });
-
-    return () => {
-      socket.off('reservationCreated');
-      socket.off('reservationCancelled');
-      socket.off('reservationCancelledByUser');
-      socket.off('reservationApproved');
-      socket.off('reservationUpdated');
+      },
+      reservationCancelledByUser: (cancelledReservation) => {
+        setReservations((prev) =>
+          prev.map((r) =>
+            r._id === cancelledReservation._id ? cancelledReservation : r
+          )
+        );
+      },
+      reservationApproved: (approvedReservation) => {
+        setReservations((prev) =>
+          prev.map((r) =>
+            r._id === approvedReservation._id ? approvedReservation : r
+          )
+        );
+      },
+      reservationUpdated: (updatedReservation) => {
+        setReservations((prev) =>
+          prev.map((r) =>
+            r._id === updatedReservation._id ? updatedReservation : r
+          )
+        );
+      },
     };
+
+    events.forEach((e) => socket.on(e, handlers[e]));
+    return () => events.forEach((e) => socket.off(e));
   }, []);
 
   // --- FETCH RESERVATIONS ---
@@ -121,7 +120,6 @@ const UserReservationLists = () => {
       'warning',
       async () => {
         await AdminAPI.post(`/admin/approve-reservation/${id}`);
-        openPopup('Success', 'Reservation approved successfully!', 'success');
         fetchReservations();
       }
     );
@@ -134,7 +132,6 @@ const UserReservationLists = () => {
       'warning',
       async () => {
         await AdminAPI.post(`/admin/approve-reservation/${id}`);
-        openPopup('Success', 'Reservation completed successfully!', 'success');
         fetchReservations();
       }
     );
@@ -147,7 +144,6 @@ const UserReservationLists = () => {
       'warning',
       async () => {
         await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
-        openPopup('Cancelled!', 'Reservation cancelled successfully.', 'success');
         setReservations((prev) => prev.filter((r) => r._id !== reservationId));
       }
     );
@@ -156,6 +152,7 @@ const UserReservationLists = () => {
   // --- HANDLE QR SCAN ---
   const handleQRScan = async (scannedText) => {
     const verificationCode = scannedText.trim().toLowerCase();
+    openPopup('Verifying...', 'Please wait', 'info'); // show popup while verifying
     try {
       const res = await AdminAPI.post('/admin/verify-reservation', {
         verificationCode,

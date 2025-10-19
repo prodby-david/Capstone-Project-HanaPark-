@@ -133,9 +133,9 @@ const CreateSlot = () => {
  return (
   <>
     <AdminHeader />
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#C8A8E9] to-[#9460C9] px-5">
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-lg border border-white/20">
-        <h2 className="text-2xl font-semibold text-color text-center mb-6">
+    <div className="flex justify-center items-center min-h-screen bg-[#C8A8E9] px-5">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg shadow-gray-400 p-8">
+        <h2 className="text-2xl font-semibold text-[#3366CC] text-center mb-6">
           Create Parking Slot
         </h2>
 
@@ -144,7 +144,7 @@ const CreateSlot = () => {
             <div className="flex flex-col w-full">
               <label
                 htmlFor="SlotUser"
-                className="text-sm font-semibold text-color-3 mb-1"
+                className="text-sm font-semibold text-gray-700 mb-1"
               >
                 Slot User
               </label>
@@ -153,7 +153,7 @@ const CreateSlot = () => {
                 id="SlotUser"
                 value={slotData.slotUser}
                 onChange={handleChange}
-                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm"
+                className="p-2 rounded-lg border border-gray-300 text-gray-700 outline-none focus:border-[#3366CC] focus:ring-1 focus:ring-[#3366CC] transition-all text-sm"
               >
                 <option value="" disabled>
                   Select Slot User
@@ -167,7 +167,7 @@ const CreateSlot = () => {
             <div className="flex flex-col w-full">
               <label
                 htmlFor="SlotNumber"
-                className="text-sm font-semibold text-color-3 mb-1"
+                className="text-sm font-semibold text-gray-700 mb-1"
               >
                 Slot Number
               </label>
@@ -180,7 +180,7 @@ const CreateSlot = () => {
                 readOnly
                 disabled
                 placeholder="Slot Number"
-                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none cursor-not-allowed text-sm"
+                className="p-2 rounded-lg border border-gray-300 text-gray-500 bg-gray-100 text-sm cursor-not-allowed"
               />
             </div>
           </div>
@@ -189,7 +189,7 @@ const CreateSlot = () => {
             <div className="flex flex-col w-full">
               <label
                 htmlFor="SlotType"
-                className="text-sm font-semibold text-color-3 mb-1"
+                className="text-sm font-semibold text-gray-700 mb-1"
               >
                 Slot Type
               </label>
@@ -198,7 +198,7 @@ const CreateSlot = () => {
                 id="SlotType"
                 value={slotData.slotType}
                 onChange={handleChange}
-                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm"
+                className="p-2 rounded-lg border border-gray-300 text-gray-700 outline-none focus:border-[#3366CC] focus:ring-1 focus:ring-[#3366CC] transition-all text-sm"
               >
                 <option value="" disabled>
                   Select Slot Type
@@ -214,7 +214,7 @@ const CreateSlot = () => {
             <div className="flex flex-col w-full">
               <label
                 htmlFor="SlotPrice"
-                className="text-sm font-semibold text-color-3 mb-1"
+                className="text-sm font-semibold text-gray-700 mb-1"
               >
                 Price
               </label>
@@ -224,7 +224,7 @@ const CreateSlot = () => {
                 value={`₱ ${slotData.slotPrice}`}
                 onChange={handleChange}
                 readOnly
-                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none cursor-not-allowed text-sm"
+                className="p-2 rounded-lg border border-gray-300 text-gray-500 bg-gray-100 text-sm cursor-not-allowed"
               />
             </div>
           </div>
@@ -232,7 +232,7 @@ const CreateSlot = () => {
           <div className="flex flex-col">
             <label
               htmlFor="SlotStatus"
-              className="text-sm font-semibold text-color-3 mb-1"
+              className="text-sm font-semibold text-gray-700 mb-1"
             >
               Status
             </label>
@@ -241,7 +241,7 @@ const CreateSlot = () => {
               id="SlotStatus"
               value={slotData.slotStatus}
               onChange={handleChange}
-              className="p-2 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm"
+              className="p-2 rounded-lg border border-gray-300 text-gray-700 outline-none focus:border-[#3366CC] focus:ring-1 focus:ring-[#3366CC] transition-all text-sm"
             >
               <option value="" disabled>
                 Slot Status
@@ -256,7 +256,7 @@ const CreateSlot = () => {
           <div className="flex flex-col">
             <label
               htmlFor="SlotDescription"
-              className="text-sm font-semibold text-color-3 mb-1"
+              className="text-sm font-semibold text-gray-700 mb-1"
             >
               Slot Description
             </label>
@@ -267,19 +267,19 @@ const CreateSlot = () => {
               onChange={handleChange}
               maxLength={100}
               placeholder="Description"
-              className="p-3 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm resize-none h-32"
+              className="p-3 rounded-lg border border-gray-300 text-gray-700 outline-none focus:border-[#3366CC] focus:ring-1 focus:ring-[#3366CC] transition-all text-sm resize-none h-32"
             ></textarea>
           </div>
 
-          <p className="text-xs text-center text-color-2">
-            <span className="font-semibold text-color-3">NOTE:</span> Max slots:
+          <p className="text-xs text-center text-gray-600">
+            <span className="font-semibold text-[#3366CC]">NOTE:</span> Max slots:
             Students: 40, Staff: 30, Visitors: 20.
           </p>
 
           <button
             type="submit"
             onClick={handleSubmit}
-            className="w-full mt-3 bg-gradient-to-r from-[#9460C9] to-[#3366CC] text-white py-2 rounded-lg text-sm font-semibold hover:scale-[1.02] transition-all duration-300 shadow-md"
+            className="w-full mt-3 bg-[#3366CC] text-white py-2 rounded-lg text-sm font-semibold hover:bg-[#254C99] transition-all duration-300 shadow-md"
           >
             Submit
           </button>
@@ -290,6 +290,7 @@ const CreateSlot = () => {
     {isLoading ? <Loader text="Creating slot..." /> : null}
   </>
 );
+
 
 }
 

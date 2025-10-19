@@ -203,7 +203,7 @@ const UserList = () => {
         <div className='flex items-center justify-between w-full'>
            <button
             onClick={() => setShowArchived((prev) => !prev)}
-            className={`px-4 py-2 rounded-md text-white font-medium ${
+            className={`px-4 py-2 rounded-md text-white cursor-pointer font-medium ${
               showArchived ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
             }`}
             >

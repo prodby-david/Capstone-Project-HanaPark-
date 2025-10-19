@@ -135,7 +135,7 @@ const CreateSlot = () => {
     <AdminHeader />
       <div className='flex justify-center items-center mt-3 px-5'>
 
-        <div className='flex flex-col text-center p-5 shadow-md shadow-color-2 w-full max-w-md'>
+        <div className='flex flex-col text-center p-5 shadow-md shadow-color-2 w-full max-w-md bg-white'>
 
           <h2 className='text-lg text-color font-semibold'>Create Parking Slot</h2>
 

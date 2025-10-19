@@ -671,58 +671,69 @@ const handleChange = (e) => {
             </div>
             )}
 
+            {step === 3 && (
+                <div className="animate-fade-in">
+                    <h3 className="font-semibold text-lg text-color-3 mb-4">
+                    Step 3: <span className="text-color font-bold">Data Preview</span>
+                    </h3>
 
-                {step == 3 && (
+                    <div className="space-y-5 text-color-3 text-sm">
+                    {/* Step 1 Preview */}
                     <div>
-                        <div className='mb-3'>
-                            <h2 className='font-bold text-color-3 text-[28px]'> Data Preview</h2>
-                        </div>
+                        <h4 className="text-base font-semibold text-color mb-2">
+                        Step 1: <span className="text-color-3 font-bold">Student Information</span>
+                        </h4>
 
-                        <div className='text-left text-color-3'>
-
-                       
-                        <h2 className='text-color-3 mb-1 text-lg'>
-                            <span className='font-bold text-color'>Step 1:</span> Student Information
-                        </h2>
-
-                            <p><strong>User Type:</strong> {formData.userType}</p>
-                            <p><strong>Last Name:</strong> {formData.lastname}</p>
-                            <p><strong>First Name:</strong> {formData.firstname}</p>
-                            <p><strong>Middle Name (Optional):</strong> {formData.middlename}</p>
-                            <p><strong>Student ID:</strong> {formData.studentId}</p>
-                            <p><strong>Username:</strong> {formData.username}</p>
-                            <p><strong>School Email:</strong> {formData.email}</p>
-    
-                            <div className='w-full h-px bg-color-3 my-2'>
-                                
-                            </div>
-
-                            <h2 className='text-color-3 mb-1 text-lg'>
-                                <span className='font-bold text-color'>Step 2:</span> Student Vehicle Information
-                            </h2>
-
-                            <p><strong>Vehicle Type:</strong> {formData.vehicleType}</p>
-                            <p><strong>Vehicle Brand:</strong> {formData.brand}</p>
-                            <p><strong>Vehicle Model:</strong> {formData.model}</p>
-                            <p><strong>Plate Number:</strong> {formData.plateNumber}</p>
-                            <p><strong>Transmission (Optional): </strong> {formData.transmission}</p>
-                            <p><strong>Color:</strong> {formData.color}</p>
-                        </div>
-
-                        <div className='mt-3 flex justify-end gap-x-3'>
-
-                            <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                            onClick={prevStep}>
-                                Edit
-                            </button>
-
-                            <button type='button' className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300' onClick={handleSubmit}>
-                                Submit
-                            </button>
+                        <div className="bg-gray-50 rounded-lg border p-4 space-y-1">
+                        <p><strong>User Type:</strong> {formData.userType}</p>
+                        <p><strong>Last Name:</strong> {formData.lastname}</p>
+                        <p><strong>First Name:</strong> {formData.firstname}</p>
+                        <p><strong>Middle Name (Optional):</strong> {formData.middlename || "—"}</p>
+                        <p><strong>Student ID:</strong> {formData.studentId}</p>
+                        <p><strong>Username:</strong> {formData.username}</p>
+                        <p><strong>School Email:</strong> {formData.email}</p>
                         </div>
                     </div>
-                )}
 
+                    {/* Divider */}
+                    <div className="w-full h-px bg-color-3 opacity-50"></div>
+
+                    {/* Step 2 Preview */}
+                    <div>
+                        <h4 className="text-base font-semibold text-color mb-2">
+                        Step 2: <span className="text-color-3 font-bold">Student Vehicle Information</span>
+                        </h4>
+
+                        <div className="bg-gray-50 rounded-lg border p-4 space-y-1">
+                        <p><strong>Vehicle Type:</strong> {formData.vehicleType}</p>
+                        <p><strong>Vehicle Brand:</strong> {formData.brand}</p>
+                        <p><strong>Vehicle Model:</strong> {formData.model}</p>
+                        <p><strong>Plate Number:</strong> {formData.plateNumber}</p>
+                        <p><strong>Transmission (Optional):</strong> {formData.transmission || "—"}</p>
+                        <p><strong>Color:</strong> {formData.color}</p>
+                        </div>
+                    </div>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex justify-between mt-6">
+                    <button
+                        type="button"
+                        onClick={prevStep}
+                        className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleSubmit}
+                        className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                    >
+                        Submit
+                    </button>
+                    </div>
+                </div>
+                )}
 
           {/* STEP 2 & STEP 3 remain same logic */}
           {/* You can wrap them in similar modern style using rounded-lg, spacing, and hover transitions */}

@@ -133,10 +133,10 @@ const confirmLockAction = async (reason) => {
           </div>
         ) : (
           <>
-            {/* Scrollable container */}
+          
             <div className="w-full max-w-6xl overflow-x-auto text-sm">
               <div className="min-w-[700px] mb-5">
-                {/* Table Header */}
+
                 <div className="grid grid-cols-8 gap-3 bg-white text-color-3 p-4 rounded-xl font-semibold text-center">
                   <p>User Type</p>
                   <p>Lastname</p>

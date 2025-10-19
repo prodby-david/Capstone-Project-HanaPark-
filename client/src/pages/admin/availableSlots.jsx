@@ -175,7 +175,7 @@ const AvailableSlots = () => {
   <>
     <AdminHeader />
 
-    <div className="p-8 min-h-screen bg-gray-50">
+    <div className="p-8 min-h-screen">
 
       <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
         <h2 className="text-2xl font-semibold text-color flex items-center gap-2">
@@ -243,12 +243,7 @@ const AvailableSlots = () => {
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {showSlots
-            .filter((slot) =>
-              slot.slotNumber.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .slice(0, visibleCount)
-            .map((slot) => (
+          {showSlots.filter((slot) =>slot.slotNumber.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, visibleCount).map((slot) => (
               <motion.div
                 key={slot._id}
                 variants={fadeUp}
@@ -281,14 +276,14 @@ const AvailableSlots = () => {
                 <div className="flex justify-end mt-4 gap-x-3">
                   <button
                     onClick={() => openEditModal(slot)}
-                    className="p-2 rounded-md bg-blue-50 hover:bg-blue-100 transition"
+                    className="p-2 cursor-pointer rounded-md bg-blue-50 hover:bg-blue-100 transition"
                     title="Edit"
                   >
                     <PencilSquareIcon className="w-5 h-5 text-color-3" />
                   </button>
                   <button
                     onClick={() => handleDelete(slot._id)}
-                    className="p-2 rounded-md bg-red-50 hover:bg-red-100 transition"
+                    className="p-2 cursor-pointer rounded-md bg-red-50 hover:bg-red-100 transition"
                     title="Delete"
                   >
                     <TrashIcon className="w-5 h-5 text-color-3" />

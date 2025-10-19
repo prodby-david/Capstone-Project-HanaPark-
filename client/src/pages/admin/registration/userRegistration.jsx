@@ -326,7 +326,7 @@ const handleChange = (e) => {
     <AdminHeader />
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-5 py-10">
       <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8 border border-gray-200 transition-all duration-300 hover:shadow-2xl">
-        {/* Header */}
+
         <div className="mb-6 text-center">
           <h2 className="text-2xl font-bold text-color">HanaPark Parking Registration</h2>
           <p className="text-sm text-gray-500 mt-1">
@@ -334,7 +334,6 @@ const handleChange = (e) => {
           </p>
         </div>
 
-        {/* Step Indicator */}
         <div className="flex items-center justify-center mb-6 space-x-2">
           {[1, 2, 3].map((num) => (
             <div
@@ -351,7 +350,7 @@ const handleChange = (e) => {
         </div>
 
         <form>
-          {/* STEP 1 */}
+
           {step === 1 && (
             <div className="animate-fade-in">
               <h3 className="font-semibold text-lg text-color-3 mb-4">
@@ -359,14 +358,14 @@ const handleChange = (e) => {
               </h3>
 
               <div className="space-y-3">
-                {/* User Type */}
+
                 <div>
                   <label className="text-sm font-semibold text-color-3">User Type</label>
                   <select
                     name="userType"
                     value={formData.userType}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    className="w-full p-2 border rounded-lg text-sm text-color-2"
                   >
                     <option value="">Select User Type</option>
                     <option value="Student">Student</option>
@@ -374,7 +373,6 @@ const handleChange = (e) => {
                   </select>
                 </div>
 
-                {/* Name Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-semibold text-color-3">Lastname</label>
@@ -384,7 +382,7 @@ const handleChange = (e) => {
                       placeholder="e.g. Dela Cruz"
                       value={formData.lastname}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                      className="w-full p-2 border rounded-lg text-sm text-color-2"
                     />
                   </div>
                   <div>
@@ -395,12 +393,11 @@ const handleChange = (e) => {
                       placeholder="e.g. Juan"
                       value={formData.firstname}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                      className="w-full p-2 border rounded-lg text-sm text-color-2"
                     />
                   </div>
                 </div>
 
-                {/* Middlename */}
                 <div>
                   <label className="text-sm font-semibold text-color-3">
                     Middlename (Optional)
@@ -410,11 +407,10 @@ const handleChange = (e) => {
                     name="middlename"
                     value={formData.middlename}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    className="w-full p-2 border rounded-lg text-sm text-color-2"
                   />
                 </div>
 
-                {/* Student ID + Username */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-semibold text-color-3">User ID</label>
@@ -427,7 +423,7 @@ const handleChange = (e) => {
                       value={formData.studentId}
                       onChange={handleChange}
                       onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
-                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                      className="w-full p-2 border rounded-lg text-sm text-color-2"
                     />
                   </div>
 
@@ -443,7 +439,6 @@ const handleChange = (e) => {
                   </div>
                 </div>
 
-                {/* Password Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="relative">
                     <label className="text-sm font-semibold text-color-3">Password</label>
@@ -452,7 +447,7 @@ const handleChange = (e) => {
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                      className="w-full p-2 border rounded-lg text-sm text-color-2"
                     />
                     {showPassword ? (
                       <EyeIcon
@@ -476,7 +471,7 @@ const handleChange = (e) => {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleChange}
-                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                      className="w-full p-2 border rounded-lg text-sm text-color-2"
                     />
                     {showConfirmPassword ? (
                       <EyeIcon
@@ -492,7 +487,6 @@ const handleChange = (e) => {
                   </div>
                 </div>
 
-                {/* Email */}
                 <div>
                   <label className="text-sm font-semibold text-color-3">Email Address</label>
                   <input
@@ -501,11 +495,10 @@ const handleChange = (e) => {
                     placeholder="e.g. johndoe123@gmail.com"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    className="w-full p-2 border rounded-lg text-sm text-color-2"
                   />
                 </div>
 
-                {/* Next Button */}
                 <div className="flex justify-end mt-5">
                   <button
                     type="button"
@@ -518,167 +511,164 @@ const handleChange = (e) => {
               </div>
             </div>
           )}
-        {step === 2 && (
-            <div className="animate-fade-in">
-                <h3 className="font-semibold text-lg text-color-3 mb-4">
-                Step 2: <span className="text-color font-bold">Student Vehicle Information</span>
-                </h3>
 
-                <div className="space-y-3">
-                {/* Vehicle Type */}
-                <div>
-                    <label className="text-sm font-semibold text-color-3">Vehicle Type</label>
-                    <select
-                    name="vehicleType"
-                    value={formData.vehicleType}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
-                    >
-                    <option value="">Select Vehicle Type</option>
-                    <option value="Small Motorcycle">Small Motorcycle</option>
-                    <option value="Bigbike Motorcycle">Bigbike Motorcycle</option>
-                    <option value="Sedan">Sedan</option>
-                    <option value="Hatchback">Hatchback</option>
-                    <option value="SUV">SUV</option>
-                    <option value="Pickup">Pickup</option>
-                    <option value="MPV">MPV</option>
-                    <option value="Van">Van</option>
-                    </select>
-                </div>
+            {step === 2 && (
+                <div className="animate-fade-in">
+                    <h3 className="font-semibold text-lg text-color-3 mb-4">
+                    Step 2: <span className="text-color font-bold">Student Vehicle Information</span>
+                    </h3>
 
-                {/* Brand & Model */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-3">
+                        
                     <div>
-                    <label className="text-sm font-semibold text-color-3">Brand</label>
-                    <select
-                        name="brand"
-                        value={formData.brand}
+                        <label className="text-sm font-semibold text-color-3">Vehicle Type</label>
+                        <select
+                        name="vehicleType"
+                        value={formData.vehicleType}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
-                    >
-                        <option value="">
-                        {filteredBrands.length === 0
-                            ? "Select vehicle type first"
-                            : "Select Brand"}
-                        </option>
-                        {filteredBrands.map((brand) => (
-                        <option key={brand} value={brand}>
-                            {brand}
-                        </option>
-                        ))}
-                    </select>
+                        className="w-full p-2 border rounded-lg text-sm text-color-2 cursor-pointer"
+                        >
+                        <option value="">Select Vehicle Type</option>
+                        <option value="Small Motorcycle">Small Motorcycle</option>
+                        <option value="Bigbike Motorcycle">Bigbike Motorcycle</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="Hatchback">Hatchback</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Pickup">Pickup</option>
+                        <option value="MPV">MPV</option>
+                        <option value="Van">Van</option>
+                        </select>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                        <label className="text-sm font-semibold text-color-3">Brand</label>
+                        <select
+                            name="brand"
+                            value={formData.brand}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded-lg text-sm text-color-2 cursor-pointer"
+                        >
+                            <option value="">
+                            {filteredBrands.length === 0
+                                ? "Select vehicle type first"
+                                : "Select Brand"}
+                            </option>
+                            {filteredBrands.map((brand) => (
+                            <option key={brand} value={brand}>
+                                {brand}
+                            </option>
+                            ))}
+                        </select>
+                        </div>
+
+                        <div>
+                        <label className="text-sm font-semibold text-color-3">
+                            Model (Year)
+                        </label>
+                        <select
+                            name="model"
+                            value={formData.model}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded-lg text-sm text-color-2 cursor-pointer"
+                        >
+                            <option value="">Select Year</option>
+                            {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                            ))}
+                        </select>
+                        </div>
                     </div>
 
                     <div>
-                    <label className="text-sm font-semibold text-color-3">
-                        Model (Year)
-                    </label>
-                    <select
-                        name="model"
-                        value={formData.model}
+                        <label className="text-sm font-semibold text-color-3">
+                        Plate Number or MV File
+                        </label>
+                        <input
+                        type="text"
+                        name="plateNumber"
+                        value={formData.plateNumber}
                         onChange={handleChange}
-                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
-                    >
-                        <option value="">Select Year</option>
-                        {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
-                        <option key={year} value={year}>
-                            {year}
-                        </option>
-                        ))}
-                    </select>
-                    </div>
-                </div>
-
-                {/* Plate Number */}
-                <div>
-                    <label className="text-sm font-semibold text-color-3">
-                    Plate Number or MV File
-                    </label>
-                    <input
-                    type="text"
-                    name="plateNumber"
-                    value={formData.plateNumber}
-                    onChange={handleChange}
-                    placeholder="e.g. 123ABC or 1234-00000012345"
-                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
-                    />
-                </div>
-
-                {/* Transmission & Color */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                    <label className="text-sm font-semibold text-color-3">
-                        Transmission (Optional)
-                    </label>
-                    <select
-                        name="transmission"
-                        value={formData.transmission}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
-                    >
-                        <option value="">Select Transmission</option>
-                        <option value="Manual">Manual</option>
-                        <option value="Automatic">Automatic</option>
-                    </select>
+                        placeholder="e.g. 123ABC or 1234-00000012345"
+                        className="w-full p-2 border rounded-lg text-sm text-color-2"
+                        />
                     </div>
 
-                    <div>
-                    <label className="text-sm font-semibold text-color-3">Color</label>
-                    <select
-                        name="color"
-                        value={formData.color}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
-                    >
-                        <option value="">Select Color</option>
-                        <option value="Black">Black</option>
-                        <option value="White">White</option>
-                        <option value="Gray">Gray</option>
-                        <option value="Red">Red</option>
-                        <option value="Blue">Blue</option>
-                        <option value="Silver">Silver</option>
-                        <option value="Green">Green</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                        <label className="text-sm font-semibold text-color-3">
+                            Transmission (Optional)
+                        </label>
+                        <select
+                            name="transmission"
+                            value={formData.transmission}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded-lg text-sm text-color-2 cursor-pointer"
+                        >
+                            <option value="">Select Transmission</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Automatic">Automatic</option>
+                        </select>
+                        </div>
+
+                        <div>
+                        <label className="text-sm font-semibold text-color-3">Color</label>
+                        <select
+                            name="color"
+                            value={formData.color}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded-lg text-sm text-color-2 cursor-pointer"
+                        >
+                            <option value="">Select Color</option>
+                            <option value="Black">Black</option>
+                            <option value="White">White</option>
+                            <option value="Gray">Gray</option>
+                            <option value="Red">Red</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Green">Green</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <p className="text-xs text-center text-color-3 mt-3">
+                        <span className="text-color font-semibold">NOTE:</span> The Plate Number or MV
+                        File should be unique.
+                    </p>
+
+                    <div className="flex justify-between mt-5">
+                        <button
+                        type="button"
+                        onClick={prevStep}
+                        className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                        >
+                        Previous
+                        </button>
+                        <button
+                        type="button"
+                        onClick={nextStep}
+                        className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                        >
+                        Next
+                        </button>
+                    </div>
                     </div>
                 </div>
-
-                {/* Note */}
-                <p className="text-xs text-center text-color-3 mt-3">
-                    <span className="text-color font-semibold">NOTE:</span> The Plate Number or MV
-                    File should be unique.
-                </p>
-
-                {/* Buttons */}
-                <div className="flex justify-between mt-5">
-                    <button
-                    type="button"
-                    onClick={prevStep}
-                    className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
-                    >
-                    Previous
-                    </button>
-                    <button
-                    type="button"
-                    onClick={nextStep}
-                    className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
-                    >
-                    Next
-                    </button>
-                </div>
-                </div>
-            </div>
             )}
 
             {step === 3 && (
                 <div className="animate-fade-in">
+
                     <h3 className="font-semibold text-lg text-color-3 mb-4">
                     Step 3: <span className="text-color font-bold">Data Preview</span>
                     </h3>
 
                     <div className="space-y-5 text-color-3 text-sm">
-                    {/* Step 1 Preview */}
+
                     <div>
                         <h4 className="text-base font-semibold text-color mb-2">
                         Step 1: <span className="text-color-3 font-bold">Student Information</span>
@@ -695,10 +685,8 @@ const handleChange = (e) => {
                         </div>
                     </div>
 
-                    {/* Divider */}
                     <div className="w-full h-px bg-color-3 opacity-50"></div>
 
-                    {/* Step 2 Preview */}
                     <div>
                         <h4 className="text-base font-semibold text-color mb-2">
                         Step 2: <span className="text-color-3 font-bold">Student Vehicle Information</span>
@@ -715,7 +703,6 @@ const handleChange = (e) => {
                     </div>
                     </div>
 
-                    {/* Buttons */}
                     <div className="flex justify-between mt-6">
                     <button
                         type="button"
@@ -735,8 +722,6 @@ const handleChange = (e) => {
                 </div>
                 )}
 
-          {/* STEP 2 & STEP 3 remain same logic */}
-          {/* You can wrap them in similar modern style using rounded-lg, spacing, and hover transitions */}
         </form>
       </div>
     </div>

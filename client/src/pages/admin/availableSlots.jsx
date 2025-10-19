@@ -176,7 +176,7 @@ const AvailableSlots = () => {
     <AdminHeader />
 
     <div className="p-8 min-h-screen bg-gray-50">
-      {/* Header & Filters */}
+
       <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
         <h2 className="text-2xl font-semibold text-color flex items-center gap-2">
           <span className="bg-color-3 text-white px-3 py-1 rounded-lg text-base">Admin</span>
@@ -184,7 +184,7 @@ const AvailableSlots = () => {
         </h2>
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* Filter by User */}
+
           <div className="flex items-center gap-2">
             <label
               htmlFor="SlotFilter"
@@ -205,7 +205,6 @@ const AvailableSlots = () => {
             </select>
           </div>
 
-          {/* Filter by Status */}
           <select
             className="border border-gray-300 bg-white rounded-lg p-2 text-sm text-color-2 outline-none shadow-sm hover:border-color-3 transition"
             value={filterStatus}
@@ -218,7 +217,6 @@ const AvailableSlots = () => {
             <option value="Ongoing Maintenance">Ongoing Maintenance</option>
           </select>
 
-          {/* Search Input */}
           <div className="relative">
             <input
               type="text"
@@ -232,7 +230,6 @@ const AvailableSlots = () => {
         </div>
       </div>
 
-      {/* Slots Display */}
       {isLoading ? (
         <Loader />
       ) : showSlots.length === 0 ? (
@@ -302,7 +299,6 @@ const AvailableSlots = () => {
         </motion.div>
       )}
 
-      {/* Edit Modal */}
       {editModalOpen && (
         <motion.div
           key="backdrop"
@@ -377,7 +373,6 @@ const AvailableSlots = () => {
         </motion.div>
       )}
 
-      {/* Show More */}
       {showSlots.length > visibleCount && (
         <div className="text-center mt-6">
           <ShowMore onClick={handleShowMore} />

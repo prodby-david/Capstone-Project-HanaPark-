@@ -63,7 +63,6 @@ const UserList = () => {
     return matchesUserFields || matchesVehicleFields;
   });
 
-
   const handleLock = (id, currentStatus) => {
     if (currentStatus) {
       Swal.fire({
@@ -162,6 +161,39 @@ const UserList = () => {
     });
   };
 
+  const handleUnarchive = async (id) => {
+  Swal.fire({
+    title: 'Unarchive this user?',
+    text: "This will restore the user to active status.",
+    icon: 'question',
+    confirmButtonColor: '#10b981',
+    confirmButtonText: 'Yes, unarchive it!',
+    showCancelButton: true,
+    cancelButtonColor: '#6b7280',
+    cancelButtonText: 'Cancel',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await AdminAPI.patch(`/admin/unarchive/${id}`);
+        Swal.fire({
+          title: 'User Unarchived',
+          text: 'User has been restored successfully.',
+          icon: 'success',
+          confirmButtonColor: '#10b981',
+        });
+        setUsersList(res.data);
+      } catch (err) {
+        console.error('Unarchive error:', err);
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to unarchive user.',
+          icon: 'error',
+        });
+      }
+    }
+  });
+};
+
   return (
     <>
       <AdminHeader />
@@ -228,30 +260,45 @@ const UserList = () => {
                     </p>
 
                     <div className="flex justify-center gap-2">
-                      <button
-                        onClick={() => handleLock(user._id, user.isLocked)}
-                        className={`p-2 rounded-full cursor-pointer transition ${
-                          user.isLocked
-                            ? 'bg-green-500 hover:bg-green-600'
-                            : 'bg-yellow-500 hover:bg-yellow-600'
-                        } text-white`}
-                        title={user.isLocked ? 'Unlock User' : 'Lock User'}
-                      >
-                        {user.isLocked ? (
-                          <LockOpenIcon className="w-5 h-5" />
+                        {showArchived ? (
+                          // Show only Unarchive button if in Archived view
+                          <button
+                            onClick={() => handleUnarchive(user._id)}
+                            className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
+                            title="Unarchive User"
+                          >
+                            Unarchive
+                          </button>
                         ) : (
-                          <LockClosedIcon className="w-5 h-5" />
-                        )}
-                      </button>
+                          // Show lock & archive buttons for active users
+                          <>
+                            <button
+                              onClick={() => handleLock(user._id, user.isLocked)}
+                              className={`p-2 rounded-full cursor-pointer transition ${
+                                user.isLocked
+                                  ? 'bg-green-500 hover:bg-green-600'
+                                  : 'bg-yellow-500 hover:bg-yellow-600'
+                              } text-white`}
+                              title={user.isLocked ? 'Unlock User' : 'Lock User'}
+                            >
+                              {user.isLocked ? (
+                                <LockOpenIcon className="w-5 h-5" />
+                              ) : (
+                                <LockClosedIcon className="w-5 h-5" />
+                              )}
+                            </button>
 
-                      <button
-                        onClick={() => handleDelete(user._id)}
-                        className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
-                        title="Archive User"
-                      >
-                        <TrashIcon className="w-5 h-5" />
-                      </button>
-                    </div>
+                            <button
+                              onClick={() => handleDelete(user._id)}
+                              className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
+                              title="Archive User"
+                            >
+                              <TrashIcon className="w-5 h-5" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+
                   </div>
                 ))}
               </div>

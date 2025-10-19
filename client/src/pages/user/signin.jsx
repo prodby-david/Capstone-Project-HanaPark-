@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import toastOptions from "../../lib/toastConfig";
 import { useAuth } from "../../context/authContext";
 import {
   EyeIcon,
@@ -36,71 +34,86 @@ const SignIn = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!userData.username) {
-    toast.error("Username should not be empty.", toastOptions);
-    return;
-  }
-  if (!userData.password) {
-    toast.error("Password should not be empty.", toastOptions);
-    return;
-  }
-
-  setIsLoading(true);
-
-  try {
-    const res = await UserAPI.post("/sign-in", userData);
-
-    if (res.data.success) {
-      setPopup({
-        show: true,
-        type: "success",
-        title: res.data.message,
-        message: "Press confirm to continue.",
-        onConfirm: () => {
-          setAuth({ user: res.data.user });
-          navigate("/dashboard");
-          setPopup({ ...popup, show: false });
-        },
-      });
-      setUserData({ username: "", password: "" });
-    }
-  } catch (err) {
-    const errorMessage =
-      err.response?.data?.message || "An unexpected error occurred.";
-
-    if (errorMessage.toLowerCase().includes("locked")) {
-      // Locked account popup
-      setPopup({
-        show: true,
-        type: "warning",
-        title: "Account Locked",
-        message: errorMessage,
-        onConfirm: () => setPopup({ ...popup, show: false }),
-      });
-    } else if (errorMessage.toLowerCase().includes("attempt")) {
-      // Remaining attempts toast
-      toast.warn(errorMessage, toastOptions);
-    } else {
-      // Generic error popup
+    if (!userData.username) {
       setPopup({
         show: true,
         type: "error",
-        title: "Sign in failed",
-        message: errorMessage,
+        title: "Missing Field",
+        message: "Username should not be empty.",
         onConfirm: () => setPopup({ ...popup, show: false }),
       });
+      return;
     }
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    if (!userData.password) {
+      setPopup({
+        show: true,
+        type: "error",
+        title: "Missing Field",
+        message: "Password should not be empty.",
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const res = await UserAPI.post("/sign-in", userData);
+
+      if (res.data.success) {
+        setPopup({
+          show: true,
+          type: "success",
+          title: res.data.message,
+          message: "Press confirm to continue.",
+          onConfirm: () => {
+            setAuth({ user: res.data.user });
+            navigate("/dashboard");
+            setPopup({ ...popup, show: false });
+          },
+        });
+        setUserData({ username: "", password: "" });
+      }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "An unexpected error occurred.";
+
+      if (errorMessage.toLowerCase().includes("locked")) {
+        setPopup({
+          show: true,
+          type: "warning",
+          title: "Account Locked",
+          message: errorMessage,
+          onConfirm: () => setPopup({ ...popup, show: false }),
+        });
+      } else if (errorMessage.toLowerCase().includes("attempt")) {
+        setPopup({
+          show: true,
+          type: "warning",
+          title: "Login Attempt Warning",
+          message: errorMessage,
+          onConfirm: () => setPopup({ ...popup, show: false }),
+        });
+      } else {
+        setPopup({
+          show: true,
+          type: "error",
+          title: "Sign in failed",
+          message: errorMessage,
+          onConfirm: () => setPopup({ ...popup, show: false }),
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
       <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen">
-
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -147,6 +160,7 @@ const SignIn = () => {
                 />
               </div>
 
+              {/* Password */}
               <div className="relative">
                 <LockClosedIcon className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                 <input

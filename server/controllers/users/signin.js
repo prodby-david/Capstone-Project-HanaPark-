@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const MAX_ATTEMPTS = 5;
-const LOCK_TIME = 15 * 60 * 1000; // 15 minutes
+const LOCK_TIME = 15 * 60 * 1000; 
 
 const studentSignInController = async (req, res) => {
   try {
@@ -14,7 +14,6 @@ const studentSignInController = async (req, res) => {
       return res.status(404).json({ message: "Username not found. Try again." });
     }
 
-    // If account is still locked
     if (user.isLocked && user.lockUntil && user.lockUntil > Date.now()) {
       const remaining = Math.ceil((user.lockUntil - Date.now()) / 60000);
       return res
@@ -24,7 +23,6 @@ const studentSignInController = async (req, res) => {
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 
-    // Wrong password
     if (!isPasswordMatch) {
       user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
 
@@ -47,7 +45,6 @@ const studentSignInController = async (req, res) => {
       });
     }
 
-    // Reset attempts after successful login
     user.failedLoginAttempts = 0;
     user.isLocked = false;
     user.lockUntil = null;

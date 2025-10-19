@@ -6,6 +6,7 @@ import toastOptions from '../../../lib/toastConfig'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import AdminAPI from '../../../lib/inteceptors/adminInterceptor'
 import AdminHeader from '../../../components/headers/adminHeader'
+import CustomPopup from '../../../components/popups/popup'
 
 
 const UserRegistration = () => {
@@ -28,6 +29,14 @@ const UserRegistration = () => {
         color: ''
     });
 
+    const [popup, setPopup] = useState({
+        show: false,
+        type: 'info',
+        title: '',
+        message: '',
+        onConfirm: null
+    });
+
     const brandsByType = {
         "Small Motorcycle": ["Honda", "Yamaha", "Suzuki", "Kawasaki"],
 
@@ -48,15 +57,12 @@ const UserRegistration = () => {
         "Van": ["Toyota", "Nissan", "Hyundai", "Foton"],
     };
 
-    {/* Routings */}
     const navigate = useNavigate();
     
-    {/* useStates */}
     const [ step, setStep ] = useState(1);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    {/* Regex Validations */}
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     const nameRegex = /^[a-zA-Z\s]+$/;
     const studentIdRegex = /^02000\d{6}$/;
@@ -66,7 +72,6 @@ const UserRegistration = () => {
 
     const filteredBrands = brandsByType[formData.vehicleType] || [];
 
-    {/* Validations */}
 const step1Validations = () => {
 
     if (!formData.userType) {
@@ -264,14 +269,16 @@ const handleChange = (e) => {
         const res = await AdminAPI.post('/admin/student-registration', formData);
 
         if(res?.data?.success){
-        Swal.fire({
-            title: 'Registration Success',
-            text: 'Click the OK button to continue.',
-            icon: 'success',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            navigate('/admin-dashboard');
-          });
+            setPopup({
+                show: true,
+                type: 'success',
+                title: 'Registration Success',
+                message: 'Click OK to continue.',
+                onConfirm: () => {
+                    setPopup(prev => ({ ...prev, show: false }));
+                    navigate('/admin-dashboard');
+                }
+            });
         }
 
         setFormData({
@@ -295,11 +302,12 @@ const handleChange = (e) => {
 
     }catch(err){
         if(err.response && err.response.status === 409){
-            Swal.fire({
+            setPopup({
+                show: true,
+                type: 'error',
                 title: 'Registration Failed',
-                text: err.response.data.message,
-                icon: 'error',
-                confirmButtonText: 'OK'
+                message: err.response.data.message,
+                onConfirm: () => setPopup(prev => ({ ...prev, show: false }))
             });
         }
     }

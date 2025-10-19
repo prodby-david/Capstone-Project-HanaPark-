@@ -17,7 +17,7 @@ const cancelReservation = async (req, res) => {
       return res.status(404).json({ message: 'Reservation not found' });
     }
 
-    await Slot.findByIdAndUpdate(
+    const updatedSlot = await Slot.findByIdAndUpdate(
       reservation.slotId, 
       { slotStatus: 'Available' }, 
       { new: true }
@@ -34,6 +34,7 @@ const cancelReservation = async (req, res) => {
 
       req.io.to(populatedReservation.reservedBy._id.toString()).emit('cancelledReservationByAdmin', notif);
       req.io.to(populatedReservation.reservedBy._id.toString()).emit('reservationUpdated', populatedReservation);
+      req.io.emit('slotUpdated', updatedSlot);
    
     res.status(200).json({ message: 'Reservation cancelled successfully' });
 

@@ -31,7 +31,6 @@ const UserReservationLists = () => {
 
   const increment = 3;
 
-  // --- SOCKET LISTENERS ---
   useEffect(() => {
     socket.on('connect', () => {
       socket.emit('joinAdmin');
@@ -92,7 +91,6 @@ const UserReservationLists = () => {
     };
   }, []);
 
-  // --- FETCH RESERVATIONS ---
   const fetchReservations = async () => {
     setIsLoading(true);
     try {
@@ -109,13 +107,11 @@ const UserReservationLists = () => {
     fetchReservations();
   }, []);
 
-  // --- POPUP HELPERS ---
   const openPopup = (title, message, type = 'info', onConfirm = null) => {
     setPopup({ show: true, title, message, type, onConfirm });
   };
   const closePopup = () => setPopup((prev) => ({ ...prev, show: false }));
 
-  // --- HANDLE APPROVE ---
   const handleApprove = async (id) => {
     openPopup(
       'Are you sure?',
@@ -140,7 +136,6 @@ const UserReservationLists = () => {
     );
   };
 
-  // --- HANDLE COMPLETE ---
   const handleComplete = async (id) => {
     openPopup(
       'Mark as Completed?',
@@ -163,22 +158,20 @@ const UserReservationLists = () => {
     );
   };
 
-  // --- HANDLE CANCEL ---
   const handleCancelAdminReservation = (reservationId) => {
-  openPopup(
-    'Cancel Reservation?',
-    "This action can't be undone.",
-    'warning',
-    async () => {
-      await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
-      toast.success('Reservation cancelled successfully!', toastOptions);
-      setReservations((prev) => prev.filter((r) => r._id !== reservationId));
-    }
-  );
-};
+    openPopup(
+      'Cancel Reservation?',
+      "This action can't be undone.",
+      'warning',
+      async () => {
+        await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
+        toast.success('Reservation cancelled successfully!', toastOptions);
+        setReservations((prev) => prev.filter((r) => r._id !== reservationId));
+      }
+    );
+  };
 
 
-  // --- HANDLE QR SCAN ---
   const handleQRScan = async (scannedText) => {
     const verificationCode = scannedText.trim().toLowerCase();
     try {
@@ -195,7 +188,6 @@ const UserReservationLists = () => {
     }
   };
 
-  // --- FILTERING ---
   const filteredReservations = reservations.filter((res) => {
     const query = searchQuery.toLowerCase();
     const reservedByName = res.reservedBy
@@ -246,7 +238,6 @@ const UserReservationLists = () => {
           />
         </div>
 
-        {/* Tabs */}
         <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
           {statusTabs.map((status) => (
             <button
@@ -273,7 +264,7 @@ const UserReservationLists = () => {
           ) : (
             <div className="overflow-auto h-80 rounded-lg border border-gray-200">
               <div className="min-w-[1000px] flex flex-col gap-2 p-4">
-                {/* Header Row */}
+
                 <div
                   className={`grid gap-4 items-center bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
                     selectedStatus === 'Pending' ||
@@ -294,7 +285,6 @@ const UserReservationLists = () => {
                     selectedStatus === 'Reserved') && <div>Actions</div>}
                 </div>
 
-                {/* Reservation Rows */}
                 {filteredReservationsByStatus(selectedStatus)
                   .slice(0, counts[selectedStatus])
                   .map((res) => (
@@ -363,7 +353,6 @@ const UserReservationLists = () => {
             </div>
           )}
 
-          {/* View More/Less */}
           <div className="flex justify-end gap-2 mt-2">
             {counts[selectedStatus] <
               filteredReservationsByStatus(selectedStatus).length && (
@@ -386,7 +375,6 @@ const UserReservationLists = () => {
         </div>
       </div>
 
-      {/* ✅ Custom Popup */}
       <CustomPopup
         show={popup.show}
         type={popup.type}
@@ -396,12 +384,8 @@ const UserReservationLists = () => {
         onConfirm={
           popup.onConfirm
             ? async () => {
-                // Show loader first
                 setIsLoading(true);
-
-                // Let React render the loader
                 await Promise.resolve();
-
                 try {
                   await popup.onConfirm();
                 } finally {

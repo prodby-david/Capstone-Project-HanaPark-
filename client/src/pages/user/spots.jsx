@@ -60,7 +60,6 @@ const Spots = () => {
     return;
   }
 
-  // Get up to 3 random unique slots
   const randomSlotsList = [...available]
     .sort(() => 0.5 - Math.random())
     .slice(0, 3);

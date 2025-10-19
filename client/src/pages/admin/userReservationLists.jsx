@@ -410,8 +410,19 @@ const UserReservationLists = () => {
         onClose={closePopup}
         onConfirm={
           popup.onConfirm
-            ? () => {
-                popup.onConfirm();
+            ? async () => {
+                // Show loader first
+                setIsLoading(true);
+
+                // Let React render the loader
+                await Promise.resolve();
+
+                try {
+                  await popup.onConfirm();
+                } finally {
+                  setIsLoading(false);
+                  closePopup();
+                }
               }
             : closePopup
         }

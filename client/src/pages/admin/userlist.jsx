@@ -201,162 +201,174 @@ const UserList = () => {
   };
 
   return (
-    <>
-      <AdminHeader />
+  <>
+    <AdminHeader />
 
-      <div className="flex flex-col items-center mt-10 px-4 sm:px-6 ">
-        <div className='text-center mb-5'>
-          <h2 className="text-2xl font-bold text-color">User Management</h2>
-           <p className="text-gray-600 text-sm">
-              Manage all user accounts — lock, unlock, archive, or restore users as needed.
-            </p>
-        </div>
-        
-        <div className="flex items-center justify-between w-full">
-          <button
-            onClick={() => setShowArchived((prev) => !prev)}
-            className={`px-4 py-2 rounded-md text-white cursor-pointer font-medium ${
-              showArchived ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
-            }`}
-          >
-            {showArchived ? 'Show Active Users' : 'Show Archived Users'}
-          </button>
-
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        </div>
-
-        {isLoading ? (
-          <div className="flex justify-center items-center h-40">
-            <Loader />
-          </div>
-        ) : (
-          <div className="w-full max-w-6xl overflow-x-auto mt-6">
-            <div className="min-w-[700px] bg-white shadow-md rounded-2xl overflow-hidden">
-              <div className="grid grid-cols-8 gap-3 bg-color text-white p-4 font-semibold text-center text-sm rounded-t-2xl">
-                <p>User Type</p>
-                <p>Lastname</p>
-                <p>Firstname</p>
-                <p>Student ID</p>
-                <p>Username</p>
-                <p>Email</p>
-                <p>Vehicle</p>
-                <p>Actions</p>
-              </div>
-
-              <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
-                {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
-                  <div
-                    key={user._id}
-                    className={`grid grid-cols-8 items-center text-center px-4 py-3 text-sm transition-all ${
-                      user.isLocked
-                        ? 'bg-red-50 border-l-4 border-red-400'
-                        : 'hover:bg-gray-50'
-                    }`}
-                  >
-                    <p
-                      className={`font-semibold ${
-                        user.isLocked ? 'text-red-600' : 'text-gray-700'
-                      }`}
-                    >
-                      {user.userType}
-                    </p>
-                    <p>{user.lastname}</p>
-                    <p>{user.firstname}</p>
-                    <p>{user.studentId}</p>
-                    <p>{user.username}</p>
-                    <p className="truncate" title={user.email}>
-                      {user.email}
-                    </p>
-                    <p>
-                      {user.vehicle
-                        ? `${user.vehicle.brand} ${user.vehicle.model} - ${user.vehicle.plateNumber}`
-                        : 'No vehicle'}
-                    </p>
-
-                    <div className="flex justify-center gap-2">
-                      {showArchived ? (
-                        <button
-                          onClick={() => handleUnarchive(user._id)}
-                          className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
-                        >
-                          Unarchive
-                        </button>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => handleLock(user._id, user.isLocked)}
-                            className={`p-2 rounded-full cursor-pointer transition ${
-                              user.isLocked
-                                ? 'bg-green-500 hover:bg-green-600'
-                                : 'bg-yellow-500 hover:bg-yellow-600'
-                            } text-white`}
-                            title={user.isLocked ? 'Unlock User' : 'Lock User'}
-                          >
-                            {user.isLocked ? (
-                              <LockOpenIcon className="w-5 h-5" />
-                            ) : (
-                              <LockClosedIcon className="w-5 h-5" />
-                            )}
-                          </button>
-
-                          <button
-                            onClick={() => handleDelete(user._id)}
-                            className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
-                            title="Archive User"
-                          >
-                            <TrashIcon className="w-5 h-5" />
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {filteredUsers.length > 10 && (
-                <div className="flex justify-center py-4 bg-white border-t">
-                  <button
-                    onClick={() => setShowAll((prev) => !prev)}
-                    className="px-4 py-2 bg-color text-white font-medium rounded-md hover:opacity-90 transition"
-                  >
-                    {showAll ? 'See Less' : 'See More'}
-                  </button>
-                </div>
-              )}
-            </div>
-
-             <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-700">
-              <h2 className='font-semibold text-color-3'>Legends:</h2>
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 bg-red-100 border border-red-400 rounded"></span>
-                  <span>Locked Account</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 bg-white border border-gray-300 rounded"></span>
-                  <span>Unlocked Account</span>
-                </div>
-              </div>
-          </div>
-        )}
+    <div className="flex flex-col items-center mt-10 px-4 sm:px-6">
+      {/* Header */}
+      <div className="text-center mb-5">
+        <h2 className="text-2xl font-bold text-color">User Management</h2>
+        <p className="text-gray-600 text-sm">
+          Manage all user accounts — lock, unlock, archive, or restore users as needed.
+        </p>
       </div>
 
-      <LockPopup
-        show={lockPopup.show}
-        isLocked={lockPopup.isLocked}
-        onClose={() => setLockPopup({ show: false, userId: null, isLocked: false })}
-        onConfirm={confirmLockAction}
-      />
+      {/* Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-4">
+        <button
+          onClick={() => setShowArchived((prev) => !prev)}
+          className={`px-4 py-2 rounded-md text-white cursor-pointer font-medium transition ${
+            showArchived
+              ? 'bg-green-600 hover:bg-green-700'
+              : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          {showArchived ? 'Show Active Users' : 'Show Archived Users'}
+        </button>
 
-      <CustomPopup
-        show={popup.show}
-        type={popup.type}
-        title={popup.title}
-        message={popup.message}
-        onConfirm={popup.onConfirm}
-        onClose={() => setPopup({ show: false })}
-      />
-    </>
-  );
+        <div className="flex flex-col sm:items-end w-full sm:w-auto">
+          {/* Search Bar */}
+          <SearchBar value={searchQuery} onChange={setSearchQuery} />
+
+          {/* Legend — only show when not archived */}
+          {!showArchived && (
+            <div className="flex justify-end items-center gap-4 mt-2 text-xs text-gray-700">
+              <h2 className="font-semibold text-color-3">Legend:</h2>
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-4 bg-red-100 border border-red-400 rounded"></span>
+                <span>Locked</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-4 bg-white border border-gray-300 rounded"></span>
+                <span>Unlocked</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Table */}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-40">
+          <Loader />
+        </div>
+      ) : (
+        <div className="w-full max-w-6xl overflow-x-auto mt-6">
+          <div className="min-w-[700px] bg-white shadow-md rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-8 gap-3 bg-color text-white p-4 font-semibold text-center text-sm rounded-t-2xl">
+              <p>User Type</p>
+              <p>Lastname</p>
+              <p>Firstname</p>
+              <p>Student ID</p>
+              <p>Username</p>
+              <p>Email</p>
+              <p>Vehicle</p>
+              <p>Actions</p>
+            </div>
+
+            <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
+              {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
+                <div
+                  key={user._id}
+                  className={`grid grid-cols-8 items-center text-center px-4 py-3 text-sm transition-all ${
+                    user.isLocked
+                      ? 'bg-red-50 border-l-4 border-red-400'
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <p
+                    className={`font-semibold ${
+                      user.isLocked ? 'text-red-600' : 'text-gray-700'
+                    }`}
+                  >
+                    {user.userType}
+                  </p>
+                  <p>{user.lastname}</p>
+                  <p>{user.firstname}</p>
+                  <p>{user.studentId}</p>
+                  <p>{user.username}</p>
+                  <p className="truncate" title={user.email}>
+                    {user.email}
+                  </p>
+                  <p>
+                    {user.vehicle
+                      ? `${user.vehicle.brand} ${user.vehicle.model} - ${user.vehicle.plateNumber}`
+                      : 'No vehicle'}
+                  </p>
+
+                  <div className="flex justify-center gap-2">
+                    {showArchived ? (
+                      <button
+                        onClick={() => handleUnarchive(user._id)}
+                        className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
+                      >
+                        Unarchive
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleLock(user._id, user.isLocked)}
+                          className={`p-2 rounded-full cursor-pointer transition ${
+                            user.isLocked
+                              ? 'bg-green-500 hover:bg-green-600'
+                              : 'bg-yellow-500 hover:bg-yellow-600'
+                          } text-white`}
+                          title={user.isLocked ? 'Unlock User' : 'Lock User'}
+                        >
+                          {user.isLocked ? (
+                            <LockOpenIcon className="w-5 h-5" />
+                          ) : (
+                            <LockClosedIcon className="w-5 h-5" />
+                          )}
+                        </button>
+
+                        <button
+                          onClick={() => handleDelete(user._id)}
+                          className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
+                          title="Archive User"
+                        >
+                          <TrashIcon className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredUsers.length > 10 && (
+              <div className="flex justify-center py-4 bg-white border-t">
+                <button
+                  onClick={() => setShowAll((prev) => !prev)}
+                  className="px-4 py-2 bg-color text-white font-medium rounded-md hover:opacity-90 transition"
+                >
+                  {showAll ? 'See Less' : 'See More'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+
+    {/* Popups */}
+    <LockPopup
+      show={lockPopup.show}
+      isLocked={lockPopup.isLocked}
+      onClose={() => setLockPopup({ show: false, userId: null, isLocked: false })}
+      onConfirm={confirmLockAction}
+    />
+
+    <CustomPopup
+      show={popup.show}
+      type={popup.type}
+      title={popup.title}
+      message={popup.message}
+      onConfirm={popup.onConfirm}
+      onClose={() => setPopup({ show: false })}
+    />
+  </>
+);
 };
 
 export default UserList;

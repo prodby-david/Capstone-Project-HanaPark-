@@ -3,10 +3,6 @@ import User from "../../../models/user.js";
 const LockUser = async (req, res) => {
   try {
 
-    console.log("🟡 Incoming Lock Request:");
-    console.log("Params:", req.params);
-    console.log("Body:", req.body);
-    
     const { id } = req.params;
     const { isLocked, lockReason } = req.body;
 

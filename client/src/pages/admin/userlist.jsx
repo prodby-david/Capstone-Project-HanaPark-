@@ -58,9 +58,52 @@ const UserList = () => {
       return matchesUserFields || matchesVehicleFields;
     });
 
-    const handleLock = (id, currentStatus) => {
-  setPopup({ show: true, userId: id, isLocked: currentStatus });
+   const handleLock = (id, currentStatus) => {
+  // If the account is currently locked, confirm unlocking
+  if (currentStatus) {
+    Swal.fire({
+      title: 'Unlock Account?',
+      text: 'Are you sure you want to unlock this user account?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#00509e',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, unlock it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await AdminAPI.patch(`/admin/lock/${id}`, {
+            isLocked: false,
+            lockReason: '',
+          });
+
+          setUsersList((prev) =>
+            prev.map((u) =>
+              u._id === id ? { ...u, isLocked: false, lockReason: '' } : u
+            )
+          );
+
+          Swal.fire({
+            title: res.data.message,
+            icon: 'success',
+            confirmButtonColor: '#00509e',
+          });
+        } catch (err) {
+          console.error(err);
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to unlock user.',
+            icon: 'error',
+          });
+        }
+      }
+    });
+  } else {
+    // If not locked, show your custom LockPopup for reason
+    setPopup({ show: true, userId: id, isLocked: currentStatus });
+  }
 };
+
 
 const confirmLockAction = async (reason) => {
   try {
@@ -133,7 +176,7 @@ const confirmLockAction = async (reason) => {
           </div>
         ) : (
           <>
-          
+
             <div className="w-full max-w-6xl overflow-x-auto text-sm">
               <div className="min-w-[700px] mb-5">
 

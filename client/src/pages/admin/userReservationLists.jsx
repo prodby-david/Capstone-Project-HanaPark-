@@ -164,34 +164,19 @@ const UserReservationLists = () => {
   };
 
   // --- HANDLE CANCEL ---
-  const handleCancelAdminReservation = async (reservationId) => {
-    openPopup(
-      'Cancel Reservation?',
-      "This action can't be undone.",
-      'warning',
-      async () => {
-        try {
-          await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
-          openPopup(
-            'Cancelled!',
-            'Reservation cancelled successfully.',
-            'success'
-          );
-          setReservations((prev) =>
-            prev.filter((r) => r._id !== reservationId)
-          );
-        } catch (err) {
-          openPopup(
-            'Error',
-            err.response?.data?.message || 'Failed to cancel reservation',
-            'error'
-          );
-        } finally {
-          closePopup();
-        }
-      }
-    );
-  };
+  const handleCancelAdminReservation = (reservationId) => {
+  openPopup(
+    'Cancel Reservation?',
+    "This action can't be undone.",
+    'warning',
+    async () => {
+      await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
+      toast.success('Reservation cancelled successfully!', toastOptions);
+      setReservations((prev) => prev.filter((r) => r._id !== reservationId));
+    }
+  );
+};
+
 
   // --- HANDLE QR SCAN ---
   const handleQRScan = async (scannedText) => {

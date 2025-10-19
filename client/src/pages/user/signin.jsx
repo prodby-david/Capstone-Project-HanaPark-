@@ -154,7 +154,6 @@ const SignIn = () => {
                 <UserIcon className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                 <input
                   type="text"
-                  required
                   name="username"
                   onChange={handleChange}
                   value={userData.username}
@@ -168,7 +167,6 @@ const SignIn = () => {
                 <LockClosedIcon className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  required
                   name="password"
                   onChange={handleChange}
                   value={userData.password}

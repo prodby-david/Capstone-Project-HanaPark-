@@ -691,7 +691,7 @@ const handleChange = (e) => {
                          
                             <div className='flex flex-col items-start w-full'>
 
-                                <label htmlFor='Color' className="font-semibold text-color-3">Color</label>
+                                <label htmlFor='Color' className="font-semibold text-sm text-color-3">Color</label>
                                 <select
                                 name="color"
                                 id='Color'

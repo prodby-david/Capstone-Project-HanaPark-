@@ -130,177 +130,167 @@ const CreateSlot = () => {
   }
 
 
-  return (
-    <>
+ return (
+  <>
     <AdminHeader />
-      <div className='flex justify-center items-center mt-3 px-5'>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#C8A8E9] to-[#9460C9] px-5">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-lg border border-white/20">
+        <h2 className="text-2xl font-semibold text-color text-center mb-6">
+          Create Parking Slot
+        </h2>
 
-        <div className='flex flex-col text-center p-5 shadow-md shadow-color-2 w-full max-w-md'>
-
-          <h2 className='text-lg text-color font-semibold'>Create Parking Slot</h2>
-
-          <form className='flex flex-col gap-3 mt-5'>
-
-            <div className='flex gap-x-3 w-full'>
-
-              <div className='flex flex-col items-baseline w-full'>
-                 <label 
-                 htmlFor="SlotUser"
-                 className='text-color-3 font-semibold text-sm'
-                 >
-                  Slot User
-                </label>
-                
-                <select 
-                name="slotUser" 
-                id="SlotUser" 
-                value={slotData.slotUser} 
+        <form className="flex flex-col gap-4">
+          <div className="flex gap-3">
+            <div className="flex flex-col w-full">
+              <label
+                htmlFor="SlotUser"
+                className="text-sm font-semibold text-color-3 mb-1"
+              >
+                Slot User
+              </label>
+              <select
+                name="slotUser"
+                id="SlotUser"
+                value={slotData.slotUser}
                 onChange={handleChange}
-                className='outline-0 border hover:cursor-pointer focus:border-color-3 p-2 rounded-md text-sm text-color-2 w-full'
-                >
-
-                  <option value="" disabled>Select Slot User</option>
-                  <option value="Student">Student</option>
-                  <option value="Staff">Staff</option>
-                  <option value="Visitor">Visitor</option>
-
-            </select>
-
-          </div>
-             
-              <div className='flex flex-col items-baseline w-full'>
-
-                <label 
-                htmlFor="SlotNumber" 
-                className='text-color-3 font-semibold text-sm'
-                >
-                  Slot Number
-                </label>
-
-                 <input 
-                  type="text"
-                  name='slotNumber'
-                  id='SlotNumber'
-                  value={slotData.slotNumber}
-                  onChange={handleChange}
-                  readOnly
-                  disabled={true}
-                  placeholder='Slot Number'
-                  className='border p-2 rounded-md text-sm text-color-2 w-full'
-                  />
-
-              </div>
-             
-
+                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm"
+              >
+                <option value="" disabled>
+                  Select Slot User
+                </option>
+                <option value="Student">Student</option>
+                <option value="Staff">Staff</option>
+                <option value="Visitor">Visitor</option>
+              </select>
             </div>
 
-              <div className='flex gap-3 items-center justify-center '>
-
-                <div className='flex flex-col items-baseline w-full'>
-                  <label 
-                  htmlFor="SlotType" 
-                  className='text-color-3 font-semibold text-sm'
-                  >
-                    Slot Type
-                  </label>
-                  
-                  <select 
-                    name="slotType" 
-                    id="SlotType"
-                    value={slotData.slotType}
-                    onChange={handleChange}
-                    className=' outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2 w-full'
-                    >
-                      <option value="" disabled>Select Slot Type</option>
-                      <option value="2-Wheels (399cc below)">2-Wheels (399cc below)</option>
-                      <option value="2-Wheels (400cc up)">2-Wheels (400cc up)</option>
-                      <option value="4-Wheels">4-Wheels</option>
-                  </select>
-
-                </div>
-
-                <div className='flex flex-col items-baseline w-full'>
-                  <label 
-                  htmlFor="SlotPrice"
-                  className='text-color-3 font-semibold text-sm'
-                  >
-                    Price
-                  </label>
-                    <input 
-                      type="text"
-                      id='SlotPrice'
-                      value={`₱ ${slotData.slotPrice}`}
-                      onChange={handleChange}
-                      readOnly
-                      className='outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2 w-full'
-                    />
-                </div>
-              
-              </div>
-              
-              <div className='flex flex-col items-baseline w-full'>
-                <label 
-                htmlFor="SlotStatus" 
-                className='text-color-3 font-semibold text-sm'
-                >
-                  Status
-                </label>
-                
-                <select 
-                name="slotStatus" 
-                id="SlotStatus"
-                value={slotData.slotStatus}
+            <div className="flex flex-col w-full">
+              <label
+                htmlFor="SlotNumber"
+                className="text-sm font-semibold text-color-3 mb-1"
+              >
+                Slot Number
+              </label>
+              <input
+                type="text"
+                name="slotNumber"
+                id="SlotNumber"
+                value={slotData.slotNumber}
                 onChange={handleChange}
-                className='outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2 w-full' >
-                  <option value="" disabled>Slot Status</option>
-                  <option value="Available">Available</option>
-                  <option value="Reserved">Reserved</option>
-                  <option value="Occupied">Occupied</option>
-                  <option value="Ongoing Maintenance">Ongoing Maintenance</option>
+                readOnly
+                disabled
+                placeholder="Slot Number"
+                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none cursor-not-allowed text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <div className="flex flex-col w-full">
+              <label
+                htmlFor="SlotType"
+                className="text-sm font-semibold text-color-3 mb-1"
+              >
+                Slot Type
+              </label>
+              <select
+                name="slotType"
+                id="SlotType"
+                value={slotData.slotType}
+                onChange={handleChange}
+                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm"
+              >
+                <option value="" disabled>
+                  Select Slot Type
+                </option>
+                <option value="2-Wheels (399cc below)">
+                  2-Wheels (399cc below)
+                </option>
+                <option value="2-Wheels (400cc up)">2-Wheels (400cc up)</option>
+                <option value="4-Wheels">4-Wheels</option>
               </select>
+            </div>
 
-              </div>
-            
+            <div className="flex flex-col w-full">
+              <label
+                htmlFor="SlotPrice"
+                className="text-sm font-semibold text-color-3 mb-1"
+              >
+                Price
+              </label>
+              <input
+                type="text"
+                id="SlotPrice"
+                value={`₱ ${slotData.slotPrice}`}
+                onChange={handleChange}
+                readOnly
+                className="p-2 rounded-lg bg-white/20 text-color-2 outline-none cursor-not-allowed text-sm"
+              />
+            </div>
+          </div>
 
-            <div className='flex flex-col items-baseline w-full'>
-              <label 
-                htmlFor="SlotDescription" 
-                className='text-color-3 font-semibold text-sm'
-                >
-                  Slot Description
-                </label>
-              <textarea 
-              name="slotDescription" 
-              id="SlotDescription" 
+          <div className="flex flex-col">
+            <label
+              htmlFor="SlotStatus"
+              className="text-sm font-semibold text-color-3 mb-1"
+            >
+              Status
+            </label>
+            <select
+              name="slotStatus"
+              id="SlotStatus"
+              value={slotData.slotStatus}
+              onChange={handleChange}
+              className="p-2 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm"
+            >
+              <option value="" disabled>
+                Slot Status
+              </option>
+              <option value="Available">Available</option>
+              <option value="Reserved">Reserved</option>
+              <option value="Occupied">Occupied</option>
+              <option value="Ongoing Maintenance">Ongoing Maintenance</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col">
+            <label
+              htmlFor="SlotDescription"
+              className="text-sm font-semibold text-color-3 mb-1"
+            >
+              Slot Description
+            </label>
+            <textarea
+              name="slotDescription"
+              id="SlotDescription"
               value={slotData.slotDescription}
               onChange={handleChange}
               maxLength={100}
-              placeholder='Description' 
-              className='outline-0 border focus:border-color-3 p-2 rounded-md text-sm text-color-2 w-full h-[150px] resize-none'>
-              </textarea>
-            </div>
+              placeholder="Description"
+              className="p-3 rounded-lg bg-white/20 text-color-2 outline-none focus:ring-2 focus:ring-[#9460C9] transition-all text-sm resize-none h-32"
+            ></textarea>
+          </div>
 
-            <div>
-              <p className='text-xs text-color-2'><span className='font-semibold text-color-3'>NOTE: </span>Max slots: Students: 40, Staff: 30 and Visitors: 20.</p>
-            </div>
+          <p className="text-xs text-center text-color-2">
+            <span className="font-semibold text-color-3">NOTE:</span> Max slots:
+            Students: 40, Staff: 30, Visitors: 20.
+          </p>
 
-            <button 
-              type='submit'
-              onClick={handleSubmit}
-              className='w-full bg-gradient-to-r from-blue-500 to-blue-900 text-white p-2 rounded-md hover:from-blue-900 hover:to-blue-500 transition duration-300 cursor-pointer text-sm'>
-              Submit
-            </button>
-           
-
-          </form>
-
-        </div>
-        
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="w-full mt-3 bg-gradient-to-r from-[#9460C9] to-[#3366CC] text-white py-2 rounded-lg text-sm font-semibold hover:scale-[1.02] transition-all duration-300 shadow-md"
+          >
+            Submit
+          </button>
+        </form>
       </div>
+    </div>
 
-      {isLoading ? <Loader text='Creating slot...' /> : null}
-    </>
-  )
+    {isLoading ? <Loader text="Creating slot..." /> : null}
+  </>
+);
+
 }
 
 export default CreateSlot;

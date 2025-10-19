@@ -626,17 +626,22 @@ const handleChange = (e) => {
                         
                         <div className='flex flex-col w-full'>
 
-                            <label htmlFor="Model"
-                            className='text-start text-color-3 text-sm font-semibold'
-                            >Year Model</label>
-
-                            <input type="Number"
-                            name='model'
+                            <label htmlFor='Model' className="font-semibold text-color-3">Model (Year)</label>
+                            <select
+                            name="model"
                             id='Model'
+                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
                             value={formData.model}
                             onChange={handleChange}
-                            placeholder='e.g. 2024, 2025, etc.'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
+                            >
+                            <option value="">Select Year</option>
+                            {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
+                                <option key={year} value={year}>
+                                {year}
+                                </option>
+                            ))}
+                            </select>
+
                         </div>
                             
 

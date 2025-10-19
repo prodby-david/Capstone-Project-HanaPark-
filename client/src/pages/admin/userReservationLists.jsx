@@ -3,6 +3,8 @@ import AdminAPI from '../../lib/inteceptors/adminInterceptor';
 import AdminHeader from '../../components/headers/adminHeader';
 import SearchBar from '../../components/search/search';
 import QRScanner from '../../lib/qrscanner';
+import { toast } from 'react-toastify';
+import toastOptions from '../../lib/toastConfig';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { socket } from '../../lib/socket';
 import Loader from '../../components/loaders/loader';
@@ -40,53 +42,54 @@ const UserReservationLists = () => {
   }, []);
 
   useEffect(() => {
-    const events = [
-      'reservationCreated',
-      'reservationCancelled',
-      'reservationCancelledByUser',
-      'reservationApproved',
-      'reservationUpdated',
-    ];
+    socket.on('reservationCreated', (newReservation) => {
+      setReservations((prev) => {
+        const exists = prev.some((r) => r._id === newReservation._id);
+        return exists ? prev : [...prev, newReservation];
+      });
+    });
 
-    const handlers = {
-      reservationCreated: (newReservation) => {
-        setReservations((prev) => {
-          const exists = prev.some((r) => r._id === newReservation._id);
-          return exists ? prev : [...prev, newReservation];
-        });
-      },
-      reservationCancelled: (cancelledReservation) => {
-        setReservations((prev) =>
-          prev.map((r) =>
-            r._id === cancelledReservation._id ? cancelledReservation : r
-          )
+    socket.on('reservationCancelled', (cancelledReservation) => {
+      setReservations((prev) =>
+        prev.map((r) =>
+          r._id === cancelledReservation._id ? cancelledReservation : r
+        )
+      );
+    });
+
+    socket.on('reservationCancelledByUser', (cancelledReservation) => {
+      setReservations((prev) => {
+        const exists = prev.some((r) => r._id === cancelledReservation._id);
+        if (!exists) return prev;
+        return prev.map((r) =>
+          r._id === cancelledReservation._id ? cancelledReservation : r
         );
-      },
-      reservationCancelledByUser: (cancelledReservation) => {
-        setReservations((prev) =>
-          prev.map((r) =>
-            r._id === cancelledReservation._id ? cancelledReservation : r
-          )
-        );
-      },
-      reservationApproved: (approvedReservation) => {
-        setReservations((prev) =>
-          prev.map((r) =>
-            r._id === approvedReservation._id ? approvedReservation : r
-          )
-        );
-      },
-      reservationUpdated: (updatedReservation) => {
-        setReservations((prev) =>
-          prev.map((r) =>
-            r._id === updatedReservation._id ? updatedReservation : r
-          )
-        );
-      },
+      });
+    });
+
+    socket.on('reservationApproved', (approvedReservation) => {
+      setReservations((prev) =>
+        prev.map((r) =>
+          r._id === approvedReservation._id ? approvedReservation : r
+        )
+      );
+    });
+
+    socket.on('reservationUpdated', (updatedReservation) => {
+      setReservations((prev) =>
+        prev.map((r) =>
+          r._id === updatedReservation._id ? updatedReservation : r
+        )
+      );
+    });
+
+    return () => {
+      socket.off('reservationCreated');
+      socket.off('reservationCancelled');
+      socket.off('reservationCancelledByUser');
+      socket.off('reservationApproved');
+      socket.off('reservationUpdated');
     };
-
-    events.forEach((e) => socket.on(e, handlers[e]));
-    return () => events.forEach((e) => socket.off(e));
   }, []);
 
   // --- FETCH RESERVATIONS ---
@@ -112,39 +115,80 @@ const UserReservationLists = () => {
   };
   const closePopup = () => setPopup((prev) => ({ ...prev, show: false }));
 
-  // --- HANDLE ACTIONS ---
-  const handleApprove = (id) => {
+  // --- HANDLE APPROVE ---
+  const handleApprove = async (id) => {
     openPopup(
       'Are you sure?',
       'You are about to approve this reservation.',
       'warning',
       async () => {
-        await AdminAPI.post(`/admin/approve-reservation/${id}`);
-        fetchReservations();
+        setIsLoading(true);
+        try {
+          await AdminAPI.post(`/admin/approve-reservation/${id}`);
+          toast.success('Reservation approved successfully!', toastOptions);
+          fetchReservations();
+        } catch (err) {
+          toast.error(
+            err.response?.data?.message || 'Failed to approve reservation',
+            toastOptions
+          );
+        } finally {
+          setIsLoading(false);
+          closePopup();
+        }
       }
     );
   };
 
-  const handleComplete = (id) => {
+  // --- HANDLE COMPLETE ---
+  const handleComplete = async (id) => {
     openPopup(
       'Mark as Completed?',
       'This will complete the reservation.',
       'warning',
       async () => {
-        await AdminAPI.post(`/admin/approve-reservation/${id}`);
-        fetchReservations();
+        try {
+          await AdminAPI.post(`/admin/approve-reservation/${id}`);
+          toast.success('Reservation completed successfully!', toastOptions);
+          fetchReservations();
+        } catch (err) {
+          toast.error(
+            err.response?.data?.message || 'Failed to complete reservation',
+            toastOptions
+          );
+        } finally {
+          closePopup();
+        }
       }
     );
   };
 
-  const handleCancelAdminReservation = (reservationId) => {
+  // --- HANDLE CANCEL ---
+  const handleCancelAdminReservation = async (reservationId) => {
     openPopup(
       'Cancel Reservation?',
       "This action can't be undone.",
       'warning',
       async () => {
-        await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
-        setReservations((prev) => prev.filter((r) => r._id !== reservationId));
+        try {
+          await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
+          openPopup(
+            'Cancelled!',
+            'Reservation cancelled successfully.',
+            'success'
+          );
+          setReservations((prev) =>
+            prev.filter((r) => r._id !== reservationId)
+          );
+        } catch (err) {
+          openPopup(
+            'Error',
+            err.response?.data?.message || 'Failed to cancel reservation',
+            'error'
+          );
+        } finally {
+          closePopup();
+        }
       }
     );
   };
@@ -152,18 +196,16 @@ const UserReservationLists = () => {
   // --- HANDLE QR SCAN ---
   const handleQRScan = async (scannedText) => {
     const verificationCode = scannedText.trim().toLowerCase();
-    openPopup('Verifying...', 'Please wait', 'info'); // show popup while verifying
     try {
       const res = await AdminAPI.post('/admin/verify-reservation', {
         verificationCode,
       });
-      openPopup('Success', res.data.message, 'success');
+      toast.success(res.data.message, toastOptions);
       fetchReservations();
     } catch (err) {
-      openPopup(
-        'Error',
+      toast.error(
         err.response?.data?.message || 'Failed to verify reservation',
-        'error'
+        toastOptions
       );
     }
   };
@@ -249,7 +291,8 @@ const UserReservationLists = () => {
                 {/* Header Row */}
                 <div
                   className={`grid gap-4 items-center bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
-                    selectedStatus === 'Pending' || selectedStatus === 'Reserved'
+                    selectedStatus === 'Pending' ||
+                    selectedStatus === 'Reserved'
                       ? 'grid-cols-9'
                       : 'grid-cols-8'
                   }`}
@@ -273,7 +316,8 @@ const UserReservationLists = () => {
                     <div
                       key={res._id}
                       className={`grid gap-4 items-center bg-white text-color-2 text-sm p-4 rounded-t-lg text-center ${
-                        selectedStatus === 'Pending' || selectedStatus === 'Reserved'
+                        selectedStatus === 'Pending' ||
+                        selectedStatus === 'Reserved'
                           ? 'grid-cols-9'
                           : 'grid-cols-8'
                       }`}
@@ -292,22 +336,25 @@ const UserReservationLists = () => {
                       <div>
                         {res.reservationDate} {res.reservationTime}
                       </div>
-                      {(selectedStatus === 'Pending' || selectedStatus === 'Reserved') && (
+                      {(selectedStatus === 'Pending' ||
+                        selectedStatus === 'Reserved') && (
                         <div>
                           {selectedStatus === 'Pending' && (
                             <div className="flex flex-col justify-center gap-2">
                               <button
                                 onClick={() => handleApprove(res._id)}
-                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-green-500  text-white px-2 py-1 rounded hover:bg-green-600"
                               >
-                                <CheckCircleIcon className="w-5 h-5" />
+                                <CheckCircleIcon className="w-5 h-5 " />
                                 Approve
                               </button>
                               <button
-                                onClick={() => handleCancelAdminReservation(res._id)}
-                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                onClick={() =>
+                                  handleCancelAdminReservation(res._id)
+                                }
+                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-red-500  text-white px-2 py-1 rounded hover:bg-red-600"
                               >
-                                <XCircleIcon className="w-5 h-5" />
+                                <XCircleIcon className="w-5 h-5 " />
                                 Cancel
                               </button>
                             </div>
@@ -316,9 +363,9 @@ const UserReservationLists = () => {
                             <div className="flex justify-center gap-2">
                               <button
                                 onClick={() => handleComplete(res._id)}
-                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-green-500  text-white px-2 py-1 rounded hover:bg-green-600"
                               >
-                                <CheckCircleIcon className="w-5 h-5" />
+                                <CheckCircleIcon className="w-5 h-5 " />
                                 Complete
                               </button>
                             </div>
@@ -333,7 +380,8 @@ const UserReservationLists = () => {
 
           {/* View More/Less */}
           <div className="flex justify-end gap-2 mt-2">
-            {counts[selectedStatus] < filteredReservationsByStatus(selectedStatus).length && (
+            {counts[selectedStatus] <
+              filteredReservationsByStatus(selectedStatus).length && (
               <button
                 onClick={() => handleViewMore(selectedStatus)}
                 className="text-sm underline text-color-2 hover:text-color-3"
@@ -363,23 +411,11 @@ const UserReservationLists = () => {
         onConfirm={
           popup.onConfirm
             ? () => {
-                setIsLoading(true);
-                // delay execution so loader renders
-                setTimeout(async () => {
-                  try {
-                    await popup.onConfirm();
-                  } finally {
-                    setIsLoading(false);
-                    closePopup();
-                  }
-                }, 50);
+                popup.onConfirm();
               }
             : closePopup
         }
       />
-
-
-      {isLoading && <Loader />}
     </>
   );
 };

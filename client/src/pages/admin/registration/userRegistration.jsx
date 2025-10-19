@@ -255,7 +255,8 @@ const handleChange = (e) => {
     studentIdRegex.test(updatedFormData.studentId)
   ) {
     const lastSixDigits = updatedFormData.studentId.slice(-6);
-    const generatedUsername = `${updatedFormData.lastname.toLowerCase()}.${lastSixDigits}`;
+    const cleanedLastName = updatedFormData.lastname.replace(/\s+/g, '');
+    const generatedUsername = `${cleanedLastName.toLowerCase()}.${lastSixDigits}`;
     updatedFormData.username = generatedUsername;
   }
 

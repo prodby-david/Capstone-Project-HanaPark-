@@ -200,7 +200,7 @@ const UserList = () => {
       <div className="flex flex-col items-center mt-10 px-4 sm:px-6 ">
         <h2 className="text-2xl font-bold text-color mb-6">User Management</h2>
         
-        <div className='flex items-center justify-around w-full'>
+        <div className='flex items-center justify-between w-full'>
            <button
             onClick={() => setShowArchived((prev) => !prev)}
             className={`px-4 py-2 rounded-md text-white font-medium ${

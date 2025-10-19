@@ -7,6 +7,7 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import AdminAPI from '../../../lib/inteceptors/adminInterceptor'
 import AdminHeader from '../../../components/headers/adminHeader'
 import CustomPopup from '../../../components/popups/popup'
+import Loader from '../../../components/loaders/loader'
 
 
 const UserRegistration = () => {
@@ -28,6 +29,8 @@ const UserRegistration = () => {
         transmission: '',
         color: ''
     });
+
+    const [loading, setLoading] = useState(false);
 
     const [popup, setPopup] = useState({
         show: false,
@@ -264,6 +267,8 @@ const handleChange = (e) => {
 
     e.preventDefault();
 
+    setLoading(true);
+
     try{
 
         const res = await AdminAPI.post('/admin/student-registration', formData);
@@ -301,7 +306,7 @@ const handleChange = (e) => {
         });
 
     }catch(err){
-        if(err.response && err.response.status === 409){
+        if(err.response){
             setPopup({
                 show: true,
                 type: 'error',
@@ -310,6 +315,8 @@ const handleChange = (e) => {
                 onConfirm: () => setPopup(prev => ({ ...prev, show: false }))
             });
         }
+    } finally {
+        setLoading(false);
     }
   }
 
@@ -763,7 +770,7 @@ const handleChange = (e) => {
                                 Edit
                             </button>
 
-                            <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300' onClick={handleSubmit}>
+                            <button type='button' className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300' onClick={handleSubmit}>
                                 Submit
                             </button>
                         </div>
@@ -774,6 +781,8 @@ const handleChange = (e) => {
 
             </div>
         </div>
+
+        {loading && <Loader />}
 
         <CustomPopup
             show={popup.show}

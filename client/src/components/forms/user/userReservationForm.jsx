@@ -146,7 +146,6 @@ const UserReservationForm = () => {
       const res = await UserAPI.post(`/reservation-form/${slotId}`, reservationData);
       setReservationResult(res.data);
 
-      // ✅ Custom popup for success
       setPopup({
         show: true,
         type: 'success',

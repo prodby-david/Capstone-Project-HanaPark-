@@ -6,11 +6,24 @@ import toastOptions from '../../../lib/toastConfig'
 
 const Step2 = ({ date, reservationTime, arrivalTime, setArrivalTime, nextStep, prevStep }) => {
 
-  const handleNext = () => {
+   const handleNext = () => {
+
     if (!arrivalTime) {
       toast.error('Arrival Time is required.', toastOptions)
       return
     }
+
+    const [hours, minutes] = arrivalTime.split(':').map(Number)
+    const totalMinutes = hours * 60 + minutes
+
+    const minTime = 5 * 60   
+    const maxTime = 21 * 60 
+
+    if (totalMinutes < minTime || totalMinutes > maxTime) {
+      toast.error('Arrival time must be between 5:00 AM and 9:00 PM.', toastOptions)
+      return
+    }
+
     nextStep()
   }
 

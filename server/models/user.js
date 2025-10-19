@@ -58,7 +58,15 @@ const userSchema = new mongoose.Schema({
     currentToken:{
         type: String,
         default: null
-    }
+    },
+    failedLoginAttempts: {
+        type: Number,
+        default: 0
+    },
+    lockUntil: {
+        type: Date,
+        default: null
+    },
 });
 
 userSchema.pre('save', async function (next) {

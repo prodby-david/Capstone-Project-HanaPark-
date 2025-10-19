@@ -36,64 +36,66 @@ const SignIn = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!userData.username) {
-      toast.error("Username should not be empty.", toastOptions);
-      return;
+  if (!userData.username) {
+    toast.error("Username should not be empty.", toastOptions);
+    return;
+  }
+  if (!userData.password) {
+    toast.error("Password should not be empty.", toastOptions);
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    const res = await UserAPI.post("/sign-in", userData);
+
+    if (res.data.success) {
+      setPopup({
+        show: true,
+        type: "success",
+        title: res.data.message,
+        message: "Press confirm to continue.",
+        onConfirm: () => {
+          setAuth({ user: res.data.user });
+          navigate("/dashboard");
+          setPopup({ ...popup, show: false });
+        },
+      });
+      setUserData({ username: "", password: "" });
     }
-    if (!userData.password) {
-      toast.error("Password should not be empty.", toastOptions);
-      return;
+  } catch (err) {
+    const errorMessage =
+      err.response?.data?.message || "An unexpected error occurred.";
+
+    if (errorMessage.toLowerCase().includes("locked")) {
+      // Locked account popup
+      setPopup({
+        show: true,
+        type: "warning",
+        title: "Account Locked",
+        message: errorMessage,
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
+    } else if (errorMessage.toLowerCase().includes("attempt")) {
+      // Remaining attempts toast
+      toast.warn(errorMessage, toastOptions);
+    } else {
+      // Generic error popup
+      setPopup({
+        show: true,
+        type: "error",
+        title: "Sign in failed",
+        message: errorMessage,
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
     }
-
-    setIsLoading(true);
-
-    try {
-      const res = await UserAPI.post("/sign-in", userData);
-
-      if (res.data.success) {
-        setPopup({
-          show: true,
-          type: "success",
-          title: res.data.message,
-          message: "Press confirm to continue.",
-          onConfirm: () => {
-            setAuth({ user: res.data.user });
-            navigate("/dashboard");
-            setPopup({ ...popup, show: false });
-          },
-        });
-
-        setUserData({ username: "", password: "" });
-      }
-    } catch (err) {
-      const errorMessage =
-        err.response?.data?.message || "An unexpected error occurred.";
-
-      if (errorMessage.toLowerCase().includes("locked")) {
-        setPopup({
-          show: true,
-          type: "warning",
-          title: "Account Locked",
-          message: errorMessage,
-          onConfirm: () => setPopup({ ...popup, show: false }),
-        });
-      } else if (errorMessage.toLowerCase().includes("attempts")) {
-        toast.warn(errorMessage, toastOptions);
-      } else {
-        setPopup({
-          show: true,
-          type: "error",
-          title: "Sign in failed",
-          message: errorMessage,
-          onConfirm: () => setPopup({ ...popup, show: false }),
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <>

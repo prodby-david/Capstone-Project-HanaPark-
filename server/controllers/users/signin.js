@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const MAX_ATTEMPTS = 5;
-const LOCK_TIME = 15 * 60 * 1000; // 15 minutes
+const LOCK_TIME = 15 * 60 * 1000; 
 
 const studentSignInController = async (req, res) => {
   try {

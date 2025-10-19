@@ -24,7 +24,7 @@ const AdminSignInController = async (req,res) => {
             role: 'admin'
         }
 
-        const admin_token = jwt.sign(payload, process.env.ADMIN_ACCESS_KEY, {expiresIn: "10s"});
+        const admin_token = jwt.sign(payload, process.env.ADMIN_ACCESS_KEY, {expiresIn: "1h"});
 
         const adminrefreshtoken = jwt.sign(payload, process.env.ADMIN_REFRESH_KEY, {expiresIn: '7d'})
 

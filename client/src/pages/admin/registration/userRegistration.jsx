@@ -774,6 +774,15 @@ const handleChange = (e) => {
 
             </div>
         </div>
+
+        <CustomPopup
+            show={popup.show}
+            type={popup.type}
+            title={popup.title}
+            message={popup.message}
+            onConfirm={popup.onConfirm}
+            onClose={() => setPopup(prev => ({ ...prev, show: false }))}
+        />
     </>
   )
 }

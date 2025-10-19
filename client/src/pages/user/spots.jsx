@@ -108,6 +108,10 @@ const Spots = () => {
       setSlots((prev) =>
         prev.map((slot) => (slot._id === updatedSlot._id ? updatedSlot : slot))
       );
+
+      setRandomSlots((prev) =>
+        prev.map((slot) => (slot._id === updatedSlot._id ? updatedSlot : slot))
+      );
     };
     const handleCreated = (createdSlot) => {
       setSlots((prev) => [...prev, createdSlot]);

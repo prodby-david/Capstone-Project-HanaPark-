@@ -204,8 +204,8 @@ const UserList = () => {
       <AdminHeader />
 
       <div className="flex flex-col items-center mt-10 px-4 sm:px-6 ">
-        <div>
-          <h2 className="text-2xl font-bold text-color mb-6">User Management</h2>
+        <div className='text-center'>
+          <h2 className="text-2xl font-bold text-color">User Management</h2>
            <p className="text-gray-600 text-sm">
               Manage all user accounts — lock, unlock, archive, or restore users as needed.
             </p>

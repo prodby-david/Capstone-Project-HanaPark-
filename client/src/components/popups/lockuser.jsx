@@ -13,6 +13,7 @@ const LockPopup = ({
 
   const lockReasons = [
     "Violation of terms",
+    "Multiple no-shows",
     "Multiple failed login attempts",
     "Suspicious activity",
     "User requested temporary lock",

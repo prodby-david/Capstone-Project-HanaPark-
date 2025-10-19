@@ -1,19 +1,26 @@
-import React, { useState } from 'react'
-import { toast } from 'react-toastify';
-import toastOptions from '../../../lib/toastConfig';
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import toastOptions from "../../../lib/toastConfig";
 import { useAdminContext } from "../../../context/adminContext";
-import { useNavigate } from 'react-router-dom';
-import AdminAPI from '../../../lib/inteceptors/adminInterceptor';
-import Loader from '../../loaders/loader';
+import { useNavigate } from "react-router-dom";
+import AdminAPI from "../../../lib/inteceptors/adminInterceptor";
+import Loader from "../../loaders/loader";
+import CustomPopup from "../../popups/CustomPopup"; // ✅ Import your popup
 
 const AdminSignInForm = () => {
   const [adminData, setAdminData] = useState({
-    adminusername: '',
-    adminpassword: ''
+    adminusername: "",
+    adminpassword: "",
   });
   const [loading, setLoading] = useState(false);
-  const [popup, setPopup] = useState({ show: false, title: '', message: '', type: 'success', onConfirm: null });
-  
+  const [popup, setPopup] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "info",
+    onConfirm: null,
+  });
+
   const navigate = useNavigate();
   const { Login } = useAdminContext();
 
@@ -22,46 +29,46 @@ const AdminSignInForm = () => {
     setAdminData({ ...adminData, [name]: value });
   };
 
-  const openPopup = (title, message, type = 'success', onConfirm = null) => {
+  const openPopup = (title, message, type = "info", onConfirm = null) => {
     setPopup({ show: true, title, message, type, onConfirm });
   };
 
   const closePopup = () => {
-    setPopup({ ...popup, show: false });
+    setPopup((prev) => ({ ...prev, show: false }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!adminData.adminusername) {
-      toast.error('Admin username is required.', toastOptions);
+      toast.error("Admin username is required.", toastOptions);
       return;
     }
 
     if (!adminData.adminpassword) {
-      toast.error('Admin password is required.', toastOptions);
+      toast.error("Admin password is required.", toastOptions);
       return;
     }
 
     try {
       setLoading(true);
-      const res = await AdminAPI.post('/admin/sign-in', adminData);
+      const res = await AdminAPI.post("/admin/sign-in", adminData);
 
       if (res.data.success) {
         Login({ verified: true });
         openPopup(
-          'Credentials Valid',
+          "Credentials Valid",
           res.data.message,
-          'success',
-          () => navigate('/admin-dashboard')
+          "success",
+          () => navigate("/admin-dashboard")
         );
       }
     } catch (err) {
       if (err.response && err.response.data) {
         openPopup(
-          'Sign in failed',
-          err.response.data.message || 'An error occurred',
-          'error'
+          "Sign in failed",
+          err.response.data.message || "An error occurred",
+          "error"
         );
       }
     } finally {
@@ -109,37 +116,22 @@ const AdminSignInForm = () => {
 
       {loading && <Loader />}
 
-      {/* ✅ Custom Popup Modal */}
-      {popup.show && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
-            <h3
-              className={`text-lg font-bold mb-3 ${
-                popup.type === 'success' ? 'text-green-600' : 'text-red-600'
-              }`}
-            >
-              {popup.title}
-            </h3>
-            <p className="text-gray-700 mb-5">{popup.message}</p>
-
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => {
-                  closePopup();
-                  if (popup.onConfirm) popup.onConfirm();
-                }}
-                className={`px-4 py-2 rounded-md text-white ${
-                  popup.type === 'success'
-                    ? 'bg-green-600 hover:bg-green-700'
-                    : 'bg-red-600 hover:bg-red-700'
-                }`}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={closePopup}
+        onConfirm={
+          popup.onConfirm
+            ? () => {
+                closePopup();
+                popup.onConfirm();
+              }
+            : closePopup
+        }
+        confirmText="Confirm"
+      />
     </>
   );
 };

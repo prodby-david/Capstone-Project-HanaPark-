@@ -161,6 +161,14 @@ const UserList = () => {
 
       <div className="flex flex-col items-center mt-10 px-4 sm:px-6">
         <h2 className="text-2xl font-bold text-color mb-6">User Management</h2>
+         <button
+            onClick={() => setShowArchived((prev) => !prev)}
+            className={`px-4 py-2 rounded-md text-white font-medium ${
+              showArchived ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
+            {showArchived ? 'Show Active Users' : 'Show Archived Users'}
+          </button>
 
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
 

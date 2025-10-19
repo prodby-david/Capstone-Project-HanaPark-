@@ -518,188 +518,157 @@ const handleChange = (e) => {
               </div>
             </div>
           )}
-          {step === 2 && (
+        {step === 2 && (
+            <div className="animate-fade-in">
+                <h3 className="font-semibold text-lg text-color-3 mb-4">
+                Step 2: <span className="text-color font-bold">Student Vehicle Information</span>
+                </h3>
+
+                <div className="space-y-3">
+                {/* Vehicle Type */}
+                <div>
+                    <label className="text-sm font-semibold text-color-3">Vehicle Type</label>
+                    <select
+                    name="vehicleType"
+                    value={formData.vehicleType}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
+                    >
+                    <option value="">Select Vehicle Type</option>
+                    <option value="Small Motorcycle">Small Motorcycle</option>
+                    <option value="Bigbike Motorcycle">Bigbike Motorcycle</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="Hatchback">Hatchback</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Pickup">Pickup</option>
+                    <option value="MPV">MPV</option>
+                    <option value="Van">Van</option>
+                    </select>
+                </div>
+
+                {/* Brand & Model */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-
-                        <div className='flex items-center mb-5'>
-                            <h2 className='text-color-3'>
-                                <span className='font-bold text-color'>Step 2:</span> Student Vehicle Information
-                            </h2>
-                        </div>
-
-                        <div className='flex flex-col w-full'>
-
-                            <label htmlFor="Type"
-                             className='text-start text-color-3 text-sm font-semibold'>Vehicle Type
-                             </label>
-
-                            <select 
-                            name="vehicleType"
-                            id="Type"
-                            value={formData.vehicleType}
-                            onChange={handleChange}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
-                            >
-                            <option value="" disabled>
-                                Vehicle Type
-                            </option>
-
-                            <option value="Small Motorcycle">Small Motorcycle</option>
-                            <option value="Bigbike Motorcycle">Bigbike Motorcycle</option>
-                            <option value="Sedan">Sedan</option>
-                            <option value="Hatchback">Hatchback</option>
-                            <option value="SUV">SUV</option>
-                            <option value="Pickup">Pickup</option>
-                            <option value="MPV">MPV</option>
-                            <option value="Van">Van</option>
-
-                        </select>
+                    <label className="text-sm font-semibold text-color-3">Brand</label>
+                    <select
+                        name="brand"
+                        value={formData.brand}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
+                    >
+                        <option value="">
+                        {filteredBrands.length === 0
+                            ? "Select vehicle type first"
+                            : "Select Brand"}
+                        </option>
+                        {filteredBrands.map((brand) => (
+                        <option key={brand} value={brand}>
+                            {brand}
+                        </option>
+                        ))}
+                    </select>
                     </div>
 
-                        <div className='flex gap-3 mt-3'>
-
-                        <div className='flex flex-col w-full'>
-
-                            <label htmlFor="Brand" 
-                            className='text-start text-color-3 text-sm font-semibold'>
-                                Brand
-                            </label>
-
-                            <select
-                                name="brand"
-                                id="Brand"
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
-                                value={formData.brand}
-                                onChange={handleChange}
-                            >
-                               <option value="" disabled>
-                                    {filteredBrands.length === 0 ? "Select vehicle type first" : "Select Brand"}
-                                </option>
-
-                                {filteredBrands.map((brand) => (
-                                    <option key={brand} value={brand}>
-                                    {brand}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        
-                        <div className='flex flex-col items-start w-full'>
-
-                            <label htmlFor='Model' className="font-semibold text-sm text-color-3">
-                                Model (Year)
-                            </label>
-                            <select
-                            name="model"
-                            id='Model'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
-                            value={formData.model}
-                            onChange={handleChange}
-                            >
-                            <option value="">Select Year</option>
-                            {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
-                                <option key={year} value={year}>
-                                {year}
-                                </option>
-                            ))}
-                            </select>
-
-                        </div>
-                            
-
-                        </div>
-
-                        <div className='flex flex-col mt-3'>
-
-                            <label htmlFor="Platenumber"
-                            className='text-start text-color-3 text-sm font-semibold'>
-                                Plate Number or MV File
-                            </label>
-
-                            <input type="text"
-                            name='plateNumber'
-                            id='Platenumber'
-                            value={formData.plateNumber}
-                            onChange={handleChange}
-                            placeholder='e.g 123ABC or 1234-00000012345'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
-
-                        </div>
-
-                        <div className='flex gap-x-3 mt-3'>
-
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="Transmission"
-                                className='text-start text-color-3 text-sm font-semibold'>
-                                    Transmission (Optional)
-                                </label>
-
-                                <select 
-                                name="transmission" 
-                                id="Transmission"
-                                value={formData.transmission}
-                                onChange={handleChange}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
-                                >
-                                    <option value="" disabled></option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Automatic">Automatic</option>
-                                </select>
-
-                            </div>
-                         
-                            <div className='flex flex-col items-start w-full'>
-
-                                <label htmlFor='Color' className="font-semibold text-sm text-color-3">Color</label>
-                                <select
-                                name="color"
-                                id='Color'
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                value={formData.color}
-                                onChange={handleChange}
-                                >
-                                <option value="">Select Color</option>
-                                <option value="Black">Black</option>
-                                <option value="White">White</option>
-                                <option value="Gray">Gray</option>
-                                <option value="Red">Red</option>
-                                <option value="Blue">Blue</option>
-                                <option value="Silver">Silver</option>
-                                <option value="Green">Green</option>
-                                <option value="Yellow">Yellow</option>
-                                <option value="Other">Other</option>
-                                </select>
-
-                            </div>
-                            
-
-                        </div>
-
-                        <div className='text-center mt-3'>
-                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The Plate Number or MV File should be unique.</h2>
-                        </div>
-
-                        <div className='flex gap-x-5 justify-end'>
-
-                            <div className='mt-3'>
-                                <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                                onClick={prevStep}>
-                                    Previous
-                                </button>
-                            </div>
-
-                            <div className='mt-3'>
-                                <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                                onClick={nextStep} type='button'>
-                                    Next
-                                </button>
-                            </div>
-                        </div>
-                       
+                    <div>
+                    <label className="text-sm font-semibold text-color-3">Model (Year)</label>
+                    <select
+                        name="model"
+                        value={formData.model}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
+                    >
+                        <option value="">Select Year</option>
+                        {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
+                        <option key={year} value={year}>
+                            {year}
+                        </option>
+                        ))}
+                    </select>
                     </div>
-                )}
+                </div>
+
+                {/* Plate Number */}
+                <div>
+                    <label className="text-sm font-semibold text-color-3">
+                    Plate Number or MV File
+                    </label>
+                    <input
+                    type="text"
+                    name="plateNumber"
+                    value={formData.plateNumber}
+                    onChange={handleChange}
+                    placeholder="e.g. 123ABC or 1234-00000012345"
+                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    />
+                </div>
+
+                {/* Transmission & Color */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                    <label className="text-sm font-semibold text-color-3">
+                        Transmission (Optional)
+                    </label>
+                    <select
+                        name="transmission"
+                        value={formData.transmission}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
+                    >
+                        <option value="">Select Transmission</option>
+                        <option value="Manual">Manual</option>
+                        <option value="Automatic">Automatic</option>
+                    </select>
+                    </div>
+
+                    <div>
+                    <label className="text-sm font-semibold text-color-3">Color</label>
+                    <select
+                        name="color"
+                        value={formData.color}
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2 cursor-pointer"
+                    >
+                        <option value="">Select Color</option>
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                        <option value="Gray">Gray</option>
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Green">Green</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    </div>
+                </div>
+
+                {/* Note */}
+                <p className="text-xs text-center text-color-3 mt-3">
+                    <span className="text-color font-semibold">NOTE:</span> The Plate Number or MV
+                    File should be unique.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex justify-between mt-5">
+                    <button
+                    type="button"
+                    onClick={prevStep}
+                    className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                    >
+                    Previous
+                    </button>
+                    <button
+                    type="button"
+                    onClick={nextStep}
+                    className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                    >
+                    Next
+                    </button>
+                </div>
+                </div>
+            </div>
+            )}
+
 
                 {step == 3 && (
                     <div>

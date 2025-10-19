@@ -213,7 +213,7 @@ const UserList = () => {
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => handleLock(user._id, user.isLocked)}
-                        className={`p-2 rounded-full transition ${
+                        className={`p-2 rounded-full cursor-pointer transition ${
                           user.isLocked
                             ? 'bg-green-500 hover:bg-green-600'
                             : 'bg-yellow-500 hover:bg-yellow-600'
@@ -229,7 +229,7 @@ const UserList = () => {
 
                       <button
                         onClick={() => handleDelete(user._id)}
-                        className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition"
+                        className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
                         title="Archive User"
                       >
                         <TrashIcon className="w-5 h-5" />

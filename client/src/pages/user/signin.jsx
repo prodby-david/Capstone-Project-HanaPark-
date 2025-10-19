@@ -20,8 +20,6 @@ const SignIn = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-
-  // Popup state
   const [popup, setPopup] = useState({
     show: false,
     type: "",

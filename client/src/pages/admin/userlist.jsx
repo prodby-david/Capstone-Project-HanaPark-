@@ -6,11 +6,18 @@ import AdminAPI from '../../lib/inteceptors/adminInterceptor';
 import SearchBar from '../../components/search/search';
 import AdminHeader from '../../components/headers/adminHeader';
 import Loader from '../../components/loaders/loader';
+import LockPopup from '../../components/popups/lockuser';
 
 const UserList = () => {
   const [usersList, setUsersList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [popup, setPopup] = useState({
+  show: false,
+  userId: null,
+  isLocked: false,
+});
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -51,44 +58,30 @@ const UserList = () => {
       return matchesUserFields || matchesVehicleFields;
     });
 
-    const handleLock = async (id, currentStatus) => {
-    const action = currentStatus ? "unlock" : "lock";
-    const confirm = await Swal.fire({
-      title: `Are you sure you want to ${action} this account?`,
-      input: !currentStatus ? 'text' : null,
-      inputLabel: !currentStatus ? 'Reason for lock (optional)' : '',
-      showCancelButton: true,
-      confirmButtonColor: '#00509e',
-      cancelButtonColor: '#d33',
-      confirmButtonText: `Yes, ${action} it!`,
+    const handleLock = (id, currentStatus) => {
+  setPopup({ show: true, userId: id, isLocked: currentStatus });
+};
+
+const confirmLockAction = async (reason) => {
+  try {
+    const res = await AdminAPI.patch(`/admin/lock/${popup.userId}`, {
+      isLocked: !popup.isLocked,
+      lockReason: reason || "",
     });
 
-    if (confirm.isConfirmed) {
-      try {
-        const res = await AdminAPI.patch(`/admin/lock/${id}`, {
-          isLocked: !currentStatus,
-          lockReason: confirm.value || '',
-        });
+    setUsersList((prev) =>
+      prev.map((u) =>
+        u._id === popup.userId ? { ...u, isLocked: !popup.isLocked } : u
+      )
+    );
 
-        Swal.fire({
-          title: res.data.message,
-          icon: 'success',
-          confirmButtonColor: '#00509e',
-        });
+    setPopup({ show: false, userId: null, isLocked: false });
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update lock status.");
+  }
+};
 
-        setUsersList((prev) =>
-          prev.map((u) => (u._id === id ? { ...u, isLocked: !currentStatus } : u))
-        );
-      } catch (err) {
-        console.error(err);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to update lock status.',
-          icon: 'error',
-        });
-      }
-    }
-  };
 
 
   const handleDelete = async (id) => {
@@ -204,6 +197,14 @@ const UserList = () => {
           </>
         )}
       </div>
+
+      <LockPopup
+        show={popup.show}
+        isLocked={popup.isLocked}
+        onClose={() => setPopup({ show: false, userId: null, isLocked: false })}
+        onConfirm={confirmLockAction}
+      />
+
     </>
   );
 };

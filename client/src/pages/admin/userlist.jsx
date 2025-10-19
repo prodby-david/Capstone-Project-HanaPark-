@@ -12,6 +12,7 @@ const UserList = () => {
   const [usersList, setUsersList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [popup, setPopup] = useState({
     show: false,
     userId: null,
@@ -20,18 +21,19 @@ const UserList = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setIsLoading(true);
-      try {
-        const res = await api.get('/admin/users');
-        setUsersList(res.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(true);
+        try {
+          const endpoint = showArchived ? '/admin/users?archived=true' : '/admin/users';
+          const res = await api.get(endpoint);
+          setUsersList(res.data);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setIsLoading(false);
+        }
+      };
     fetchUsers();
-  }, []);
+  }, [showArchived]);
 
   const filteredUsers = usersList
     .filter((user) => user.status !== 'Archived')

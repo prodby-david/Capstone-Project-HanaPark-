@@ -24,6 +24,7 @@ import ArchiveUser from '../../controllers/admin/accounts/archived.js';
 import cancelReservation from '../../controllers/admin/reservation/cancelReservation.js';
 import GetAllFeedbacks from '../../controllers/users/getFeedback.js';
 import getActivityLogs from '../../controllers/admin/activitylogs.js';
+import UnarchiveUser from '../../controllers/admin/accounts/unarchive.js';
 
 
 
@@ -56,6 +57,7 @@ AdminRoute.put('/slots/:id', EditSlot);
 
 AdminRoute.patch('/lock/:id', LockUser);
 AdminRoute.patch('/archive/:id', ArchiveUser);
+AdminRoute.patch('/unarchive/:id', UnarchiveUser)
 AdminRoute.patch('/reservation/cancel/:id', cancelReservation);
 
 AdminRoute.delete('/slots/:id', DeleteSlot);

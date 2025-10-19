@@ -172,189 +172,221 @@ const AvailableSlots = () => {
 
 
   return (
-    <>
-
+  <>
     <AdminHeader />
-   
-    <div className="p-10">
 
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-8 min-h-screen bg-gray-50">
+      {/* Header & Filters */}
+      <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
+        <h2 className="text-2xl font-semibold text-color flex items-center gap-2">
+          <span className="bg-color-3 text-white px-3 py-1 rounded-lg text-base">Admin</span>
+          Parking Slots
+        </h2>
 
-        <h2 className="text-2xl font-semibold text-color">All Parking Slots</h2>
-
-        <div className='flex gap-x-2 items-center'>
-            <label 
-            htmlFor="SlotFilter"
-            className='text-sm  text-color-3 font-semibold'
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Filter by User */}
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="SlotFilter"
+              className="text-sm text-color-3 font-semibold"
             >
-                Filter by:
+              Filter by:
             </label>
+            <select
+              id="SlotFilter"
+              className="border border-gray-300 bg-white rounded-lg p-2 text-sm text-color-2 outline-none shadow-sm hover:border-color-3 transition"
+              value={filterUser}
+              onChange={handleUserChange}
+            >
+              <option value="All">All User</option>
+              <option value="Student">Student</option>
+              <option value="Staff">Staff</option>
+              <option value="Visitor">Visitor</option>
+            </select>
+          </div>
 
-             <select
-            id='SlotFilter'
-            className="border w-[100px] outline-0 cursor-pointer rounded p-2 text-sm text-color-2"
-            value={filterUser}
-            onChange={handleUserChange}
-        >
-
-            <option value="All">All User</option>
-            <option value="Student">Student</option>
-            <option value="Staff">Staff</option>
-            <option value="Visitor">Visitor</option>
-
-        </select>
-
-        <select
-            className="border w-[100px] outline-0 cursor-pointer rounded p-2 text-sm text-color-2"
+          {/* Filter by Status */}
+          <select
+            className="border border-gray-300 bg-white rounded-lg p-2 text-sm text-color-2 outline-none shadow-sm hover:border-color-3 transition"
             value={filterStatus}
             onChange={handleStatusChange}
-            >
-            <option value="All">All</option>
+          >
+            <option value="All">All Status</option>
             <option value="Available">Available</option>
             <option value="Reserved">Reserved</option>
             <option value="Occupied">Occupied</option>
             <option value="Ongoing Maintenance">Ongoing Maintenance</option>
-        </select>
+          </select>
 
-        <div>
-          <input
-            type="text"
-            placeholder="Search slot number"
-            className=" relative border outline-0 rounded p-2 text-sm text-color-2 group"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <MagnifyingGlassIcon className='w-5 h-5 absolute top-25.5 right-13 text-color-3'/>
+          {/* Search Input */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search slot number..."
+              className="border border-gray-300 bg-white rounded-lg p-2 pl-9 text-sm text-color-2 outline-none shadow-sm hover:border-color-3 transition w-[180px]"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <MagnifyingGlassIcon className="w-5 h-5 absolute left-2 top-2.5 text-color-3" />
+          </div>
         </div>
+      </div>
 
-
-
+      {/* Slots Display */}
+      {isLoading ? (
+        <Loader />
+      ) : showSlots.length === 0 ? (
+        <div className="text-center py-20 text-gray-500 text-sm">
+          No parking slots found.
         </div>
-
-    </div>
-
-
-      {isLoading ? ( 
-  <Loader />
-) : (
-  showSlots.length === 0 ? (
-    <p className="text-gray-500">No slots available.</p>
-  ) : (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-    >
-      {showSlots
-        .filter(slot => slot.slotNumber.toLowerCase().includes(searchTerm.toLowerCase()))
-        .slice(0, visibleCount)
-        .map((slot) => (
-          <motion.div
-            variants={fadeUp}
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.1 }}
-            key={slot._id}
-            className="p-4 rounded-md shadow-md bg-white hover:shadow-lg transition"
-          >
-            <h3 className="text-lg font-bold text-color">{slot.slotNumber}</h3>
-            <p className="text-color-2"><strong className="text-color-3">User:</strong> {slot.slotUser}</p>
-            <p className="text-color-2"><strong className="text-color-3">Type:</strong> {slot.slotType}</p>
-            <p className="text-color-2"><strong className="text-color-3">Slot Price:</strong> {`₱ ${slot.slotPrice}`}</p>
-            <p className="text-color-2">
-              <strong className="text-color-3">Status:</strong>{" "}
-              <span className={
-                slot.slotStatus === "Available" ? "text-green-600" :
-                slot.slotStatus === "Reserved" ? "text-yellow-600" :
-                slot.slotStatus === "Occupied" ? "text-red-600" :
-                "text-blue-600"
-              }>
-                {slot.slotStatus}
-              </span>
-            </p>
-            <p className="text-sm text-gray-500 mt-2">{slot.slotDescription}</p>
-            <div className="flex justify-end gap-x-3">
-              <button onClick={() => openEditModal(slot)}>
-                <PencilSquareIcon className="w-5 h-5 text-color-3 hover:cursor-pointer" />
-              </button>
-              <button onClick={() => handleDelete(slot._id)}>
-                <TrashIcon className="w-5 h-5 text-color-3 hover:cursor-pointer" />
-              </button>
-            </div>
-          </motion.div>
-        ))}
-    </motion.div>
-  )
-)}
-
-    </div>
-
-    {editModalOpen && (
+      ) : (
         <motion.div
-        key="backdrop"
-        variants={container}
-        initial="hidden"
-        animate="show"
-        exit="hidden"
-        className="fixed inset-0 bg-white/10 backdrop-blur-xs bg-opacity-30 flex justify-center items-center z-50">
-          <motion.div
-          key="modal"
-          variants={fadeUp}
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {showSlots
+            .filter((slot) =>
+              slot.slotNumber.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .slice(0, visibleCount)
+            .map((slot) => (
+              <motion.div
+                key={slot._id}
+                variants={fadeUp}
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.15 }}
+                className="p-5 rounded-xl shadow-sm border border-gray-200 bg-white hover:shadow-lg transition duration-200 relative"
+              >
+                <div className="absolute top-2 right-2 px-2 py-0.5 text-xs rounded-full font-medium 
+                  bg-gray-100 text-color-3">
+                  {slot.slotStatus}
+                </div>
+
+                <h3 className="text-xl font-bold text-color mb-1">
+                  {slot.slotNumber}
+                </h3>
+                <p className="text-sm text-color-2">
+                  <strong className="text-color-3">User:</strong> {slot.slotUser}
+                </p>
+                <p className="text-sm text-color-2">
+                  <strong className="text-color-3">Type:</strong> {slot.slotType}
+                </p>
+                <p className="text-sm text-color-2">
+                  <strong className="text-color-3">Price:</strong> ₱{slot.slotPrice}
+                </p>
+
+                <p className="text-xs text-gray-500 mt-2">
+                  {slot.slotDescription || "No description provided."}
+                </p>
+
+                <div className="flex justify-end mt-4 gap-x-3">
+                  <button
+                    onClick={() => openEditModal(slot)}
+                    className="p-2 rounded-md bg-blue-50 hover:bg-blue-100 transition"
+                    title="Edit"
+                  >
+                    <PencilSquareIcon className="w-5 h-5 text-color-3" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(slot._id)}
+                    className="p-2 rounded-md bg-red-50 hover:bg-red-100 transition"
+                    title="Delete"
+                  >
+                    <TrashIcon className="w-5 h-5 text-color-3" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+        </motion.div>
+      )}
+
+      {/* Edit Modal */}
+      {editModalOpen && (
+        <motion.div
+          key="backdrop"
+          variants={container}
           initial="hidden"
           animate="show"
           exit="hidden"
-          className="bg-white p-6 rounded shadow-md w-full max-w-md"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-[9999]"
+        >
+          <motion.div
+            key="modal"
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md"
           >
-            <h2 className="text-xl font-bold mb-4 text-color">Edit Slot</h2>
-            <div className="mb-4">
-              <label className="text-sm font-semibold text-color-3"  htmlFor='EditedStatus'>Status</label>
-              <select
-              id='EditedStatus'
-              value={editedStatus}
-              onChange={(e) => setEditedStatus(e.target.value)}
-              className="w-full outline-0 cursor-pointer border rounded p-2 text-color-2"
-              >
-                <option>Available</option>
-                <option>Reserved</option>
-                <option>Occupied</option>
-                <option>Ongoing Maintenance</option>
-              </select>
+            <h2 className="text-xl font-bold mb-4 text-color text-center">
+              Edit Slot Details
+            </h2>
+
+            <div className="space-y-3">
+              <div>
+                <label
+                  htmlFor="EditedStatus"
+                  className="text-sm font-semibold text-color-3 block mb-1"
+                >
+                  Status
+                </label>
+                <select
+                  id="EditedStatus"
+                  value={editedStatus}
+                  onChange={(e) => setEditedStatus(e.target.value)}
+                  className="w-full outline-none border border-gray-300 rounded-lg p-2 text-color-2 text-sm hover:border-color-3 transition"
+                >
+                  <option>Available</option>
+                  <option>Reserved</option>
+                  <option>Occupied</option>
+                  <option>Ongoing Maintenance</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-color-3 block mb-1">
+                  Description
+                </label>
+                <textarea
+                  value={editedDescription}
+                  onChange={(e) => setEditedDescription(e.target.value)}
+                  rows="3"
+                  className="w-full outline-none border border-gray-300 rounded-lg p-2 text-color-2 text-sm hover:border-color-3 transition"
+                  placeholder="Write description..."
+                />
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-color-3">Description</label>
-              <textarea
-                value={editedDescription}
-                onChange={(e) => setEditedDescription(e.target.value)}
-                className="w-full outline-0 border rounded p-2 text-color-2"
-              />
-            </div>
-            <div className="flex justify-end gap-2">
+
+            <div className="flex justify-end gap-3 mt-5">
               <button
                 onClick={() => setEditModalOpen(false)}
-                className="bg-red-500 px-4 py-2 rounded text-white cursor-pointer transition ease-in-out hover:opacity-75 duration-300"
+                className="px-4 py-2 text-sm rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdate}
-                className=" bg-blue-600 text-white px-4 p-2 rounded cursor-pointer transition ease-in-out hover:opacity-75 duration-300"
+                className="px-4 py-2 text-sm rounded-lg bg-color-3 text-white hover:opacity-90 transition"
               >
-                Save
+                Save Changes
               </button>
             </div>
           </motion.div>
         </motion.div>
       )}
 
+      {/* Show More */}
       {showSlots.length > visibleCount && (
-        <div className="text-center my-3">
+        <div className="text-center mt-6">
           <ShowMore onClick={handleShowMore} />
         </div>
       )}
+    </div>
+  </>
+);
 
-
-     </>
-  )
 }
 
 export default AvailableSlots

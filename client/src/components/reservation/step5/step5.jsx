@@ -42,9 +42,9 @@ const Step5 = ({reservationResult, navigate}) => {
 
                 <button 
                 type='button'
-                onClick={() => navigate('/dashboard')} 
+                onClick={() => navigate('/recents')} 
                 className="text-sm bg-color-3 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 transition">
-                  Go to Dashboard
+                  Go to Recents
                 </button>
 
               </div>

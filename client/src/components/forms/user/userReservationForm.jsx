@@ -13,7 +13,7 @@ import Step3 from '../../reservation/step3/step3';
 import Step4 from '../../reservation/step4/step4';
 import Step5 from '../../reservation/step5/step5';
 import Loader from '../../../components/loaders/loader';
-import CustomPopup from '../../popups/popup';
+import CustomPopup from '../../popups/popup'
 
 const UserReservationForm = () => {
   const { slotId } = useParams();
@@ -247,7 +247,7 @@ const UserReservationForm = () => {
         onClose={() => setPopup({ show: false })}
         onConfirm={popup.onConfirm}
       />
-      
+
     </>
   );
 };

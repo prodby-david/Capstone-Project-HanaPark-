@@ -148,7 +148,6 @@ const UserList = () => {
             confirmButtonColor: '#10b981',
           });
           setUsersList(res.data);
-          localStorage.removeItem('user');
         } catch (err) {
           console.error('Delete error:', err);
           Swal.fire({
@@ -261,7 +260,6 @@ const UserList = () => {
 
                     <div className="flex justify-center gap-2">
                         {showArchived ? (
-                          // Show only Unarchive button if in Archived view
                           <button
                             onClick={() => handleUnarchive(user._id)}
                             className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"

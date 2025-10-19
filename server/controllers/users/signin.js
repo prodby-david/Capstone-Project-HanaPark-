@@ -14,6 +14,10 @@ const studentSignInController = async (req, res) => {
       return res.status(404).json({ message: "Username not found. Try again." });
     }
 
+    if (user.status === 'Archived') {
+      return res.status(403).json({ message: 'Your account is archived. Please contact the administrator.' });
+    }
+
     if (user.isLocked && user.lockUntil && user.lockUntil > Date.now()) {
       const remaining = Math.ceil((user.lockUntil - Date.now()) / 60000);
       return res

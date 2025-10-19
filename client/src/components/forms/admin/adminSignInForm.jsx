@@ -5,7 +5,7 @@ import { useAdminContext } from "../../../context/adminContext";
 import { useNavigate } from "react-router-dom";
 import AdminAPI from "../../../lib/inteceptors/adminInterceptor";
 import Loader from "../../loaders/loader";
-import CustomPopup from "../../popups/CustomPopup"; // ✅ Import your popup
+import CustomPopup from "../../popups/popup";
 
 const AdminSignInForm = () => {
   const [adminData, setAdminData] = useState({

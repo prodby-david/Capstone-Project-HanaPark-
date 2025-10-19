@@ -36,26 +36,33 @@ const UserList = () => {
   }, [showArchived]);
 
   const filteredUsers = usersList
-    .filter((user) => user.status !== 'Archived')
-    .filter((user) => {
-      const query = searchQuery.toLowerCase();
-      const matchesUserFields =
-        user.lastname.toLowerCase().includes(query) ||
-        user.firstname.toLowerCase().includes(query) ||
-        String(user.studentId).toLowerCase().includes(query) ||
-        user.username.toLowerCase().includes(query) ||
-        user.email.toLowerCase().includes(query);
+  .filter((user) => {
+    if (showArchived) {
+      return user.status === 'Archived';
+    } else {
+      return user.status !== 'Archived';
+    }
+  })
+  .filter((user) => {
+    const query = searchQuery.toLowerCase();
+    const matchesUserFields =
+      user.lastname.toLowerCase().includes(query) ||
+      user.firstname.toLowerCase().includes(query) ||
+      String(user.studentId).toLowerCase().includes(query) ||
+      user.username.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query);
 
-      const vehicle = user.vehicle;
-      const matchesVehicleFields =
-        vehicle &&
-        (vehicle.plateNumber?.toLowerCase().includes(query) ||
-          vehicle.brand?.toLowerCase().includes(query) ||
-          vehicle.model?.toLowerCase().includes(query) ||
-          vehicle.color?.toLowerCase().includes(query));
+    const vehicle = user.vehicle;
+    const matchesVehicleFields =
+      vehicle &&
+      (vehicle.plateNumber?.toLowerCase().includes(query) ||
+        vehicle.brand?.toLowerCase().includes(query) ||
+        vehicle.model?.toLowerCase().includes(query) ||
+        vehicle.color?.toLowerCase().includes(query));
 
-      return matchesUserFields || matchesVehicleFields;
-    });
+    return matchesUserFields || matchesVehicleFields;
+  });
+
 
   const handleLock = (id, currentStatus) => {
     if (currentStatus) {

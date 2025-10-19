@@ -79,7 +79,7 @@ const LockPopup = ({
               {selectedReason === "Other" && (
                 <input
                   type="text"
-                  className="w-full border rounded-lg p-2 text-sm text-gray-700 focus:ring-2 focus:ring-color-3 outline-none"
+                  className="w-full border rounded-lg p-2 text-sm text-gray-700 outline-none"
                   placeholder="Type your specific reason"
                   value={customReason}
                   onChange={(e) => setCustomReason(e.target.value)}
@@ -91,13 +91,13 @@ const LockPopup = ({
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+              className="px-4 py-2 rounded-lg cursor-pointer bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
-              className="px-4 py-2 rounded-lg bg-color text-white hover:opacity-90 transition"
+              className="px-4 py-2 rounded-lg cursor-pointer bg-color text-white hover:opacity-90 transition"
               disabled={!isLocked && !selectedReason}
             >
               {isLocked ? "Unlock" : "Lock"}

@@ -452,7 +452,7 @@ const handleChange = (e) => {
                                 id="Username"
                                 value={formData.username}
                                 readOnly
-                                className="w-full p-2 text-gray-500 rounded text-sm cursor-not-allowed"
+                                className="w-full p-2 border text-gray-500 rounded text-sm cursor-not-allowed"
                                 />
  
                             </div>

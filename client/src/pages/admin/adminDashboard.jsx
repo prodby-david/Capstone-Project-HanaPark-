@@ -134,79 +134,109 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <AdminHeader />
+        <AdminHeader />
 
-      <div className="flex flex-col gap-y-12 px-8 lg:px-16 py-10 min-h-screen">
-        <div className="flex items-center justify-between border-b border-color-2 pb-4">
-          <h2 className="text-3xl font-bold text-color">System Overview</h2>
-          <p className="text-gray-500 text-sm">Admin Dashboard</p>
-        </div>
+        <div className='flex flex-col gap-y-10'>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6"
-        >
-          <DashboardCard icon={UsersIcon} title="Total Users" value={countUser.length} to="/users-lists" />
-          <DashboardCard icon={MapPinIcon} title="Parking Slots" value={showSlots.length} to="/admin-dashboard/available-slots" />
-          <DashboardCard icon={CalendarIcon} title="Reservations" value={countReservation.length} to="/reservation/lists" />
-          <DashboardCard icon={ChatBubbleOvalLeftIcon} title="Feedbacks" value={feedbacks.length} to="/feedbacks" />
-        </motion.div>
-
-        <div className="w-full flex justify-center">
-          <div className="w-full max-w-5xl bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-color-2 bg-gradient-to-r from-[#3366CC]/10 to-[#9460C9]/10">
-              <h2 className="text-lg font-semibold text-gray-800">Recent User Activities</h2>
-              <span className="text-sm text-gray-500">({reservation.length} activities)</span>
+            <div className='flex items-center justify-between px-10 mt-10'>
+                <h2 className='text-xl text-color font-semibold'>System Overview</h2>
             </div>
 
-            <div className="p-5 h-[450px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
-              {reservation.length === 0 ? (
-                <p className="text-gray-500 text-center mt-10">No recent activities to display.</p>
-              ) : (
-                reservation.map((notif, index) => {
-                  const isLatest = index === 0 && unseenCount > 0
-                  return (
-                    <motion.div
-                      key={notif._id || index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="relative p-4 border-b border-gray-100 hover:bg-gray-50 rounded-xl transition"
-                    >
-                      {isLatest && (
-                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-[#3366CC] rounded-full animate-pulse"></span>
-                      )}
-                      <p className="font-semibold text-gray-800 flex items-center gap-2">
-                        {getUserTypeIcon(notif.reservedBy?.userType)}
-                        {notif.reservedBy?.firstname} {notif.reservedBy?.lastname}
-                      </p>
-                      <div className="text-gray-600 mt-1">
-                        {notif.status === "Pending" && (
-                          <>Requested a reservation for slot <span className="font-semibold text-[#3366CC]">{notif.slotCode}</span>. The slot status is now reserved.</>
+            <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className='flex justify-between gap-5 px-20'>
+
+                <DashboardCard 
+                icon={UsersIcon}
+                title={'Total Users'}
+                value={countUser.length}
+                to={'/users-lists'} 
+                />
+
+                <DashboardCard 
+                icon={MapPinIcon}
+                title={'Parking Slots'}
+                value={showSlots.length}
+                to={'/admin-dashboard/available-slots'} 
+                />
+
+                <DashboardCard 
+                icon={CalendarIcon}
+                title={'Reservations'}
+                value={countReservation.length}
+                to={'/reservation/lists'} 
+                />
+
+                <DashboardCard 
+                icon={ChatBubbleOvalLeftIcon}
+                title={'Feedbacks'}
+                value={feedbacks.length}
+                to={'/feedbacks'} 
+                />
+                   
+            </motion.div>
+
+            <div className="flex flex-col items-center justify-center my-5 w-full px-5">
+            <div className="w-full max-w-4xl">
+              <h2 className="text-lg font-semibold text-color mb-3 text-center relative">
+                  Users Activities
+              </h2>
+              <div className="bg-white shadow-md rounded-xl p-4 h-96 overflow-y-auto border border-gray-200">
+                {reservation.length === 0 ? (
+                  <p className="text-gray-500 text-sm text-center">Loading activities...</p>
+                ) : (
+                  reservation.map((notif, index) => {
+                    const isLatest = index === 0 && unseenCount > 0; 
+                    return (
+                      <div
+                        key={notif._id || index}
+                        className="p-3 border-b border-gray-200 text-sm relative"
+                      >
+
+                        {isLatest && (
+                          <span className="absolute top-1/2 left-[-6px] -translate-y-1/2 w-2 h-2 bg-color-3 rounded-full animate-pulse"></span>
                         )}
-                        {notif.status === "Reserved" && (
-                          <>Confirmed a reservation on slot <span className="font-semibold text-[#3366CC]">{notif.slotCode}</span>. The slot status is now occupied.</>
-                        )}
-                        {notif.status === "Cancelled" && (
-                          <>Cancelled their reservation. Slot <span className="font-semibold text-[#3366CC]">{notif.slotCode}</span> is now available.</>
-                        )}
-                        {notif.status === "Completed" && (
-                          <>Completed their reservation on slot <span className="font-semibold text-[#3366CC]">{notif.slotCode}</span>. The slot is now available.</>
-                        )}
+
+                        <p className="font-semibold text-color flex items-center gap-1">
+                          {getUserTypeIcon(notif.reservedBy?.userType)}
+                          {notif.reservedBy?.firstname} {notif.reservedBy?.lastname}
+                        </p>
+                        
+                        <div className="text-gray-600">
+                          {notif.status === 'Pending' && (
+                            <>Requested a reservation for slot <span className="font-semibold">{notif.slotCode}</span>. The slot status is now reserved.</>
+                          )}
+
+                          {notif.status === 'Reserved' && (
+                            <>Confirmed a reservation on slot <span className="font-semibold">{notif.slotCode}</span>. The slot status is now occupied.</>
+                          )}
+
+                          {notif.status === 'Cancelled' && (
+                            <>Cancelled their reservation. The slot status is now available.</>
+                          )}
+
+                          {notif.status === 'Completed' && (
+                            <>Completed their reservation on slot <span className="font-semibold">{notif.slotCode}</span>. The slot status is now available.</>
+                          )}
+                        </div>
+
+                        <p className="text-xs text-gray-400">
+                          {new Date(notif.createdAt).toLocaleString()}
+                        </p>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">{new Date(notif.createdAt).toLocaleString()}</p>
-                    </motion.div>
-                  )
-                })
-              )}
+                    );
+                  })
+                )}
+              </div>
+
             </div>
           </div>
-        </div>
-      </div>
 
-      <UserFooter />
+        </div>
+
+        <UserFooter />
     </>
   )
 }

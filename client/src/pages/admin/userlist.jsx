@@ -12,6 +12,7 @@ const UserList = () => {
   const [usersList, setUsersList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [lockPopup, setLockPopup] = useState({
     show: false,
@@ -204,7 +205,7 @@ const UserList = () => {
       <AdminHeader />
 
       <div className="flex flex-col items-center mt-10 px-4 sm:px-6 ">
-        <div className='text-center'>
+        <div className='text-center mb-5'>
           <h2 className="text-2xl font-bold text-color">User Management</h2>
            <p className="text-gray-600 text-sm">
               Manage all user accounts — lock, unlock, archive, or restore users as needed.
@@ -232,6 +233,7 @@ const UserList = () => {
         ) : (
           <div className="w-full max-w-6xl overflow-x-auto mt-6">
             <div className="min-w-[700px] bg-white shadow-md rounded-2xl overflow-hidden">
+              {/* Header */}
               <div className="grid grid-cols-8 gap-3 bg-color text-white p-4 font-semibold text-center text-sm rounded-t-2xl">
                 <p>User Type</p>
                 <p>Lastname</p>
@@ -243,8 +245,9 @@ const UserList = () => {
                 <p>Actions</p>
               </div>
 
+              {/* Scrollable Data Container */}
               <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
-                {filteredUsers.map((user) => (
+                {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
                   <div
                     key={user._id}
                     className={`grid grid-cols-8 items-center text-center px-4 py-3 text-sm transition-all ${
@@ -285,7 +288,7 @@ const UserList = () => {
                         <>
                           <button
                             onClick={() => handleLock(user._id, user.isLocked)}
-                            className={`p-2 rounded-full transition ${
+                            className={`p-2 rounded-full cursor-pointer transition ${
                               user.isLocked
                                 ? 'bg-green-500 hover:bg-green-600'
                                 : 'bg-yellow-500 hover:bg-yellow-600'
@@ -301,7 +304,7 @@ const UserList = () => {
 
                           <button
                             onClick={() => handleDelete(user._id)}
-                            className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition"
+                            className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
                             title="Archive User"
                           >
                             <TrashIcon className="w-5 h-5" />
@@ -312,6 +315,18 @@ const UserList = () => {
                   </div>
                 ))}
               </div>
+
+              {/* See More / See Less Button */}
+              {filteredUsers.length > 10 && (
+                <div className="flex justify-center py-4 bg-white border-t">
+                  <button
+                    onClick={() => setShowAll((prev) => !prev)}
+                    className="px-4 py-2 bg-color text-white font-medium rounded-md hover:opacity-90 transition"
+                  >
+                    {showAll ? 'See Less' : 'See More'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

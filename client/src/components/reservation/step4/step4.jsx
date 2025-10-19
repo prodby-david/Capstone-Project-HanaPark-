@@ -17,7 +17,6 @@ const Step4 = ({
     <>
       <div className="flex flex-col gap-y-6 p-6 md:p-10 ">
 
-        {/* Header */}
         <div className="text-center">
           <h2 className="text-2xl font-bold text-color mb-1">Reservation Summary</h2>
           <p className="text-sm text-color-2">
@@ -25,10 +24,8 @@ const Step4 = ({
           </p>
         </div>
 
-        {/* Details Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-          {/* Spot Information */}
           <div className="flex flex-col gap-3 p-5 border border-gray-200 rounded-xl bg-gray-50 shadow-sm hover:shadow-md transition-all duration-300">
             <h3 className="text-lg font-semibold text-color">Spot Information</h3>
 
@@ -39,7 +36,6 @@ const Step4 = ({
             </div>
           </div>
 
-          {/* Date and Time */}
           <div className="flex flex-col gap-3 p-5 border border-gray-200 rounded-xl bg-gray-50 shadow-sm hover:shadow-md transition-all duration-300">
             <h3 className="text-lg font-semibold text-color">Date & Time</h3>
 
@@ -49,7 +45,6 @@ const Step4 = ({
             </div>
           </div>
 
-          {/* Vehicle Information */}
           <div className="flex flex-col gap-3 p-5 border border-gray-200 rounded-xl bg-gray-50 shadow-sm hover:shadow-md transition-all duration-300">
             <h3 className="text-lg font-semibold text-color">Vehicle Information</h3>
 
@@ -60,7 +55,6 @@ const Step4 = ({
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="flex justify-center items-center gap-x-6 mt-4">
           <BackButton onClick={prevStep} />
           <Submit onClick={submit} />

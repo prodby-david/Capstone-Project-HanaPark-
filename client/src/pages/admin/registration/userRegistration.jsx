@@ -155,7 +155,7 @@ const step1Validations = () => {
     }
 
     if (!emailRegex.test(formData.email)) {
-        toast.error("Invalid school email format", toastOptions);
+        toast.error("Invalid email format", toastOptions);
         return false;
     }
 

@@ -68,12 +68,25 @@ const SignIn = () => {
         setUserData({ username: "", password: "" });
       }
     } catch (err) {
-      if (err.response && err.response.data) {
+      const errorMessage =
+        err.response?.data?.message || "An unexpected error occurred.";
+
+      if (errorMessage.toLowerCase().includes("locked")) {
+        setPopup({
+          show: true,
+          type: "warning",
+          title: "Account Locked",
+          message: errorMessage,
+          onConfirm: () => setPopup({ ...popup, show: false }),
+        });
+      } else if (errorMessage.toLowerCase().includes("attempts")) {
+        toast.warn(errorMessage, toastOptions);
+      } else {
         setPopup({
           show: true,
           type: "error",
           title: "Sign in failed",
-          message: err.response.data.message || "An error occurred",
+          message: errorMessage,
           onConfirm: () => setPopup({ ...popup, show: false }),
         });
       }
@@ -85,6 +98,7 @@ const SignIn = () => {
   return (
     <>
       <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen">
+
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -117,6 +131,7 @@ const SignIn = () => {
             </div>
 
             <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
+              {/* Username */}
               <div className="relative">
                 <UserIcon className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                 <input
@@ -154,6 +169,7 @@ const SignIn = () => {
                 )}
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-medium py-2.5 rounded-md hover:from-blue-800 hover:to-blue-600 transition-all duration-300 shadow-md cursor-pointer"

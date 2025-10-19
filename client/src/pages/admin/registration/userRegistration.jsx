@@ -570,7 +570,9 @@ const handleChange = (e) => {
                     </div>
 
                     <div>
-                    <label className="text-sm font-semibold text-color-3">Model (Year)</label>
+                    <label className="text-sm font-semibold text-color-3">
+                        Model (Year)
+                    </label>
                     <select
                         name="model"
                         value={formData.model}

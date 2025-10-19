@@ -1,197 +1,209 @@
 import React, { useState, useEffect } from 'react';
 import { TrashIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid';
-import Swal from 'sweetalert2';
 import { api } from '../../lib/api';
 import AdminAPI from '../../lib/inteceptors/adminInterceptor';
 import SearchBar from '../../components/search/search';
 import AdminHeader from '../../components/headers/adminHeader';
 import Loader from '../../components/loaders/loader';
 import LockPopup from '../../components/popups/lockuser';
+import CustomPopup from '../../components/popups/popup';
 
 const UserList = () => {
   const [usersList, setUsersList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
-  const [popup, setPopup] = useState({
+  const [lockPopup, setLockPopup] = useState({
     show: false,
     userId: null,
     isLocked: false,
   });
 
+  const [popup, setPopup] = useState({
+    show: false,
+    type: '',
+    title: '',
+    message: '',
+    onConfirm: null,
+  });
+
   useEffect(() => {
     const fetchUsers = async () => {
-    setIsLoading(true);
-        try {
-          const endpoint = showArchived ? '/admin/users?archived=true' : '/admin/users';
-          const res = await api.get(endpoint);
-          setUsersList(res.data);
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+      setIsLoading(true);
+      try {
+        const endpoint = showArchived ? '/admin/users?archived=true' : '/admin/users';
+        const res = await api.get(endpoint);
+        setUsersList(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchUsers();
   }, [showArchived]);
 
   const filteredUsers = usersList
-  .filter((user) => {
-    if (showArchived) {
-      return user.status === 'Archived';
-    } else {
-      return user.status !== 'Archived';
-    }
-  })
-  .filter((user) => {
-    const query = searchQuery.toLowerCase();
-    const matchesUserFields =
-      user.lastname.toLowerCase().includes(query) ||
-      user.firstname.toLowerCase().includes(query) ||
-      String(user.studentId).toLowerCase().includes(query) ||
-      user.username.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query);
+    .filter((user) => (showArchived ? user.status === 'Archived' : user.status !== 'Archived'))
+    .filter((user) => {
+      const query = searchQuery.toLowerCase();
+      const matchesUserFields =
+        user.lastname.toLowerCase().includes(query) ||
+        user.firstname.toLowerCase().includes(query) ||
+        String(user.studentId).toLowerCase().includes(query) ||
+        user.username.toLowerCase().includes(query) ||
+        user.email.toLowerCase().includes(query);
 
-    const vehicle = user.vehicle;
-    const matchesVehicleFields =
-      vehicle &&
-      (vehicle.plateNumber?.toLowerCase().includes(query) ||
-        vehicle.brand?.toLowerCase().includes(query) ||
-        vehicle.model?.toLowerCase().includes(query) ||
-        vehicle.color?.toLowerCase().includes(query));
+      const vehicle = user.vehicle;
+      const matchesVehicleFields =
+        vehicle &&
+        (vehicle.plateNumber?.toLowerCase().includes(query) ||
+          vehicle.brand?.toLowerCase().includes(query) ||
+          vehicle.model?.toLowerCase().includes(query) ||
+          vehicle.color?.toLowerCase().includes(query));
 
-    return matchesUserFields || matchesVehicleFields;
-  });
+      return matchesUserFields || matchesVehicleFields;
+    });
 
+  // 🔒 Lock or Unlock User
   const handleLock = (id, currentStatus) => {
     if (currentStatus) {
-      Swal.fire({
+      // Unlock confirmation popup
+      setPopup({
+        show: true,
+        type: 'question',
         title: 'Unlock Account?',
-        text: 'Are you sure you want to unlock this user account?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#10b981',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, unlock it!',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
+        message: 'Are you sure you want to unlock this user account?',
+        onConfirm: async () => {
           try {
             const res = await AdminAPI.patch(`/admin/lock/${id}`, {
               isLocked: false,
               lockReason: '',
             });
-
             setUsersList((prev) =>
-              prev.map((u) =>
-                u._id === id ? { ...u, isLocked: false, lockReason: '' } : u
-              )
+              prev.map((u) => (u._id === id ? { ...u, isLocked: false, lockReason: '' } : u))
             );
-
-            Swal.fire({
-              title: res.data.message,
-              icon: 'success',
-              confirmButtonColor: '#10b981',
+            setPopup({
+              show: true,
+              type: 'success',
+              title: 'Account Unlocked',
+              message: res.data.message || 'User account has been unlocked successfully.',
+              onConfirm: () => setPopup({ show: false }),
             });
           } catch (err) {
             console.error(err);
-            Swal.fire({
+            setPopup({
+              show: true,
+              type: 'error',
               title: 'Error',
-              text: 'Failed to unlock user.',
-              icon: 'error',
+              message: 'Failed to unlock user.',
+              onConfirm: () => setPopup({ show: false }),
             });
           }
-        }
+        },
       });
     } else {
-      setPopup({ show: true, userId: id, isLocked: currentStatus });
+      // Show lock reason popup
+      setLockPopup({ show: true, userId: id, isLocked: currentStatus });
     }
   };
 
   const confirmLockAction = async (reason) => {
     try {
-      const res = await AdminAPI.patch(`/admin/lock/${popup.userId}`, {
-        isLocked: !popup.isLocked,
+      const res = await AdminAPI.patch(`/admin/lock/${lockPopup.userId}`, {
+        isLocked: !lockPopup.isLocked,
         lockReason: reason || '',
       });
 
       setUsersList((prev) =>
         prev.map((u) =>
-          u._id === popup.userId ? { ...u, isLocked: !popup.isLocked } : u
+          u._id === lockPopup.userId ? { ...u, isLocked: !lockPopup.isLocked } : u
         )
       );
 
-      setPopup({ show: false, userId: null, isLocked: false });
+      setLockPopup({ show: false, userId: null, isLocked: false });
+      setPopup({
+        show: true,
+        type: 'success',
+        title: 'User Locked',
+        message: 'User account has been locked successfully.',
+        onConfirm: () => setPopup({ show: false }),
+      });
     } catch (err) {
       console.error(err);
-      alert('Failed to update lock status.');
+      setPopup({
+        show: true,
+        type: 'error',
+        title: 'Error',
+        message: 'Failed to update lock status.',
+        onConfirm: () => setPopup({ show: false }),
+      });
     }
   };
 
-  const handleDelete = async (id) => {
-    Swal.fire({
+  // 🗑️ Archive User
+  const handleDelete = (id) => {
+    setPopup({
+      show: true,
+      type: 'warning',
       title: 'Archive this user?',
-      text: "This action cannot be undone.",
-      icon: 'warning',
-      confirmButtonColor: '#ef4444',
-      confirmButtonText: 'Yes, archive it!',
-      showCancelButton: true,
-      cancelButtonColor: '#6b7280',
-      cancelButtonText: 'Cancel',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+      message: 'This action cannot be undone.',
+      onConfirm: async () => {
         try {
           const res = await AdminAPI.patch(`/admin/archive/${id}`);
-          Swal.fire({
-            title: 'User Archived',
-            text: 'User archived successfully.',
-            icon: 'success',
-            confirmButtonColor: '#10b981',
-          });
           setUsersList(res.data);
+          setPopup({
+            show: true,
+            type: 'success',
+            title: 'User Archived',
+            message: 'User archived successfully.',
+            onConfirm: () => setPopup({ show: false }),
+          });
         } catch (err) {
           console.error('Delete error:', err);
-          Swal.fire({
+          setPopup({
+            show: true,
+            type: 'error',
             title: 'Error',
-            text: 'Failed to archive user.',
-            icon: 'error',
+            message: 'Failed to archive user.',
+            onConfirm: () => setPopup({ show: false }),
           });
         }
-      }
+      },
     });
   };
 
-  const handleUnarchive = async (id) => {
-  Swal.fire({
-    title: 'Unarchive this user?',
-    text: "This will restore the user to active status.",
-    icon: 'question',
-    confirmButtonColor: '#10b981',
-    confirmButtonText: 'Yes, unarchive it!',
-    showCancelButton: true,
-    cancelButtonColor: '#6b7280',
-    cancelButtonText: 'Cancel',
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const res = await AdminAPI.patch(`/admin/unarchive/${id}`);
-        Swal.fire({
-          title: 'User Unarchived',
-          text: 'User has been restored successfully.',
-          icon: 'success',
-          confirmButtonColor: '#10b981',
-        });
-        setUsersList(res.data);
-      } catch (err) {
-        console.error('Unarchive error:', err);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to unarchive user.',
-          icon: 'error',
-        });
-      }
-    }
-  });
-};
+  // ♻️ Unarchive User
+  const handleUnarchive = (id) => {
+    setPopup({
+      show: true,
+      type: 'question',
+      title: 'Unarchive this user?',
+      message: 'This will restore the user to active status.',
+      onConfirm: async () => {
+        try {
+          const res = await AdminAPI.patch(`/admin/unarchive/${id}`);
+          setUsersList(res.data);
+          setPopup({
+            show: true,
+            type: 'success',
+            title: 'User Unarchived',
+            message: 'User has been restored successfully.',
+            onConfirm: () => setPopup({ show: false }),
+          });
+        } catch (err) {
+          console.error('Unarchive error:', err);
+          setPopup({
+            show: true,
+            type: 'error',
+            title: 'Error',
+            message: 'Failed to unarchive user.',
+            onConfirm: () => setPopup({ show: false }),
+          });
+        }
+      },
+    });
+  };
 
   return (
     <>
@@ -199,16 +211,16 @@ const UserList = () => {
 
       <div className="flex flex-col items-center mt-10 px-4 sm:px-6 ">
         <h2 className="text-2xl font-bold text-color mb-6">User Management</h2>
-        
-        <div className='flex items-center justify-between w-full'>
-           <button
+
+        <div className="flex items-center justify-between w-full">
+          <button
             onClick={() => setShowArchived((prev) => !prev)}
             className={`px-4 py-2 rounded-md text-white cursor-pointer font-medium ${
               showArchived ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
             }`}
-            >
-              {showArchived ? 'Show Active Users' : 'Show Archived Users'}
-            </button>
+          >
+            {showArchived ? 'Show Active Users' : 'Show Archived Users'}
+          </button>
 
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
         </div>
@@ -262,44 +274,41 @@ const UserList = () => {
                     </p>
 
                     <div className="flex justify-center gap-2">
-                        {showArchived ? (
+                      {showArchived ? (
+                        <button
+                          onClick={() => handleUnarchive(user._id)}
+                          className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
+                        >
+                          Unarchive
+                        </button>
+                      ) : (
+                        <>
                           <button
-                            onClick={() => handleUnarchive(user._id)}
-                            className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
-                            title="Unarchive User"
+                            onClick={() => handleLock(user._id, user.isLocked)}
+                            className={`p-2 rounded-full transition ${
+                              user.isLocked
+                                ? 'bg-green-500 hover:bg-green-600'
+                                : 'bg-yellow-500 hover:bg-yellow-600'
+                            } text-white`}
+                            title={user.isLocked ? 'Unlock User' : 'Lock User'}
                           >
-                            Unarchive
+                            {user.isLocked ? (
+                              <LockOpenIcon className="w-5 h-5" />
+                            ) : (
+                              <LockClosedIcon className="w-5 h-5" />
+                            )}
                           </button>
-                        ) : (
-                          // Show lock & archive buttons for active users
-                          <>
-                            <button
-                              onClick={() => handleLock(user._id, user.isLocked)}
-                              className={`p-2 rounded-full cursor-pointer transition ${
-                                user.isLocked
-                                  ? 'bg-green-500 hover:bg-green-600'
-                                  : 'bg-yellow-500 hover:bg-yellow-600'
-                              } text-white`}
-                              title={user.isLocked ? 'Unlock User' : 'Lock User'}
-                            >
-                              {user.isLocked ? (
-                                <LockOpenIcon className="w-5 h-5" />
-                              ) : (
-                                <LockClosedIcon className="w-5 h-5" />
-                              )}
-                            </button>
 
-                            <button
-                              onClick={() => handleDelete(user._id)}
-                              className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
-                              title="Archive User"
-                            >
-                              <TrashIcon className="w-5 h-5" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-
+                          <button
+                            onClick={() => handleDelete(user._id)}
+                            className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition"
+                            title="Archive User"
+                          >
+                            <TrashIcon className="w-5 h-5" />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -308,13 +317,21 @@ const UserList = () => {
         )}
       </div>
 
+      {/* ✅ Popups */}
       <LockPopup
-        show={popup.show}
-        isLocked={popup.isLocked}
-        onClose={() =>
-          setPopup({ show: false, userId: null, isLocked: false })
-        }
+        show={lockPopup.show}
+        isLocked={lockPopup.isLocked}
+        onClose={() => setLockPopup({ show: false, userId: null, isLocked: false })}
         onConfirm={confirmLockAction}
+      />
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onConfirm={popup.onConfirm}
+        onClose={() => setPopup({ show: false })}
       />
     </>
   );

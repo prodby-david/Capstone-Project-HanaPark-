@@ -20,9 +20,7 @@ const studentSignInController = async (req, res) => {
 
     if (user.isLocked && user.lockUntil && user.lockUntil > Date.now()) {
       const remaining = Math.ceil((user.lockUntil - Date.now()) / 60000);
-      return res
-        .status(403)
-        .json({ message: `Account locked. Try again in ${remaining} minutes.` });
+      return res.status(403).json({ message: `Account locked. Try again in ${remaining} minutes.` });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);

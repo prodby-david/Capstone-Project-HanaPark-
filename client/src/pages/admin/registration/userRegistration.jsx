@@ -626,7 +626,9 @@ const handleChange = (e) => {
                         
                         <div className='flex flex-col items-start w-full'>
 
-                            <label htmlFor='Model' className="font-semibold text-sm text-color-3">Model (Year)</label>
+                            <label htmlFor='Model' className="font-semibold text-sm text-color-3">
+                                Model (Year)
+                            </label>
                             <select
                             name="model"
                             id='Model'
@@ -687,20 +689,27 @@ const handleChange = (e) => {
 
                             </div>
                          
-                            <div className='flex flex-col w-full'>
+                            <div className='flex flex-col items-start w-full'>
 
-                                <label htmlFor="Color"
-                                className='text-start text-color-3 text-sm font-semibold'>
-                                    Vehicle Color
-                                </label>
-
-                                <input type="text"
-                                name='color'
+                                <label htmlFor='Color' className="font-semibold text-color-3">Color</label>
+                                <select
+                                name="color"
                                 id='Color'
+                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
                                 value={formData.color}
                                 onChange={handleChange}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                />
+                                >
+                                <option value="">Select Color</option>
+                                <option value="Black">Black</option>
+                                <option value="White">White</option>
+                                <option value="Gray">Gray</option>
+                                <option value="Red">Red</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Silver">Silver</option>
+                                <option value="Green">Green</option>
+                                <option value="Yellow">Yellow</option>
+                                <option value="Other">Other</option>
+                                </select>
 
                             </div>
                             

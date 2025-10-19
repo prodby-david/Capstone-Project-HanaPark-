@@ -3,25 +3,28 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const MAX_ATTEMPTS = 5;
-const LOCK_TIME = 15 * 60 * 1000; 
+const LOCK_TIME = 15 * 60 * 1000; // 15 minutes
 
 const studentSignInController = async (req, res) => {
   try {
     const { username, password } = req.body;
-
     const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).json({ message: "Username not found. Try again." });
     }
 
+    // If account is still locked
     if (user.isLocked && user.lockUntil && user.lockUntil > Date.now()) {
       const remaining = Math.ceil((user.lockUntil - Date.now()) / 60000);
-      return res.status(403).json({ message: `Account locked. Try again in ${remaining} minutes.` });
+      return res
+        .status(403)
+        .json({ message: `Account locked. Try again in ${remaining} minutes.` });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 
+    // Wrong password
     if (!isPasswordMatch) {
       user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
 
@@ -44,6 +47,7 @@ const studentSignInController = async (req, res) => {
       });
     }
 
+    // Reset attempts after successful login
     user.failedLoginAttempts = 0;
     user.isLocked = false;
     user.lockUntil = null;
@@ -88,6 +92,7 @@ const studentSignInController = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -212,7 +212,6 @@ const UserList = () => {
             </p>
         </div>
         
-
         <div className="flex items-center justify-between w-full">
           <button
             onClick={() => setShowArchived((prev) => !prev)}
@@ -233,7 +232,6 @@ const UserList = () => {
         ) : (
           <div className="w-full max-w-6xl overflow-x-auto mt-6">
             <div className="min-w-[700px] bg-white shadow-md rounded-2xl overflow-hidden">
-              {/* Header */}
               <div className="grid grid-cols-8 gap-3 bg-color text-white p-4 font-semibold text-center text-sm rounded-t-2xl">
                 <p>User Type</p>
                 <p>Lastname</p>
@@ -245,7 +243,6 @@ const UserList = () => {
                 <p>Actions</p>
               </div>
 
-              {/* Scrollable Data Container */}
               <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
                 {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
                   <div
@@ -316,7 +313,6 @@ const UserList = () => {
                 ))}
               </div>
 
-              {/* See More / See Less Button */}
               {filteredUsers.length > 10 && (
                 <div className="flex justify-center py-4 bg-white border-t">
                   <button
@@ -327,6 +323,18 @@ const UserList = () => {
                   </button>
                 </div>
               )}
+
+              <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-700">
+                <div className="flex items-center gap-2">
+                  <span className="w-4 h-4 bg-red-100 border border-red-400 rounded"></span>
+                  <span>Locked Account</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-4 h-4 bg-white border border-gray-300 rounded"></span>
+                  <span>Unlocked Account</span>
+                </div>
+              </div>
+
             </div>
           </div>
         )}

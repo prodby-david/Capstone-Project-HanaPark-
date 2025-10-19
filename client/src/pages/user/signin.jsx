@@ -89,6 +89,7 @@ const SignIn = () => {
           message: errorMessage,
           onConfirm: () => setPopup({ ...popup, show: false }),
         });
+        setUserData({ username: "", password: "" });
       } else if (errorMessage.toLowerCase().includes("attempt")) {
         setPopup({
           show: true,
@@ -97,6 +98,7 @@ const SignIn = () => {
           message: errorMessage,
           onConfirm: () => setPopup({ ...popup, show: false }),
         });
+        setUserData({ username: "", password: "" });
       } else {
         setPopup({
           show: true,
@@ -105,6 +107,7 @@ const SignIn = () => {
           message: errorMessage,
           onConfirm: () => setPopup({ ...popup, show: false }),
         });
+        setUserData({ username: "", password: "" });
       }
     } finally {
       setIsLoading(false);

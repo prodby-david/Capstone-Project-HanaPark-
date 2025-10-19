@@ -8,7 +8,7 @@ import toastOptions from '../../lib/toastConfig';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { socket } from '../../lib/socket';
 import Loader from '../../components/loaders/loader';
-import CustomPopup from '../../components/popups/CustomPopup'; // ✅ Import your custom popup
+import CustomPopup from '../../components/popups/popup';
 
 const UserReservationLists = () => {
   const [reservations, setReservations] = useState([]);

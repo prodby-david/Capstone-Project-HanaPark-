@@ -321,494 +321,223 @@ const handleChange = (e) => {
     }
   }
 
-  return (
-    <>
-        <AdminHeader />
-        <div className='flex flex-col items-center justify-center mt-2 px-5'>
-
-            <div className='flex flex-col border border-gray-300 rounded-lg px-6 py-4 shadow-lg bg-white w-full max-w-xl text-center'>
-
-                <div className='mb-5'>
-                    <h2 className='font-bold text-color text-xl'>HanaPark Parking Registration</h2>
-                </div>
-
-                <form>
-                {step === 1 && (
-                    <div>
-
-                        <div className='flex items-center mb-5'>
-                            <h2 className='text-color-3'>
-                                <span className='font-bold text-color'>Step 1:</span> User Information
-                            </h2>
-                        </div>
-
-                        <div className='flex flex-col gap-2'>
-
-                            <div className='flex flex-col w-full'>
-
-                                    <label htmlFor="UserType"
-                                    className='text-start text-color-3 text-sm font-semibold'>User Type</label>
-                                    
-                                   <select 
-                                   className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                   name="userType" 
-                                   id="UserType"
-                                   value={formData.userType}
-                                   onChange={handleChange}>
-                                    <option value="">Select User Type</option>
-                                    <option value="Student">Student</option>
-                                    <option value="Staff">Staff</option>
-                                   </select>
-
-                                </div>
-
-                            <div className='flex flex-col md:flex-row gap-x-3'>
-                                
-
-                                <div className='flex flex-col w-full'>
-
-                                    <label htmlFor="Lastname"
-                                    className='text-start text-color-3 text-sm font-semibold'>Lastname</label>
-                                    
-                                    <input type="text"
-                                    name="lastname"
-                                    id="Lastname"
-                                    placeholder='e.g. Dela Cruz' 
-                                    onChange={handleChange}
-                                    value={formData.lastname}
-                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                    />  
-
-                                </div>
-
-                                <div className='flex flex-col w-full'>
-
-                                    <label htmlFor="Firstname"
-                                    className='text-start text-color-3 text-sm font-semibold'>Firstname</label>
-
-                                    <input type="text"
-                                    name="firstname"
-                                    id="Firstname"
-                                    placeholder='e.g. Juan'
-                                    onChange={handleChange}
-                                    value={formData.firstname}
-                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                    />  
-                                </div>
-                                
-                            </div>
-
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="Firstname"
-                                className='text-start text-color-3 text-sm font-semibold'>Middlename (Optional)</label>
-
-                                <input type="text"
-                                name="middlename"
-                                id="Middlename"
-                                onChange={handleChange}
-                                value={formData.middlename}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                />  
-
-                            </div>
-                           
-                        </div>
-
-                        <div className='flex flex-col md:flex-row gap-3 mt-2'>
-
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="StudentId"
-                                className='text-start text-color-3 text-sm font-semibold'>User ID
-                                </label>
-
-                                <input type="text"
-                                name="studentId"
-                                id="StudentId"
-                                placeholder='e.g. 02000123456'
-                                maxLength={11}
-                                inputMode="numeric"
-                                pattern="[0-9]*"
-                                onChange={handleChange}
-                                value={formData.studentId}
-                                onInput={(e) => {
-                                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                                }}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                />
-
-                            </div>
-                           
-                            <div className='flex flex-col w-full'>
-                            
-                                <label htmlFor="Username"
-                                className='text-start text-color-3 text-sm font-semibold'>Username
-                                </label>
-
-                                <input
-                                type="text"
-                                name="username"
-                                id="Username"
-                                value={formData.username}
-                                readOnly
-                                className="w-full p-2 border text-gray-500 rounded text-sm cursor-not-allowed"
-                                />
- 
-                            </div>
-        
-                        </div>
-
-                        <div className='flex flex-col md:flex-row gap-3 mt-2'>
-                            
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="Password"
-                                className='text-start text-color-3 text-sm font-semibold'>Password
-                                </label>
-                                
-                                <div className='relative'>
-
-                                    <input type={showPassword ? 'text' : 'password'}
-                                    name='password'
-                                    id='Password'
-                                    onChange={handleChange}
-                                    value={formData.password}
-                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                    />
-
-                                    {showPassword ? (
-                                        <EyeIcon
-                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
-                                        onClick={togglePassword}
-                                        />
-                                    ) : (
-                                        <EyeSlashIcon
-                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
-                                        onClick={togglePassword}
-                                        />
-                                    )}
-
-                                </div>
-                                
-
-                            </div>
-                            
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="ConfirmPassword"
-                                className='text-start text-color-3 text-sm font-semibold'>Confirm Password
-                                </label>
-                                
-                                <div className='relative'>
-                                    <input type={showConfirmPassword ? 'text' : 'password'}
-                                    name='confirmPassword'
-                                    id='ConfirmPassword'
-                                    onChange={handleChange}
-                                    value={formData.confirmPassword}
-                                    className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                    />
-
-                                    {showConfirmPassword ? (
-                                        <EyeIcon
-                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
-                                        onClick={toggleConfirmPassword}
-                                        />
-                                    ) : (
-                                        <EyeSlashIcon
-                                        className='absolute right-3 top-3 w-5 h-5 text-color-2 cursor-pointer'
-                                        onClick={toggleConfirmPassword}
-                                        />
-                                    )}
-
-                                </div>
-                               
-                            </div>
-                           
-                        </div>
-
-                        <div className='flex flex-col gap-3 mt-1'>
-
-                            <div className='flex flex-col w-full'>
-                                
-                                <label htmlFor="Email"
-                                className='text-start text-color-3 text-sm font-semibold'>Email Address
-                                </label>
-                                
-                                <input type="email"
-                                name='email'
-                                id='Email'
-                                placeholder='e.g. johndoe123@gmail.com'
-                                onChange={handleChange}
-                                value={formData.email}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'  
-                                />
-
-                            </div>
-                            
-                        </div>
-
-                        <div className='mt-3 flex justify-end'>
-                            <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                            onClick={nextStep}
-                            type='button'>
-                                Next
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {step === 2 && (
-                    <div>
-
-                        <div className='flex items-center mb-5'>
-                            <h2 className='text-color-3'>
-                                <span className='font-bold text-color'>Step 2:</span> Student Vehicle Information
-                            </h2>
-                        </div>
-
-                        <div className='flex flex-col w-full'>
-
-                            <label htmlFor="Type"
-                             className='text-start text-color-3 text-sm font-semibold'>Vehicle Type
-                             </label>
-
-                            <select 
-                            name="vehicleType"
-                            id="Type"
-                            value={formData.vehicleType}
-                            onChange={handleChange}
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
-                            >
-                            <option value="" disabled>
-                                Vehicle Type
-                            </option>
-
-                            <option value="Small Motorcycle">Small Motorcycle</option>
-                            <option value="Bigbike Motorcycle">Bigbike Motorcycle</option>
-                            <option value="Sedan">Sedan</option>
-                            <option value="Hatchback">Hatchback</option>
-                            <option value="SUV">SUV</option>
-                            <option value="Pickup">Pickup</option>
-                            <option value="MPV">MPV</option>
-                            <option value="Van">Van</option>
-
-                        </select>
-                    </div>
-
-                        <div className='flex gap-3 mt-3'>
-
-                        <div className='flex flex-col w-full'>
-
-                            <label htmlFor="Brand" 
-                            className='text-start text-color-3 text-sm font-semibold'>
-                                Brand
-                            </label>
-
-                            <select
-                                name="brand"
-                                id="Brand"
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2 cursor-pointer'
-                                value={formData.brand}
-                                onChange={handleChange}
-                            >
-                               <option value="" disabled>
-                                    {filteredBrands.length === 0 ? "Select vehicle type first" : "Select Brand"}
-                                </option>
-
-                                {filteredBrands.map((brand) => (
-                                    <option key={brand} value={brand}>
-                                    {brand}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        
-                        <div className='flex flex-col items-start w-full'>
-
-                            <label htmlFor='Model' className="font-semibold text-sm text-color-3">
-                                Model (Year)
-                            </label>
-                            <select
-                            name="model"
-                            id='Model'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
-                            value={formData.model}
-                            onChange={handleChange}
-                            >
-                            <option value="">Select Year</option>
-                            {Array.from({ length: 47 }, (_, i) => 1980 + i).map((year) => (
-                                <option key={year} value={year}>
-                                {year}
-                                </option>
-                            ))}
-                            </select>
-
-                        </div>
-                            
-
-                        </div>
-
-                        <div className='flex flex-col mt-3'>
-
-                            <label htmlFor="Platenumber"
-                            className='text-start text-color-3 text-sm font-semibold'>
-                                Plate Number or MV File
-                            </label>
-
-                            <input type="text"
-                            name='plateNumber'
-                            id='Platenumber'
-                            value={formData.plateNumber}
-                            onChange={handleChange}
-                            placeholder='e.g 123ABC or 1234-00000012345'
-                            className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' />
-
-                        </div>
-
-                        <div className='flex gap-x-3 mt-3'>
-
-                            <div className='flex flex-col w-full'>
-
-                                <label htmlFor="Transmission"
-                                className='text-start text-color-3 text-sm font-semibold'>
-                                    Transmission (Optional)
-                                </label>
-
-                                <select 
-                                name="transmission" 
-                                id="Transmission"
-                                value={formData.transmission}
-                                onChange={handleChange}
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2'
-                                >
-                                    <option value="" disabled></option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Automatic">Automatic</option>
-                                </select>
-
-                            </div>
-                         
-                            <div className='flex flex-col items-start w-full'>
-
-                                <label htmlFor='Color' className="font-semibold text-sm text-color-3">Color</label>
-                                <select
-                                name="color"
-                                id='Color'
-                                className='w-full p-2 border focus:border-color-3 rounded focus:outline-none text-sm text-color-2' 
-                                value={formData.color}
-                                onChange={handleChange}
-                                >
-                                <option value="">Select Color</option>
-                                <option value="Black">Black</option>
-                                <option value="White">White</option>
-                                <option value="Gray">Gray</option>
-                                <option value="Red">Red</option>
-                                <option value="Blue">Blue</option>
-                                <option value="Silver">Silver</option>
-                                <option value="Green">Green</option>
-                                <option value="Yellow">Yellow</option>
-                                <option value="Other">Other</option>
-                                </select>
-
-                            </div>
-                            
-
-                        </div>
-
-                        <div className='text-center mt-3'>
-                            <h2 className='text-xs text-color-3'><span className='text-color font-semibold'>NOTE:</span> The Plate Number or MV File should be unique.</h2>
-                        </div>
-
-                        <div className='flex gap-x-5 justify-end'>
-
-                            <div className='mt-3'>
-                                <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                                onClick={prevStep}>
-                                    Previous
-                                </button>
-                            </div>
-
-                            <div className='mt-3'>
-                                <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                                onClick={nextStep} type='button'>
-                                    Next
-                                </button>
-                            </div>
-                        </div>
-                       
-                    </div>
-                )}
-
-                {step == 3 && (
-                    <div>
-                        <div className='mb-3'>
-                            <h2 className='font-bold text-color-3 text-[28px]'> Data Preview</h2>
-                        </div>
-
-                        <div className='text-left text-color-3'>
-
-                       
-                        <h2 className='text-color-3 mb-1 text-lg'>
-                            <span className='font-bold text-color'>Step 1:</span> Student Information
-                        </h2>
-
-                            <p><strong>User Type:</strong> {formData.userType}</p>
-                            <p><strong>Last Name:</strong> {formData.lastname}</p>
-                            <p><strong>First Name:</strong> {formData.firstname}</p>
-                            <p><strong>Middle Name (Optional):</strong> {formData.middlename}</p>
-                            <p><strong>Student ID:</strong> {formData.studentId}</p>
-                            <p><strong>Username:</strong> {formData.username}</p>
-                            <p><strong>School Email:</strong> {formData.email}</p>
-    
-                            <div className='w-full h-px bg-color-3 my-2'>
-                                
-                            </div>
-
-                            <h2 className='text-color-3 mb-1 text-lg'>
-                                <span className='font-bold text-color'>Step 2:</span> Student Vehicle Information
-                            </h2>
-
-                            <p><strong>Vehicle Type:</strong> {formData.vehicleType}</p>
-                            <p><strong>Vehicle Brand:</strong> {formData.brand}</p>
-                            <p><strong>Vehicle Model:</strong> {formData.model}</p>
-                            <p><strong>Plate Number:</strong> {formData.plateNumber}</p>
-                            <p><strong>Transmission (Optional): </strong> {formData.transmission}</p>
-                            <p><strong>Color:</strong> {formData.color}</p>
-                        </div>
-
-                        <div className='mt-3 flex justify-end gap-x-3'>
-
-                            <button className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300'
-                            onClick={prevStep}>
-                                Edit
-                            </button>
-
-                            <button type='button' className='text-sm text-white p-3 bg-color-3 w-[90px] cursor-pointer transition hover:opacity-75 duration-300' onClick={handleSubmit}>
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                </form>
-
-            </div>
+ return (
+  <>
+    <AdminHeader />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-5 py-10">
+      <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8 border border-gray-200 transition-all duration-300 hover:shadow-2xl">
+        {/* Header */}
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl font-bold text-color">HanaPark Parking Registration</h2>
+          <p className="text-sm text-gray-500 mt-1">
+            Complete the steps below to register a new user and vehicle.
+          </p>
         </div>
 
-        {loading && <Loader />}
+        {/* Step Indicator */}
+        <div className="flex items-center justify-center mb-6 space-x-2">
+          {[1, 2, 3].map((num) => (
+            <div
+              key={num}
+              className={`w-8 h-8 flex items-center justify-center rounded-full font-semibold text-sm ${
+                step >= num
+                  ? "bg-color-3 text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {num}
+            </div>
+          ))}
+        </div>
 
-        <CustomPopup
-            show={popup.show}
-            type={popup.type}
-            title={popup.title}
-            message={popup.message}
-            onConfirm={popup.onConfirm}
-            onClose={() => setPopup(prev => ({ ...prev, show: false }))}
-        />
-    </>
-  )
+        <form>
+          {/* STEP 1 */}
+          {step === 1 && (
+            <div className="animate-fade-in">
+              <h3 className="font-semibold text-lg text-color-3 mb-4">
+                Step 1: <span className="text-color font-bold">User Information</span>
+              </h3>
+
+              <div className="space-y-3">
+                {/* User Type */}
+                <div>
+                  <label className="text-sm font-semibold text-color-3">User Type</label>
+                  <select
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                  >
+                    <option value="">Select User Type</option>
+                    <option value="Student">Student</option>
+                    <option value="Staff">Staff</option>
+                  </select>
+                </div>
+
+                {/* Name Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-semibold text-color-3">Lastname</label>
+                    <input
+                      type="text"
+                      name="lastname"
+                      placeholder="e.g. Dela Cruz"
+                      value={formData.lastname}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-color-3">Firstname</label>
+                    <input
+                      type="text"
+                      name="firstname"
+                      placeholder="e.g. Juan"
+                      value={formData.firstname}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    />
+                  </div>
+                </div>
+
+                {/* Middlename */}
+                <div>
+                  <label className="text-sm font-semibold text-color-3">
+                    Middlename (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="middlename"
+                    value={formData.middlename}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                  />
+                </div>
+
+                {/* Student ID + Username */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-semibold text-color-3">User ID</label>
+                    <input
+                      type="text"
+                      name="studentId"
+                      placeholder="e.g. 02000123456"
+                      maxLength={11}
+                      inputMode="numeric"
+                      value={formData.studentId}
+                      onChange={handleChange}
+                      onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
+                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-semibold text-color-3">Username</label>
+                    <input
+                      type="text"
+                      name="username"
+                      readOnly
+                      value={formData.username}
+                      className="w-full p-2 border rounded-lg text-gray-500 bg-gray-50 cursor-not-allowed text-sm"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="relative">
+                    <label className="text-sm font-semibold text-color-3">Password</label>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    />
+                    {showPassword ? (
+                      <EyeIcon
+                        className="absolute right-3 top-8 w-5 h-5 text-color-2 cursor-pointer"
+                        onClick={togglePassword}
+                      />
+                    ) : (
+                      <EyeSlashIcon
+                        className="absolute right-3 top-8 w-5 h-5 text-color-2 cursor-pointer"
+                        onClick={togglePassword}
+                      />
+                    )}
+                  </div>
+
+                  <div className="relative">
+                    <label className="text-sm font-semibold text-color-3">
+                      Confirm Password
+                    </label>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                    />
+                    {showConfirmPassword ? (
+                      <EyeIcon
+                        className="absolute right-3 top-8 w-5 h-5 text-color-2 cursor-pointer"
+                        onClick={toggleConfirmPassword}
+                      />
+                    ) : (
+                      <EyeSlashIcon
+                        className="absolute right-3 top-8 w-5 h-5 text-color-2 cursor-pointer"
+                        onClick={toggleConfirmPassword}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="text-sm font-semibold text-color-3">Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="e.g. johndoe123@gmail.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded-lg focus:border-color-3 focus:ring-1 focus:ring-color-3 outline-none text-sm text-color-2"
+                  />
+                </div>
+
+                {/* Next Button */}
+                <div className="flex justify-end mt-5">
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="px-6 py-2 text-sm text-white bg-color-3 rounded-lg shadow-md hover:opacity-90 transition duration-300"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2 & STEP 3 remain same logic */}
+          {/* You can wrap them in similar modern style using rounded-lg, spacing, and hover transitions */}
+        </form>
+      </div>
+    </div>
+
+    {loading && <Loader />}
+
+    <CustomPopup
+      show={popup.show}
+      type={popup.type}
+      title={popup.title}
+      message={popup.message}
+      onConfirm={popup.onConfirm}
+      onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+    />
+  </>
+);
+
 }
 
 export default UserRegistration;

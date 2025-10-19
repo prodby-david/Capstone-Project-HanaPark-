@@ -204,7 +204,7 @@ const UserList = () => {
   <>
     <AdminHeader />
 
-    <div className="flex flex-col items-center mt-10 px-4 sm:px-6">
+    <div className="flex flex-col items-center my-10 px-4 sm:px-6">
 
       <div className="text-center mb-5">
         <h2 className="text-2xl font-bold text-color">User Management</h2>
@@ -263,7 +263,7 @@ const UserList = () => {
               <p>Actions</p>
             </div>
 
-            <div className="max-h-[450px] overflow-y-auto mt-5 divide-y divide-gray-100">
+            <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
               {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
                 <div
                   key={user._id}

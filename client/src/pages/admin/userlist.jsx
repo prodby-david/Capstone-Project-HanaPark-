@@ -213,11 +213,10 @@ const UserList = () => {
         </p>
       </div>
 
-      {/* Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-4">
         <button
           onClick={() => setShowArchived((prev) => !prev)}
-          className={`px-4 py-2 rounded-md text-white cursor-pointer font-medium transition ${
+          className={`px-4 py-2 rounded-md text-white cursor-pointer font-semibold text-sm transition ${
             showArchived
               ? 'bg-green-600 hover:bg-green-700'
               : 'bg-blue-600 hover:bg-blue-700'
@@ -227,10 +226,9 @@ const UserList = () => {
         </button>
 
         <div className="flex flex-col sm:items-end w-full sm:w-auto">
-          {/* Search Bar */}
+
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
-          {/* Legend — only show when not archived */}
           {!showArchived && (
             <div className="flex justify-end items-center gap-4 mt-2 text-xs text-gray-700">
               <h2 className="font-semibold text-color-3">Legend:</h2>
@@ -247,7 +245,6 @@ const UserList = () => {
         </div>
       </div>
 
-      {/* Table */}
       {isLoading ? (
         <div className="flex justify-center items-center h-40">
           <Loader />
@@ -351,7 +348,6 @@ const UserList = () => {
       )}
     </div>
 
-    {/* Popups */}
     <LockPopup
       show={lockPopup.show}
       isLocked={lockPopup.isLocked}

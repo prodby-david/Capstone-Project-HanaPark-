@@ -326,7 +326,7 @@ const UserList = () => {
             </div>
 
              <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-700">
-              <h2>Legends</h2>
+              <h2 className='font-semibold text-color-3'>Legends:</h2>
                 <div className="flex items-center gap-2">
                   <span className="w-4 h-4 bg-red-100 border border-red-400 rounded"></span>
                   <span>Locked Account</span>

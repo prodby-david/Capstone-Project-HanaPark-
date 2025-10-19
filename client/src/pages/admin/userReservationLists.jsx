@@ -362,18 +362,22 @@ const UserReservationLists = () => {
         onClose={closePopup}
         onConfirm={
           popup.onConfirm
-            ? async () => {
+            ? () => {
                 setIsLoading(true);
-                try {
-                  await popup.onConfirm();
-                } finally {
-                  setIsLoading(false);
-                  closePopup();
-                }
+                // delay execution so loader renders
+                setTimeout(async () => {
+                  try {
+                    await popup.onConfirm();
+                  } finally {
+                    setIsLoading(false);
+                    closePopup();
+                  }
+                }, 50);
               }
             : closePopup
         }
       />
+
 
       {isLoading && <Loader />}
     </>

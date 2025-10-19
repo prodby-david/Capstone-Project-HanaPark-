@@ -14,6 +14,14 @@ const studentSignInController = async (req,res) => {
             return res.status(404).json({message: "Username not found. Try again."});
         }
 
+        if (user.isLocked) {
+        return res.status(403).json({
+            message: `Your account is temporarily locked.${
+            user.lockReason ? ' Reason: ' + user.lockReason : ''
+            }`,
+        });
+        }
+
         const isPaswordMatch = await bcrypt.compare(password, user.password);
         if(!isPaswordMatch){
             return res.status(401).json({message: "Password is incorrect. Please try again."});

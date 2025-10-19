@@ -51,6 +51,46 @@ const UserList = () => {
       return matchesUserFields || matchesVehicleFields;
     });
 
+    const handleLock = async (id, currentStatus) => {
+    const action = currentStatus ? "unlock" : "lock";
+    const confirm = await Swal.fire({
+      title: `Are you sure you want to ${action} this account?`,
+      input: !currentStatus ? 'text' : null,
+      inputLabel: !currentStatus ? 'Reason for lock (optional)' : '',
+      showCancelButton: true,
+      confirmButtonColor: '#00509e',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Yes, ${action} it!`,
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const res = await AdminAPI.patch(`/admin/lock/${id}`, {
+          isLocked: !currentStatus,
+          lockReason: confirm.value || '',
+        });
+
+        Swal.fire({
+          title: res.data.message,
+          icon: 'success',
+          confirmButtonColor: '#00509e',
+        });
+
+        setUsersList((prev) =>
+          prev.map((u) => (u._id === id ? { ...u, isLocked: !currentStatus } : u))
+        );
+      } catch (err) {
+        console.error(err);
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to update lock status.',
+          icon: 'error',
+        });
+      }
+    }
+  };
+
+
   const handleDelete = async (id) => {
     Swal.fire({
       title: 'Are you sure you want to archive this user?',
@@ -120,8 +160,11 @@ const UserList = () => {
                   {filteredUsers.map((user) => (
                     <div
                       key={user._id}
-                      className="grid grid-cols-8 gap-4 items-center bg-white text-color-2 my-2 p-3 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold"
+                      className={`grid grid-cols-8 gap-4 items-center bg-white text-color-2 my-2 p-3 rounded-xl shadow-sm hover:shadow-md transition text-center font-semibold ${
+                        user.isLocked ? "opacity-60" : ""
+                      }`}
                     >
+
                       <div>{user.userType}</div>
                       <div>{user.lastname}</div>
                       <div>{user.firstname}</div>
@@ -148,7 +191,7 @@ const UserList = () => {
                           <TrashIcon className="w-5 h-5" title="Delete user" />
                         </button>
 
-                        <button className="px-2 py-1 rounded cursor-pointer bg-color-3 text-white hover:opacity-75">
+                        <button className="px-2 py-1 rounded cursor-pointer bg-color-3 text-white hover:opacity-75" onClick={() => handleLock(user._id)}>
                           <LockClosedIcon className="w-5 h-5" title="Lock Account" />
                         </button>
                       </div>

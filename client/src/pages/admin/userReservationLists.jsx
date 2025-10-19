@@ -216,188 +216,178 @@ const UserReservationLists = () => {
   const statusTabs = ['Pending', 'Reserved', 'Completed', 'Cancelled'];
 
   return (
-    <>
-      <AdminHeader />
+  <>
+    <AdminHeader />
 
-      <div className="py-5 px-5">
-        <div className="text-center my-5">
-          <h2 className="text-xl font-semibold text-color">
-            User Reservations List
-          </h2>
-          <p className="text-sm text-color-2">
-            Manage and track all user reservations in one place.
-          </p>
-        </div>
-
-        <div className="flex justify-between items-center w-full px-5 mb-5">
-          <QRScanner onScanSuccess={handleQRScan} />
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Name, Reservation Code or Plate Number"
-          />
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
-          {statusTabs.map((status) => (
-            <button
-              key={status}
-              className={`px-4 py-2 rounded font-semibold cursor-pointer ${
-                selectedStatus === status
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-              onClick={() => setSelectedStatus(status)}
-            >
-              {status}
-            </button>
-          ))}
-        </div>
-
-        {isLoading && <Loader />}
-
-        <div className="px-5">
-          {filteredReservationsByStatus(selectedStatus).length === 0 ? (
-            <div className="text-center text-gray-500 mt-10">
-              No {selectedStatus.toLowerCase()} reservations
-            </div>
-          ) : (
-            <div className="overflow-auto h-80 rounded-lg border border-gray-200">
-              <div className="min-w-[1000px] flex flex-col gap-2 p-4">
-
-                <div
-                  className={`grid gap-4 items-center bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
-                    selectedStatus === 'Pending' ||
-                    selectedStatus === 'Reserved'
-                      ? 'grid-cols-9'
-                      : 'grid-cols-8'
-                  }`}
-                >
-                  <div>Name</div>
-                  <div>Verification Code</div>
-                  <div>Slot Code</div>
-                  <div>Slot Type</div>
-                  <div>Price</div>
-                  <div>Vehicle Type</div>
-                  <div>Plate Number</div>
-                  <div>Date & Time</div>
-                  {(selectedStatus === 'Pending' ||
-                    selectedStatus === 'Reserved') && <div>Actions</div>}
-                </div>
-
-                {filteredReservationsByStatus(selectedStatus)
-                  .slice(0, counts[selectedStatus])
-                  .map((res) => (
-                    <div
-                      key={res._id}
-                      className={`grid gap-4 items-center bg-white text-color-2 text-sm p-4 rounded-t-lg text-center ${
-                        selectedStatus === 'Pending' ||
-                        selectedStatus === 'Reserved'
-                          ? 'grid-cols-9'
-                          : 'grid-cols-8'
-                      }`}
-                    >
-                      <div>
-                        {res.reservedBy
-                          ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}`
-                          : 'Deleted User'}
-                      </div>
-                      <div>{res.verificationCode}</div>
-                      <div>{res.slotCode}</div>
-                      <div>{res.slotId?.slotType}</div>
-                      <div>{res.slotPrice}</div>
-                      <div>{res.vehicleType}</div>
-                      <div>{res.plateNumber}</div>
-                      <div>
-                        {res.reservationDate} {res.reservationTime}
-                      </div>
-                      {(selectedStatus === 'Pending' ||
-                        selectedStatus === 'Reserved') && (
-                        <div>
-                          {selectedStatus === 'Pending' && (
-                            <div className="flex flex-col justify-center gap-2">
-                              <button
-                                onClick={() => handleApprove(res._id)}
-                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-green-500  text-white px-2 py-1 rounded hover:bg-green-600"
-                              >
-                                <CheckCircleIcon className="w-5 h-5 " />
-                                Approve
-                              </button>
-                              <button
-                                onClick={() =>
-                                  handleCancelAdminReservation(res._id)
-                                }
-                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-red-500  text-white px-2 py-1 rounded hover:bg-red-600"
-                              >
-                                <XCircleIcon className="w-5 h-5 " />
-                                Cancel
-                              </button>
-                            </div>
-                          )}
-                          {selectedStatus === 'Reserved' && (
-                            <div className="flex justify-center gap-2">
-                              <button
-                                onClick={() => handleComplete(res._id)}
-                                className="flex items-center justify-center gap-x-1 cursor-pointer bg-green-500  text-white px-2 py-1 rounded hover:bg-green-600"
-                              >
-                                <CheckCircleIcon className="w-5 h-5 " />
-                                Complete
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          <div className="flex justify-end gap-2 mt-2">
-            {counts[selectedStatus] <
-              filteredReservationsByStatus(selectedStatus).length && (
-              <button
-                onClick={() => handleViewMore(selectedStatus)}
-                className="text-sm underline text-color-2 hover:text-color-3"
-              >
-                View More
-              </button>
-            )}
-            {counts[selectedStatus] > increment && (
-              <button
-                onClick={() => handleViewLess(selectedStatus)}
-                className="text-sm underline text-color-2 hover:text-color-3"
-              >
-                View Less
-              </button>
-            )}
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-50 py-10 px-6 md:px-12">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl font-bold text-gray-800">User Reservations</h2>
+        <p className="text-gray-500 text-sm mt-1">
+          Manage and track all user reservations efficiently.
+        </p>
       </div>
 
-      <CustomPopup
-        show={popup.show}
-        type={popup.type}
-        title={popup.title}
-        message={popup.message}
-        onClose={closePopup}
-        onConfirm={
-          popup.onConfirm
-            ? async () => {
-                setIsLoading(true);
-                await Promise.resolve();
-                try {
-                  await popup.onConfirm();
-                } finally {
-                  setIsLoading(false);
-                  closePopup();
-                }
+      <div className="flex flex-col lg:flex-row justify-between items-center gap-4 mb-8">
+        <QRScanner onScanSuccess={handleQRScan} />
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search by Name, Code, or Plate Number"
+        />
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-3 mb-6">
+        {statusTabs.map((status) => (
+          <button
+            key={status}
+            onClick={() => setSelectedStatus(status)}
+            className={`px-5 py-2.5 text-sm font-medium rounded-xl transition-all shadow-sm ${
+              selectedStatus === status
+                ? 'bg-gradient-to-r from-[#3366CC] to-[#9460C9] text-white shadow-md'
+                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            {status}
+          </button>
+        ))}
+      </div>
+
+      {isLoading && <Loader />}
+
+      <div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+        {filteredReservationsByStatus(selectedStatus).length === 0 ? (
+          <div className="text-center text-gray-500 py-20">
+            No {selectedStatus.toLowerCase()} reservations found.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <div className="min-w-[1100px]">
+              <div
+                className={`grid items-center text-sm font-semibold text-gray-700 bg-gradient-to-r from-[#3366CC]/10 to-[#9460C9]/10 px-6 py-4 ${
+                  selectedStatus === 'Pending' || selectedStatus === 'Reserved'
+                    ? 'grid-cols-9'
+                    : 'grid-cols-8'
+                }`}
+              >
+                <p>Name</p>
+                <p>Verification Code</p>
+                <p>Slot Code</p>
+                <p>Slot Type</p>
+                <p>Price</p>
+                <p>Vehicle Type</p>
+                <p>Plate Number</p>
+                <p>Date & Time</p>
+                {(selectedStatus === 'Pending' || selectedStatus === 'Reserved') && <p>Actions</p>}
+              </div>
+
+              {filteredReservationsByStatus(selectedStatus)
+                .slice(0, counts[selectedStatus])
+                .map((res) => (
+                  <div
+                    key={res._id}
+                    className={`grid items-center text-sm text-gray-700 px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition-all ${
+                      selectedStatus === 'Pending' || selectedStatus === 'Reserved'
+                        ? 'grid-cols-9'
+                        : 'grid-cols-8'
+                    }`}
+                  >
+                    <p className="font-medium">
+                      {res.reservedBy
+                        ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}`
+                        : 'Deleted User'}
+                    </p>
+                    <p className="text-gray-600">{res.verificationCode}</p>
+                    <p className="text-gray-600">{res.slotCode}</p>
+                    <p className="text-gray-600">{res.slotId?.slotType}</p>
+                    <p className="text-gray-600">₱{res.slotPrice}</p>
+                    <p className="text-gray-600">{res.vehicleType}</p>
+                    <p className="text-gray-600">{res.plateNumber}</p>
+                    <p className="text-gray-600">
+                      {res.reservationDate} {res.reservationTime}
+                    </p>
+
+                    {(selectedStatus === 'Pending' || selectedStatus === 'Reserved') && (
+                      <div className="flex flex-col md:flex-row justify-center gap-2">
+                        {selectedStatus === 'Pending' && (
+                          <>
+                            <button
+                              onClick={() => handleApprove(res._id)}
+                              className="flex items-center justify-center gap-x-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition"
+                            >
+                              <CheckCircleIcon className="w-4 h-4" />
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleCancelAdminReservation(res._id)}
+                              className="flex items-center justify-center gap-x-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-medium transition"
+                            >
+                              <XCircleIcon className="w-4 h-4" />
+                              Cancel
+                            </button>
+                          </>
+                        )}
+                        {selectedStatus === 'Reserved' && (
+                          <button
+                            onClick={() => handleComplete(res._id)}
+                            className="flex items-center justify-center gap-x-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-medium transition"
+                          >
+                            <CheckCircleIcon className="w-4 h-4" />
+                            Complete
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-end gap-3 mt-4">
+        {counts[selectedStatus] < filteredReservationsByStatus(selectedStatus).length && (
+          <button
+            onClick={() => handleViewMore(selectedStatus)}
+            className="text-sm font-medium text-[#3366CC] hover:underline"
+          >
+            View More
+          </button>
+        )}
+        {counts[selectedStatus] > increment && (
+          <button
+            onClick={() => handleViewLess(selectedStatus)}
+            className="text-sm font-medium text-[#9460C9] hover:underline"
+          >
+            View Less
+          </button>
+        )}
+      </div>
+    </div>
+
+    <CustomPopup
+      show={popup.show}
+      type={popup.type}
+      title={popup.title}
+      message={popup.message}
+      onClose={closePopup}
+      onConfirm={
+        popup.onConfirm
+          ? async () => {
+              setIsLoading(true)
+              await Promise.resolve()
+              try {
+                await popup.onConfirm()
+              } finally {
+                setIsLoading(false)
+                closePopup()
               }
-            : closePopup
-        }
-      />
-    </>
-  );
+            }
+          : closePopup
+      }
+    />
+  </>
+)
+
 };
 
 export default UserReservationLists;

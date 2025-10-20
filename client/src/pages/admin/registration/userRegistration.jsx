@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import Swal from 'sweetalert2'
 import toastOptions from '../../../lib/toastConfig'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import AdminAPI from '../../../lib/inteceptors/adminInterceptor'
@@ -70,9 +69,6 @@ const UserRegistration = () => {
     const nameRegex = /^[a-zA-Z\s]+$/;
     const studentIdRegex = /^02000\d{6}$/;
     const usernameRegex = /^[a-zA-Z]+\.[0-9]{6}$/;
-    const plateNumberRegex = /^(?:([A-Z]{3}\d{3}|\d{3}[A-Z]{3}|(?=(?:.*[A-Z]){3})(?=(?:.*\d){3})[A-Z0-9]{6})|([A-Z]{3}\d{4})|(\d{4}-\d{9,11}))$/;
-    const mvFileRegex = /^[0-9]{4}-[0-9]{11,12}$/;  
-
     const filteredBrands = brandsByType[formData.vehicleType] || [];
 
 const step1Validations = () => {
@@ -171,35 +167,57 @@ const step1Validations = () => {
 };
 
 const step2Validations = () => {
+  if (!formData.vehicleType) {
+    toast.error("Vehicle Type is required.", toastOptions);
+    return false;
+  }
 
-    if(!formData.vehicleType){
-        toast.error("Vehicle Type is required.", toastOptions);
-        return false;
-    }
+  if (!formData.model) {
+    toast.error("Year model is required.", toastOptions);
+    return false;
+  }
 
-    if(!formData.model){
-        toast.error("Year model is required.", toastOptions);
-        return false;
-    }
+  if (!formData.plateNumber) {
+    toast.error("Plate Number or MV File is required.", toastOptions);
+    return false;
+  }
 
-    if (!formData.plateNumber) {
-        toast.error("Plate Number or MV File is required.", toastOptions);
-        return false;
-    }
+  const plate = formData.plateNumber.toUpperCase().trim();
+  const motorcycleRegex = /^[A-Z0-9]{6}$/;
+  const fourWheelRegex = /^[A-Z]{3}\d{4}$/i;
+  const mvFileRegex = /^[0-9]{4}-[0-9]{9,12}$/;
 
-    if (!plateNumberRegex.test(formData.plateNumber) && !mvFileRegex.test(formData.plateNumber)) {
-        toast.error("Invalid Plate Number or MV File format. Use 123ABC or 1234-00000012345 format.", toastOptions);
-        return false;
-    }
+  const motorcycleTypes = [
+    "Small Motorcycle",
+    "Bigbike Motorcycle",
+    "2-Wheels (400cc and above)"
+  ];
 
-    if (!formData.color) {
-        toast.error("Vehicle color is required.", toastOptions);
-        return false;
+  if (motorcycleTypes.includes(formData.vehicleType)) {
+    if (!motorcycleRegex.test(plate) && !mvFileRegex.test(plate)) {
+      toast.error(
+        "Invalid Motorcycle Plate Number. Use 6 characters (e.g. 123ABC) or valid MV File.",
+        toastOptions
+      );
+      return false;
     }
+  } else {
+    if (!fourWheelRegex.test(plate) && !mvFileRegex.test(plate)) {
+      toast.error(
+        "Invalid 4-Wheel Plate Number. Use ABC1234 format or valid MV File.",
+        toastOptions
+      );
+      return false;
+    }
+  }
+
+  if (!formData.color) {
+    toast.error("Vehicle color is required.", toastOptions);
+    return false;
+  }
 
   return true;
 };
-
 
 const nextStep = () => {
 

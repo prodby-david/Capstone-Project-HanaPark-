@@ -344,7 +344,7 @@ const AvailableSlots = () => {
                   value={editedDescription}
                   onChange={(e) => setEditedDescription(e.target.value)}
                   rows="3"
-                  className="w-full outline-none border border-gray-300 rounded-lg p-2 text-color-2 text-sm hover:border-color-3 transition"
+                  className="w-full outline-none resize-none border border-gray-300 rounded-lg p-2 text-color-2 text-sm hover:border-color-3 transition"
                   placeholder="Write description..."
                 />
               </div>
@@ -353,13 +353,13 @@ const AvailableSlots = () => {
             <div className="flex justify-end gap-3 mt-5">
               <button
                 onClick={() => setEditModalOpen(false)}
-                className="px-4 py-2 text-sm rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+                className="px-4 py-2 text-sm cursor-pointer rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdate}
-                className="px-4 py-2 text-sm rounded-lg bg-color-3 text-white hover:opacity-90 transition"
+                className="px-4 py-2 text-sm cursor-pointer rounded-lg bg-color-3 text-white hover:opacity-90 transition"
               >
                 Save Changes
               </button>

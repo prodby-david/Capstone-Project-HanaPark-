@@ -73,6 +73,7 @@ const UserList = () => {
         title: 'Unlock Account?',
         message: 'Are you sure you want to unlock this user account?',
         onConfirm: async () => {
+          setIsLoading(true);
           try {
             const res = await AdminAPI.patch(`/admin/lock/${id}`, {
               isLocked: false,
@@ -87,6 +88,7 @@ const UserList = () => {
               title: 'Account Unlocked',
               message: res.data.message || 'User account has been unlocked successfully.',
               onConfirm: () => setPopup({ show: false }),
+              showCancel: false,
             });
           } catch (err) {
             console.error(err);
@@ -97,6 +99,8 @@ const UserList = () => {
               message: 'Failed to unlock user.',
               onConfirm: () => setPopup({ show: false }),
             });
+          } finally {
+            setIsLoading(false);
           }
         },
       });
@@ -106,6 +110,7 @@ const UserList = () => {
   };
 
   const confirmLockAction = async (reason) => {
+    setIsLoading(true);
     try {
       const res = await AdminAPI.patch(`/admin/lock/${lockPopup.userId}`, {
         isLocked: !lockPopup.isLocked,
@@ -125,6 +130,7 @@ const UserList = () => {
         title: 'User Locked',
         message: 'User account has been locked successfully.',
         onConfirm: () => setPopup({ show: false }),
+        showCancel: false,
       });
     } catch (err) {
       console.error(err);
@@ -135,6 +141,8 @@ const UserList = () => {
         message: 'Failed to update lock status.',
         onConfirm: () => setPopup({ show: false }),
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -145,6 +153,7 @@ const UserList = () => {
       title: 'Archive this user?',
       message: 'This action cannot be undone.',
       onConfirm: async () => {
+        setIsLoading(true);
         try {
           const res = await AdminAPI.patch(`/admin/archive/${id}`);
           setUsersList(res.data);
@@ -154,6 +163,7 @@ const UserList = () => {
             title: 'User Archived',
             message: 'User archived successfully.',
             onConfirm: () => setPopup({ show: false }),
+            showCancel: false,
           });
         } catch (err) {
           console.error('Delete error:', err);
@@ -164,6 +174,8 @@ const UserList = () => {
             message: 'Failed to archive user.',
             onConfirm: () => setPopup({ show: false }),
           });
+        } finally {
+          setIsLoading(false);
         }
       },
     });
@@ -176,6 +188,7 @@ const UserList = () => {
       title: 'Unarchive this user?',
       message: 'This will restore the user to active status.',
       onConfirm: async () => {
+        setIsLoading(true);
         try {
           const res = await AdminAPI.patch(`/admin/unarchive/${id}`);
           setUsersList(res.data);
@@ -185,6 +198,7 @@ const UserList = () => {
             title: 'User Unarchived',
             message: 'User has been restored successfully.',
             onConfirm: () => setPopup({ show: false }),
+            showCancel: false,
           });
         } catch (err) {
           console.error('Unarchive error:', err);
@@ -195,176 +209,180 @@ const UserList = () => {
             message: 'Failed to unarchive user.',
             onConfirm: () => setPopup({ show: false }),
           });
+        } finally {
+          setIsLoading(false);
         }
       },
     });
   };
 
   return (
-  <>
-    <AdminHeader />
+    <>
+      <AdminHeader />
 
-    <div className="flex flex-col items-center my-10 px-4 sm:px-6">
-
-      <div className="text-center mb-5">
-        <h2 className="text-2xl font-bold text-color">User Management</h2>
-        <p className="text-gray-600 text-sm">
-          Manage all user accounts — lock, unlock, archive, or restore users as needed.
-        </p>
-      </div>
-
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-4">
-        <button
-          onClick={() => setShowArchived((prev) => !prev)}
-          className={`px-4 py-2 rounded-md text-white cursor-pointer font-semibold text-sm transition ${
-            showArchived
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'bg-blue-600 hover:bg-blue-700'
-          }`}
-        >
-          {showArchived ? 'Show Active Users' : 'Show Archived Users'}
-        </button>
-
-        <div className="flex flex-col sm:items-end w-full sm:w-auto">
-
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
-
-          {!showArchived && (
-            <div className="flex justify-end items-center gap-4 mt-2 text-xs text-gray-700">
-              <h2 className="font-semibold text-color-3">Legend:</h2>
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 bg-red-100 border border-red-400 rounded"></span>
-                <span>Locked</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 bg-white border border-gray-300 rounded"></span>
-                <span>Unlocked</span>
-              </div>
-            </div>
-          )}
+      <div className="flex flex-col items-center my-10 px-4 sm:px-6">
+        <div className="text-center mb-5">
+          <h2 className="text-2xl font-bold text-color">User Management</h2>
+          <p className="text-gray-600 text-sm">
+            Manage all user accounts — lock, unlock, archive, or restore users as needed.
+          </p>
         </div>
-      </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-40">
-          <Loader />
-        </div>
-      ) : (
-        <div className="w-full max-w-6xl overflow-x-auto mt-6">
-          <div className="min-w-[700px] bg-white shadow-md rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-8 gap-3 bg-color text-white p-4 font-semibold text-center text-sm rounded-t-2xl">
-              <p>User Type</p>
-              <p>Lastname</p>
-              <p>Firstname</p>
-              <p>Student ID</p>
-              <p>Username</p>
-              <p>Email</p>
-              <p>Vehicle</p>
-              <p>Actions</p>
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-4">
+          <button
+            onClick={() => setShowArchived((prev) => !prev)}
+            className={`px-4 py-2 rounded-md text-white cursor-pointer font-semibold text-sm transition ${
+              showArchived
+                ? 'bg-green-600 hover:bg-green-700'
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
+            {showArchived ? 'Show Active Users' : 'Show Archived Users'}
+          </button>
 
-            <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
-              {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
-                <div
-                  key={user._id}
-                  className={`grid grid-cols-8 items-center text-center px-4 py-3 text-sm transition-all ${
-                    user.isLocked
-                      ? 'bg-red-50 border-l-4 border-red-400'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <p
-                    className={`font-semibold ${
-                      user.isLocked ? 'text-red-600' : 'text-gray-700'
-                    }`}
-                  >
-                    {user.userType}
-                  </p>
-                  <p>{user.lastname}</p>
-                  <p>{user.firstname}</p>
-                  <p>{user.studentId}</p>
-                  <p>{user.username}</p>
-                  <p className="truncate" title={user.email}>
-                    {user.email}
-                  </p>
-                  <p>
-                    {user.vehicle
-                      ? `${user.vehicle.brand} ${user.vehicle.model} - ${user.vehicle.plateNumber}`
-                      : 'No vehicle'}
-                  </p>
+          <div className="flex flex-col sm:items-end w-full sm:w-auto">
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
-                  <div className="flex justify-center gap-2">
-                    {showArchived ? (
-                      <button
-                        onClick={() => handleUnarchive(user._id)}
-                        className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
-                      >
-                        Unarchive
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => handleLock(user._id, user.isLocked)}
-                          className={`p-2 rounded-full cursor-pointer transition ${
-                            user.isLocked
-                              ? 'bg-green-500 hover:bg-green-600'
-                              : 'bg-yellow-500 hover:bg-yellow-600'
-                          } text-white`}
-                          title={user.isLocked ? 'Unlock User' : 'Lock User'}
-                        >
-                          {user.isLocked ? (
-                            <LockOpenIcon className="w-5 h-5" />
-                          ) : (
-                            <LockClosedIcon className="w-5 h-5" />
-                          )}
-                        </button>
-
-                        <button
-                          onClick={() => handleDelete(user._id)}
-                          className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
-                          title="Archive User"
-                        >
-                          <TrashIcon className="w-5 h-5" />
-                        </button>
-                      </>
-                    )}
-                  </div>
+            {!showArchived && (
+              <div className="flex justify-end items-center gap-4 mt-2 text-xs text-gray-700">
+                <h2 className="font-semibold text-color-3">Legend:</h2>
+                <div className="flex items-center gap-2">
+                  <span className="w-4 h-4 bg-red-100 border border-red-400 rounded"></span>
+                  <span>Locked</span>
                 </div>
-              ))}
-            </div>
-
-            {filteredUsers.length > 10 && (
-              <div className="flex justify-center py-4 bg-white border-t">
-                <button
-                  onClick={() => setShowAll((prev) => !prev)}
-                  className="px-4 py-2 bg-color text-white font-medium rounded-md hover:opacity-90 transition"
-                >
-                  {showAll ? 'See Less' : 'See More'}
-                </button>
+                <div className="flex items-center gap-2">
+                  <span className="w-4 h-4 bg-white border border-gray-300 rounded"></span>
+                  <span>Unlocked</span>
+                </div>
               </div>
             )}
           </div>
         </div>
-      )}
-    </div>
 
-    <LockPopup
-      show={lockPopup.show}
-      isLocked={lockPopup.isLocked}
-      onClose={() => setLockPopup({ show: false, userId: null, isLocked: false })}
-      onConfirm={confirmLockAction}
-    />
+        {isLoading && (
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-[9999]">
+            <Loader />
+          </div>
+        )}
 
-    <CustomPopup
-      show={popup.show}
-      type={popup.type}
-      title={popup.title}
-      message={popup.message}
-      onConfirm={popup.onConfirm}
-      onClose={() => setPopup({ show: false })}
-    />
-  </>
-);
+        {!isLoading && (
+          <div className="w-full max-w-6xl overflow-x-auto mt-6">
+            <div className="min-w-[700px] bg-white shadow-md rounded-2xl overflow-hidden">
+              <div className="grid grid-cols-8 gap-3 bg-color text-white p-4 font-semibold text-center text-sm rounded-t-2xl">
+                <p>User Type</p>
+                <p>Lastname</p>
+                <p>Firstname</p>
+                <p>Student ID</p>
+                <p>Username</p>
+                <p>Email</p>
+                <p>Vehicle</p>
+                <p>Actions</p>
+              </div>
+
+              <div className="max-h-[450px] overflow-y-auto divide-y divide-gray-100">
+                {(showAll ? filteredUsers : filteredUsers.slice(0, 10)).map((user) => (
+                  <div
+                    key={user._id}
+                    className={`grid grid-cols-8 items-center text-center px-4 py-3 text-sm transition-all ${
+                      user.isLocked
+                        ? 'bg-red-50 border-l-4 border-red-400'
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <p
+                      className={`font-semibold ${
+                        user.isLocked ? 'text-red-600' : 'text-gray-700'
+                      }`}
+                    >
+                      {user.userType}
+                    </p>
+                    <p>{user.lastname}</p>
+                    <p>{user.firstname}</p>
+                    <p>{user.studentId}</p>
+                    <p>{user.username}</p>
+                    <p className="truncate" title={user.email}>
+                      {user.email}
+                    </p>
+                    <p>
+                      {user.vehicle
+                        ? `${user.vehicle.brand} ${user.vehicle.model} - ${user.vehicle.plateNumber}`
+                        : 'No vehicle'}
+                    </p>
+
+                    <div className="flex justify-center gap-2">
+                      {showArchived ? (
+                        <button
+                          onClick={() => handleUnarchive(user._id)}
+                          className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition"
+                        >
+                          Unarchive
+                        </button>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleLock(user._id, user.isLocked)}
+                            className={`p-2 rounded-full cursor-pointer transition ${
+                              user.isLocked
+                                ? 'bg-green-500 hover:bg-green-600'
+                                : 'bg-yellow-500 hover:bg-yellow-600'
+                            } text-white`}
+                            title={user.isLocked ? 'Unlock User' : 'Lock User'}
+                          >
+                            {user.isLocked ? (
+                              <LockOpenIcon className="w-5 h-5" />
+                            ) : (
+                              <LockClosedIcon className="w-5 h-5" />
+                            )}
+                          </button>
+
+                          <button
+                            onClick={() => handleDelete(user._id)}
+                            className="p-2 rounded-full cursor-pointer bg-red-500 hover:bg-red-600 text-white transition"
+                            title="Archive User"
+                          >
+                            <TrashIcon className="w-5 h-5" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredUsers.length > 10 && (
+                <div className="flex justify-center py-4 bg-white border-t">
+                  <button
+                    onClick={() => setShowAll((prev) => !prev)}
+                    className="px-4 py-2 bg-color text-white font-medium rounded-md hover:opacity-90 transition"
+                  >
+                    {showAll ? 'See Less' : 'See More'}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <LockPopup
+        show={lockPopup.show}
+        isLocked={lockPopup.isLocked}
+        onClose={() => setLockPopup({ show: false, userId: null, isLocked: false })}
+        onConfirm={confirmLockAction}
+      />
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onConfirm={popup.onConfirm}
+        onClose={() => setPopup({ show: false })}
+        showCancel={popup.showCancel}
+        confirmText={popup.confirmText}
+      />
+    </>
+  );
 };
 
 export default UserList;

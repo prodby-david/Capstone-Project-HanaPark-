@@ -4,6 +4,7 @@ import {
   XCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -11,6 +12,7 @@ const icons = {
   error: <XCircleIcon className="w-16 h-16 text-red-500" />,
   warning: <ExclamationTriangleIcon className="w-16 h-16 text-yellow-500" />,
   info: <InformationCircleIcon className="w-16 h-16 text-blue-500" />,
+  question: <QuestionMarkCircleIcon className="w-16 h-16 text-blue-500" />,
 };
 
 const CustomPopup = ({
@@ -20,44 +22,45 @@ const CustomPopup = ({
   message = "",
   onClose,
   onConfirm,
-  confirmText = "OK",
+  confirmText = "Confirm",
   cancelText = "Cancel",
+  showCancel = true,
 }) => {
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[99] flex items-center justify-center bg-black/40 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[99] flex items-center justify-center bg-black/40 backdrop-blur-sm"
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white rounded-3xl p-8 w-[90%] max-w-md shadow-2xl flex flex-col items-center text-center"
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-md text-center flex flex-col items-center"
           >
             {icons[type]}
 
             <h2 className="mt-4 text-2xl font-bold text-color">{title}</h2>
+            <p className="text-sm text-color-2 mt-2 leading-relaxed">{message}</p>
 
-            <p className="text-base text-color-2 mt-2 leading-relaxed">
-              {message}
-            </p>
-
-            <div className="flex justify-center gap-4 mt-8">
+            <div className="flex justify-center gap-4 mt-8 text-sm">
               {onConfirm ? (
                 <>
-                  <button
-                    onClick={onClose}
-                    className="px-5 py-2.5 border border-gray-300 rounded-md text-color-2 hover:bg-gray-100 transition cursor-pointer text-sm font-medium"
-                  >
-                    {cancelText}
-                  </button>
+                  {showCancel && (
+                    <button
+                      onClick={onClose}
+                      className="px-5 py-2 border border-gray-300 rounded-md text-color-2 hover:bg-gray-100 transition cursor-pointer text-sm font-medium"
+                    >
+                      {cancelText}
+                    </button>
+                  )}
                   <button
                     onClick={onConfirm}
-                    className="px-5 py-2.5 bg-color text-white rounded-md hover:opacity-90 transition cursor-pointer text-sm font-medium"
+                    className="px-5 py-2 bg-color text-white rounded-md hover:opacity-90 transition cursor-pointer text-sm font-medium"
                   >
                     {confirmText}
                   </button>
@@ -65,7 +68,7 @@ const CustomPopup = ({
               ) : (
                 <button
                   onClick={onClose}
-                  className="px-6 py-2.5 bg-color text-white rounded-md hover:opacity-90 transition cursor-pointer text-sm font-medium"
+                  className="px-6 py-2 bg-color text-white rounded-md hover:opacity-90 transition cursor-pointer text-sm font-medium"
                 >
                   {confirmText}
                 </button>

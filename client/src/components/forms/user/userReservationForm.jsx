@@ -12,7 +12,7 @@ import Step2 from '../../reservation/step2/step2';
 import Step3 from '../../reservation/step3/step3';
 import Step4 from '../../reservation/step4/step4';
 import Step5 from '../../reservation/step5/step5';
-import Loader from '../../../components/loaders/loader';
+import Loader from '../../loaders/loader';
 import CustomPopup from '../../popups/popup';
 
 const UserReservationForm = () => {
@@ -203,7 +203,7 @@ const UserReservationForm = () => {
           </div>
         )}
 
-        <div className="rounded-2xl w-full max-w-3xl p-6 sm:p-10 transition-all border border-gray-100">
+        <div className="rounded-2xl w-full max-w-3xl p-6 sm:p-10">
           <form className="w-full">
             {step === 1 && <Step1 slot={slot} nextStep={nextStep} />}
             {step === 2 && (

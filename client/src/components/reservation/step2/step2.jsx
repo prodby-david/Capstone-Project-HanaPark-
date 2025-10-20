@@ -87,7 +87,7 @@ const Step2 = ({ date, reservationTime, arrivalTime, setArrivalTime, nextStep, p
 
           <div className="bg-blue-50 border-l-4 border-color-2 p-4 rounded-md mt-2 w-full">
             <h2 className="text-xs sm:text-sm text-color-3 leading-relaxed">
-              <span className="text-color font-semibold">NOTE:</span> You must arrive at the parking area within <span className="font-semibold text-color">60 minutes</span> of your reserved time. Failure to do so may result in automatic cancellation.
+              <span className="text-color font-semibold">NOTE:</span> You must arrive at the parking area atleast <span className="font-semibold text-color">15 minutes</span> before your arrival time. Failure to arrive by your scheduled booking time may result in automatic cancellation.
             </h2>
           </div>
 

@@ -15,7 +15,7 @@ const Step2 = ({ date, reservationTime, nextStep, prevStep }) => {
     <>
       <div className="flex flex-col justify-center items-center p-6 sm:p-10 bg-white">
         <h2 className="font-bold text-color text-xl mb-4 text-center">
-          Date & Time Details
+          Date & Time
         </h2>
 
         <div className="flex flex-col items-center gap-5 w-full">

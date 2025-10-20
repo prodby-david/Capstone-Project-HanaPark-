@@ -203,7 +203,7 @@ const UserReservationForm = () => {
           </div>
         )}
 
-        <div className="rounded-2xl w-full max-w-3xl p-6 sm:p-10">
+        <div className="rounded-2xl w-full max-w-3xl p-6 sm:p-10 bg-white">
           <form className="w-full">
             {step === 1 && <Step1 slot={slot} nextStep={nextStep} />}
             {step === 2 && (

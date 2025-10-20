@@ -70,6 +70,7 @@ const Step2 = ({ date, reservationTime, nextStep, prevStep }) => {
             <NextButton onClick={handleNext} />
           </div>
         </div>
+        
       </div>
     </>
   )

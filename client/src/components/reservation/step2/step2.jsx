@@ -1,15 +1,13 @@
 import React from 'react'
 import NextButton from '../../buttons/nextbutton'
 import BackButton from '../../buttons/backbutton'
-import { toast } from 'react-toastify'
-import toastOptions from '../../../lib/toastConfig'
+
+
+
+
 
 const Step2 = ({ date, reservationTime, nextStep, prevStep }) => {
   const handleNext = () => {
-    if (!reservationTime) {
-      toast.error('Reservation Time is required.', toastOptions)
-      return
-    }
     nextStep()
   }
 
@@ -58,10 +56,12 @@ const Step2 = ({ date, reservationTime, nextStep, prevStep }) => {
           </div>
 
           <div className="bg-blue-50 border-l-4 border-color-2 p-4 rounded-md mt-2 w-full">
-            <h2 className="text-xs sm:text-sm text-color-3 leading-relaxed">
-              <span className="text-color font-semibold">NOTE:</span> Please
-              ensure the reservation time you selected is correct before
-              proceeding.
+           <h2 className="text-xs sm:text-sm text-color-3 leading-relaxed">
+              <span className="text-color font-semibold">NOTE:</span> You must arrive 
+              <span className="font-semibold text-color"> no later than 45 minutes before the reserved time</span>. 
+              A <span className="font-semibold text-color">60-minute grace period</span> is provided for confirmation or parking. 
+              Reservations not validated within this period will be 
+              <span className="font-semibold text-color"> automatically cancelled</span>.
             </h2>
           </div>
 
@@ -70,7 +70,7 @@ const Step2 = ({ date, reservationTime, nextStep, prevStep }) => {
             <NextButton onClick={handleNext} />
           </div>
         </div>
-        
+
       </div>
     </>
   )

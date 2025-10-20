@@ -11,7 +11,7 @@ const CreateReservation = async(req,res) => {
 
     try{
         const { slotId } = req.params;
-        const { slotCode, slotPrice, reservationDate, reservationTime, arrivalTime, plateNumber, vehicleType } = req.body;
+        const { slotCode, slotPrice, reservationDate, reservationTime, plateNumber, vehicleType } = req.body;
         const userId = req.user?.userId;
         
             if(!userId){
@@ -29,7 +29,7 @@ const CreateReservation = async(req,res) => {
                 return;
             }
 
-            if(!slotCode || !slotPrice || !reservationDate || !arrivalTime || !reservationTime || !plateNumber || !vehicleType){
+            if(!slotCode || !slotPrice || !reservationDate || !reservationTime || !plateNumber || !vehicleType){
                 return res.status(400).json({ message: 'All fields are required' });
             }
 
@@ -74,7 +74,7 @@ const CreateReservation = async(req,res) => {
             const qrCodeDataURL = await QRCode.toDataURL(verificationCode);
             const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
-            const userReservation = new Reservation({ reservedBy: userId, verificationCode, slotId, slotCode, qrCode: qrCodeDataURL,  slotPrice,reservationDate, reservationTime, arrivalTime, plateNumber, vehicleType, status: 'Pending', isEntryUsed: false, isExitUsed: false, expiresAt });
+            const userReservation = new Reservation({ reservedBy: userId, verificationCode, slotId, slotCode, qrCode: qrCodeDataURL,  slotPrice,reservationDate, reservationTime, plateNumber, vehicleType, status: 'Pending', isEntryUsed: false, isExitUsed: false, expiresAt });
 
             await userReservation.save();
 

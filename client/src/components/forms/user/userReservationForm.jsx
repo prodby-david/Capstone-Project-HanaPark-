@@ -157,7 +157,7 @@ const UserReservationForm = () => {
         },
       });
     } catch (err) {
-      // ✅ Custom popup for error
+
       setPopup({
         show: true,
         type: 'error',
@@ -176,7 +176,7 @@ const UserReservationForm = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-6 py-10 gap-8">
+      <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-6 py-10 gap-8">
 
         {step !== 5 && (
           <div className="hidden lg:flex flex-col gap-y-6 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl p-8 w-full max-w-xs border border-gray-100 h-[75vh]">

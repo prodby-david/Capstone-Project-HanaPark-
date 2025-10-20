@@ -180,7 +180,7 @@ const UserReservationForm = () => {
 
         {step !== 5 && (
           <div className="hidden lg:flex flex-col gap-y-6 shadow-md rounded-2xl bg-white p-8 w-full max-w-xs border border-gray-100 h-[75vh]">
-            <h2 className="text-lg font-semibold text-[#00509e] text-center">Reservation Steps</h2>
+            <h2 className="text-lg font-semibold text-color text-center">Reservation Steps</h2>
 
             <ul className="space-y-4">
               {[

@@ -179,7 +179,7 @@ const UserReservationForm = () => {
       <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-6 py-10 gap-8">
 
         {step !== 5 && (
-          <div className="hidden lg:flex flex-col gap-y-6 shadow-md rounded-2xl p-8 w-full max-w-xs border border-gray-100 h-[75vh]">
+          <div className="hidden lg:flex flex-col gap-y-6 shadow-md rounded-2xl bg-white p-8 w-full max-w-xs border border-gray-100 h-[75vh]">
             <h2 className="text-lg font-semibold text-[#00509e] text-center">Reservation Steps</h2>
 
             <ul className="space-y-4">

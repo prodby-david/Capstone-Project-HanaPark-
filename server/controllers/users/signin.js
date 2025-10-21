@@ -18,9 +18,19 @@ const studentSignInController = async (req, res) => {
       return res.status(403).json({ message: 'Your account is archived. Please contact the administrator.' });
     }
 
-    if (user.isLocked && user.lockUntil && user.lockUntil > Date.now()) {
+    if (user.isLocked && (!user.lockUntil || user.lockUntil <= Date.now())) {
+      return res.status(403).json({
+        message: user.lockReason
+          ? `Your account is locked by the administrator. Reason: ${user.lockReason}`
+          : "Your account is locked. Please contact the administrator.",
+      });
+    }
+
+    if (user.lockUntil && user.lockUntil > Date.now()) {
       const remaining = Math.ceil((user.lockUntil - Date.now()) / 60000);
-      return res.status(403).json({ message: `Account locked. Try again in ${remaining} minutes.` });
+      return res.status(403).json({
+        message: `Account locked. Try again in ${remaining} minutes.`,
+      });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);

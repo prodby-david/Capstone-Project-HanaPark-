@@ -20,7 +20,7 @@ const UserViolations = ({ userId }) => {
   }, [userId]);
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl p-6 mt-6 border border-gray-100 transition-all duration-300 hover:shadow-xl">
+    <div className="rounded-2xl p-6 border border-color-2">
       <h2 className="text-xl font-semibold text-color mb-4 flex items-center gap-2">
         <ExclamationTriangleIcon className="w-6 h-6 text-color-3" />
         Account Violations
@@ -37,7 +37,7 @@ const UserViolations = ({ userId }) => {
 
       {violations.length > 0 ? (
         <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          
+
           <ul className="divide-y divide-gray-200">
             {violations.map((v, index) => (
               <li

@@ -10,24 +10,22 @@ const LockUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update lock state
     user.isLocked = isLocked;
 
     if (isLocked) {
-      user.currentToken = null; // force logout
+      user.currentToken = null; 
       user.lockReason = lockReason || "Locked by administrator";
-      user.lockUntil = null; // manual lock doesn't expire
+      user.lockUntil = null;
       if (!user.violations) user.violations = [];
       user.violations.push({
         reason: lockReason || "Manual lock by admin",
         date: new Date(),
       });
     } else {
-      // UNLOCK user manually
       user.lockReason = "";
       user.lockUntil = null;
       user.failedLoginAttempts = 0;
-      user.currentToken = null; // reset just in case
+      user.currentToken = null; 
     }
 
     await user.save();

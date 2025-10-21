@@ -26,6 +26,27 @@ const CustomPopup = ({
   cancelText = "Cancel",
   showCancel = true,
 }) => {
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          if (onConfirm) {
+            onConfirm();
+          } else {
+            onClose(); 
+          }
+        }
+      };
+
+      if (show) {
+        document.addEventListener("keydown", handleKeyDown);
+      }
+
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [show, onConfirm, onClose]);
   return (
     <AnimatePresence>
       {show && (

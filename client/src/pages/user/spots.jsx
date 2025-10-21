@@ -209,7 +209,6 @@ const Spots = () => {
           </div>
         </div>
 
-        {/* Slot Cards */}
         {isLoading ? (
           <Loader text="Loading slots..." />
         ) : displayedSlots.length === 0 ? (
@@ -253,13 +252,7 @@ const Spots = () => {
                     <strong className="text-[#00509e]">Status:</strong>{' '}
                     <span
                       className={
-                        slot.slotStatus === 'Available'
-                          ? 'text-green-600'
-                          : slot.slotStatus === 'Reserved'
-                          ? 'text-yellow-600'
-                          : slot.slotStatus === 'Occupied'
-                          ? 'text-red-600'
-                          : 'text-blue-600'
+                        slot.slotStatus === 'Available' ? 'text-green-600' : slot.slotStatus === 'Reserved' ? 'text-yellow-600' : slot.slotStatus === 'Occupied' ? 'text-red-600' : 'text-blue-600'
                       }
                     >
                       {slot.slotStatus}
@@ -275,9 +268,11 @@ const Spots = () => {
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {slot.slotStatus === 'Available'
-                      ? 'Reserve Now'
-                      : 'Reserved'}
+                    {slot.slotStatus === 'Available' ? 'Reserve Now' : 
+                    slot.slotStatus === 'Ongoing Maintenance' ? 'Ongoing Maintenance' : 
+                    slot.slotStatus === 'Reserved' ? 'Reserved' : 
+                    slot.slotStatus === 'Occupied' ? 'Occupied' : 
+                    'Available'}
                   </button>
                 </motion.div>
               )

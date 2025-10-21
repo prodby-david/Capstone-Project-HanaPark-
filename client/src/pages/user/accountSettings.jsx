@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import UserHeader from '../../components/headers/userHeader';
-import { UserIcon, KeyIcon, IdentificationIcon, EyeIcon, EyeSlashIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { UserIcon, KeyIcon, IdentificationIcon, EyeIcon, EyeSlashIcon, PencilIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import UserAPI from '../../lib/inteceptors/userInterceptor';
 import { toast } from 'react-toastify';
 import toastOptions from '../../lib/toastConfig';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import brandsByType from '../../../utils/brandsByType';
 import Loader from '../../components/loaders/loader';
 import CustomPopup from '../../components/popups/popup';
+import UserViolations from './violations';
 
 const AccountSettings = () => {
   const [activeSection, setActiveSection] = useState('profile');
@@ -203,7 +204,7 @@ const AccountSettings = () => {
 
             <button
               onClick={() => setActiveSection("profile")}
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "profile" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
+              className={`flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "profile" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
             >
               <UserIcon className="w-5 h-5" />
               <span>Profile Information</span>
@@ -211,7 +212,7 @@ const AccountSettings = () => {
 
             <button
               onClick={() => setActiveSection("password")}
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "password" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
+              className={`flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "password" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
             >
               <KeyIcon className="w-5 h-5" />
               <span>Password Information</span>
@@ -219,20 +220,31 @@ const AccountSettings = () => {
 
             <button
               onClick={() => setActiveSection("vehicle")}
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "vehicle" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
+              className={`flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "vehicle" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
             >
               <IdentificationIcon className="w-5 h-5" />
               <span>Vehicle Information</span>
             </button>
+
+            <button
+              onClick={() => setActiveSection("violations")}
+              className={`flex items-center gap-2 w-full w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+                activeSection === "violations"
+                  ? "bg-blue-100 text-color"
+                  : "hover:bg-gray-100 text-gray-600"
+              }`}
+            >
+              <ExclamationTriangleIcon className='w-5 h-5'/>
+              <span>Violations</span>
+            </button>
+
           </div>
 
           <div className="w-full h-px md:h-full md:w-px bg-color-2"></div>
 
-          {/* Main Content */}
           <div className="flex flex-col items-center justify-center w-full">
             <h2 className="text-xl font-semibold text-color text-center my-5">Account Settings</h2>
 
-            {/* --- PROFILE --- */}
             {activeSection === "profile" && (
               <div className="flex flex-col gap-1 px-5">
                 <h3 className="font-semibold text-lg text-color-3">Profile Information</h3>
@@ -282,7 +294,6 @@ const AccountSettings = () => {
               </div>
             )}
 
-            {/* --- PASSWORD --- */}
             {activeSection === "password" && (
               <div className="flex flex-col gap-1">
                 <h3 className="font-semibold text-lg text-color-3">Change Password</h3>
@@ -345,7 +356,6 @@ const AccountSettings = () => {
               </div>
             )}
 
-            {/* --- VEHICLE --- */}
             {activeSection === "vehicle" && (
               <div className="space-y-4 text-sm px-5">
                 <h3 className="font-semibold text-lg text-color-3">Vehicle Information</h3>
@@ -475,6 +485,13 @@ const AccountSettings = () => {
                 </button>
               </div>
             )}
+
+            {activeSection === "violations" && (
+              <div className="w-full px-5">
+                <UserViolations userId={userInfo._id} />
+              </div>
+            )}
+
           </div>
         </div>
       </div>

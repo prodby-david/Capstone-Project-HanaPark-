@@ -55,6 +55,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default:'Active'
     },
+    violations:[
+        {
+        reason: { type: String, required: true },
+        date: { type: Date, default: Date.now },
+        },
+    ],
     currentToken:{
         type: String,
         default: null

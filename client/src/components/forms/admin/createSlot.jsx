@@ -147,7 +147,7 @@ const CreateSlot = () => {
                   name="slotUser"
                   value={slotData.slotUser}
                   onChange={handleChange}
-                  className="w-full border rounded-lg p-2.5 text-sm text-gray-700 outline-none transition"
+                  className="w-full border rounded-lg p-2 text-sm text-gray-700 outline-none transition"
                 >
                   <option value="" disabled>
                     Select Slot User
@@ -167,7 +167,7 @@ const CreateSlot = () => {
                   name="slotNumber"
                   value={slotData.slotNumber}
                   readOnly
-                  className="w-full border rounded-lg p-2.5 text-sm text-gray-700 bg-gray-50 outline-none"
+                  className="w-full border rounded-lg p-2 text-sm text-gray-700 bg-gray-50 outline-none"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ const CreateSlot = () => {
                   name="slotType"
                   value={slotData.slotType}
                   onChange={handleChange}
-                  className="w-full border rounded-lg p-2.5 text-sm text-gray-700 outline-none transition"
+                  className="w-full border rounded-lg p-2 text-sm text-gray-700 outline-none transition"
                 >
                   <option value="" disabled>
                     Select Slot Type
@@ -202,7 +202,7 @@ const CreateSlot = () => {
                   type="text"
                   value={`₱ ${slotData.slotPrice}`}
                   readOnly
-                  className="w-full border rounded-lg p-2.5 text-sm text-gray-700 bg-gray-50 outline-none"
+                  className="w-full border rounded-lg p-2 text-sm text-gray-700 bg-gray-50 outline-none"
                 />
               </div>
             </div>
@@ -215,7 +215,7 @@ const CreateSlot = () => {
                 name="slotStatus"
                 value={slotData.slotStatus}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-2.5 text-sm text-gray-700 outline-none transition"
+                className="w-full border rounded-lg p-2 text-sm text-gray-700 outline-none transition"
               >
                 <option value="" disabled>
                   Slot Status
@@ -239,7 +239,7 @@ const CreateSlot = () => {
                 onChange={handleChange}
                 maxLength={100}
                 placeholder="Write a short description..."
-                className="w-full border rounded-lg p-2.5 text-sm text-gray-700 h-[120px] resize-none outline-none transition"
+                className="w-full border rounded-lg p-2 text-sm text-gray-700 h-[120px] resize-none outline-none transition"
               ></textarea>
             </div>
 
@@ -250,7 +250,7 @@ const CreateSlot = () => {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-color to-blue-900 text-white py-2.5 rounded-lg font-medium hover:opacity-90 transition-all duration-300 cursor-pointer"
+              className="w-full bg-gradient-to-r from-color to-blue-900 text-white py-2 text-sm rounded-lg font-medium hover:opacity-90 transition-all duration-300 cursor-pointer"
             >
               Submit
             </button>

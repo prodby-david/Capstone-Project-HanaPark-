@@ -36,7 +36,8 @@ const UserViolations = ({ userId }) => {
       )}
 
       {violations.length > 0 ? (
-        <div className="overflow-x-auto">
+        <div className="max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          
           <ul className="divide-y divide-gray-200">
             {violations.map((v, index) => (
               <li

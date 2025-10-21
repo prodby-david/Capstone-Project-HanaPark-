@@ -25,6 +25,9 @@ input{
       border-color:#666;
       color:#666;
 }
+button{
+  cursor: pointer;
+}
 select{
       outline: none !important;
       border-color:#666;

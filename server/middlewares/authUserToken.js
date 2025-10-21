@@ -20,8 +20,11 @@ const authToken = async (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized: User no longer exists." });
         }
 
-        if (user.currentToken !== user_token) {
-        return res.status(401).json({ message: "Logged in on another device" });
+        if (user.isLocked) {
+        return res.status(403).json({ message: "Account is locked. Please contact the administrator.", });
+        }
+
+        if (user.currentToken !== user_token) { return res.status(401).json({ message: "Logged in on another device"});
         }
 
         req.user = {

@@ -228,7 +228,7 @@ const AccountSettings = () => {
 
             <button
               onClick={() => setActiveSection("violations")}
-              className={`flex items-center gap-2 w-full w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${
+              className={`flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${
                 activeSection === "violations"
                   ? "bg-blue-100 text-color"
                   : "hover:bg-gray-100 text-gray-600"
@@ -486,6 +486,7 @@ const AccountSettings = () => {
               </div>
             )}
 
+          
             {activeSection === "violations" && (
               <div className="w-full px-5">
                 <UserViolations userId={userInfo._id} />

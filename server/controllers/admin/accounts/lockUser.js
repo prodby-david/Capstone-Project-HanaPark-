@@ -11,6 +11,10 @@ const LockUser = async (req, res) => {
     }
 
     user.isLocked = isLocked;
+    if (isLocked) {
+      user.currentToken = null; 
+    }
+    await user.save();
 
     if (isLocked && lockReason) {
       if (!user.violations) user.violations = [];
@@ -29,7 +33,7 @@ const LockUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({message: isLocked ? "User account locked and violation recorded." : "User account unlocked.", user, });
-    
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error updating user lock status.", error: err.message });

@@ -198,7 +198,6 @@ const AccountSettings = () => {
       <div className="flex justify-center items-center min-h-[90vh] my-5 md:my-0 px-4">
         <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white rounded-2xl shadow-lg h-auto md:h-[80vh] overflow-y-auto md:overflow-hidden p-5">
 
-          {/* Sidebar */}
           <div className="flex flex-col sm:flex-row md:flex-col items-center p-4 gap-2 w-full md:max-w-3xs md:items-start">
             <h2 className="hidden md:block text-lg font-semibold text-color mb-2">Settings</h2>
 

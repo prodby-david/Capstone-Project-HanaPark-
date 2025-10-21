@@ -21,6 +21,7 @@ import GetVisitorSlots from '../../controllers/users/visitorSlot.js';
 import Logout from '../../controllers/users/logout.js';
 import createFeedback from '../../controllers/users/feedbackController.js';
 import LockUser from '../../controllers/admin/accounts/lockUser.js';
+import GetUserViolations from '../../controllers/users/getViolations.js';
 
 
 
@@ -48,7 +49,7 @@ UserRouter.patch('/read/:id', authUserToken, markAsRead)
 UserRouter.patch('/notifications/mark-all-read', authUserToken, markAllAsRead)
 UserRouter.get('/visitors', GetVisitorSlots);
 UserRouter.post('/feedback', authUserToken, createFeedback);
-UserRouter.get('violations/:id', authUserToken, LockUser);
+UserRouter.get('/violations/:id', authUserToken, GetUserViolations);
 
 
 

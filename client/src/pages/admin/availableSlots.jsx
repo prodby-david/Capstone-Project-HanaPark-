@@ -50,7 +50,6 @@ const AvailableSlots = () => {
 
   useEffect(() => {
     socket.on('slotUpdated', (updatedSlot) => {
-      console.log('Slot updated in real time:', updatedSlot);
       setShowSlots((prevSlots) =>
         prevSlots.map((slot) =>
           slot._id === updatedSlot._id ? updatedSlot : slot

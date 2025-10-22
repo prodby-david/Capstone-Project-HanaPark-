@@ -117,7 +117,7 @@ const FAQ = () => {
 
     try {
 
-      const res = await publicApi.post('/message')
+      const res = await publicApi.post('/message', formData)
       setFormData(res.data);
       setPopup({
       show: true,

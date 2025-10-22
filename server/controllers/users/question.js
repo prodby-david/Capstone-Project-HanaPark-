@@ -16,6 +16,8 @@ const createQuestion = async(req,res) => {
 
         const userQuestion = new Question({name, subject, email, message});
         await userQuestion.save();   
+
+        return res.status(201).json({ message: "Message sent successfully!" });
         
     } catch (err) {
         return res.status(500).json({message: 'Server Error. Please try again.'})

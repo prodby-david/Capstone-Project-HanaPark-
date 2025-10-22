@@ -22,6 +22,7 @@ const VerifyReservation = async (req, res) => {
       }
 
       reservation.status = "Reserved";
+      reservation.expiresAt = null;
       reservation.isEntryUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Occupied" });
       await reservation.save();

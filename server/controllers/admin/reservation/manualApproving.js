@@ -21,9 +21,9 @@ const ApproveReservation = async (req, res) => {
 
     if (!reservation.isEntryUsed) {
       reservation.status = "Reserved";
+      reservation.expiresAt = null;
       reservation.isEntryUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Occupied" });
-
       await reservation.save();
 
       await Activity.create({

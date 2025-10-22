@@ -45,13 +45,21 @@ const CreateReservation = async(req,res) => {
                 return res.status(409).json({message: 'Slot is already reserved.'});  
             }
 
-            const plateInUse = await Reservation.findOne({ plateNumber, status: 'Pending' });
+            const plateInUse = await Reservation.findOne({
+            plateNumber,
+            status: { $in: ['Pending', 'Reserved'] },
+            });
+
 
             if (plateInUse) {
                 return res.status(409).json({ message: 'The registered vehicle in your account already has a reservation.' });
             }
 
-            const userHasReservation = await Reservation.findOne({ reservedBy: userId, status: 'Pending' });
+            const userHasReservation = await Reservation.findOne({
+            reservedBy: userId,
+            status: { $in: ['Pending', 'Reserved']}, 
+            });
+
             
             if (userHasReservation) {
                 return res.status(409).json({ message: 'Your account already have an active reservation.' });

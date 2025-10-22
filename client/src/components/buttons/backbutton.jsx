@@ -8,7 +8,7 @@ const BackButton = ({onClick}) => {
     <div>
         <button
         onClick={onClick}
-        className=" text-white bg-color-3 w-[100px] p-2 rounded border border-color-3 cursor-pointer shadow-sm transition ease-in-out hover:shadow-color-3 hover:opacity-95 duration-300 text-sm">
+        className=" text-color-3 text-sm border w-[100px] p-2 rounded cursor-pointer transition ease-in-out hover:bg-gray-100 duration-300" >
 
         <div className='flex items-center justify-center gap-x-2'>
           <ArrowUturnLeftIcon className='w-5 h-5' />

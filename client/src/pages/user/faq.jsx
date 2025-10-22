@@ -14,10 +14,28 @@ import {
   LightBulbIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import {publicApi} from '../../lib/api';
+import CustomPopup from "../../components/popups/popup";
+import Loader from "../../components/loaders/loader";
+
+
 
 const FAQ = () => {
   const [showModal, setShowModal] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name:'',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [popup, setPopup] = useState({
+      show: false,
+      type: "info",
+      title: "",
+      message: "",
+      onConfirm: null,
+  });
   const faqs = [
     {
       icon: <InformationCircleIcon className="w-8 h-8 text-color-3 mb-3 mx-auto" />,
@@ -75,6 +93,59 @@ const FAQ = () => {
     },
   ];
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({...formData, [name]: value})
+  }
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if(!formData.name || !formData.email || !formData.subject || !formData.message){
+         setPopup({
+        show: true,
+        type: "error",
+        title: "Failed to send message",
+        message: 'Fields must not be empty',
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+
+      const res = await publicApi.post('/message')
+      setFormData(res.data);
+      setPopup({
+      show: true,
+      type: "success",
+      title: "Message Sent!",
+      message: "Thanks for reaching out — we’ll get back to you soon.",
+      onConfirm: () => setPopup({ ...popup, show: false }),
+    });
+
+    setFormData({ name: "", email: "", subject: "", message: "" });
+
+    } catch (err) {
+        setPopup({
+        show: true,
+        type: "error",
+        title: "Failed to Send",
+        message: "Something went wrong while sending your message. Please try again later.",
+        onConfirm: () => setPopup({ ...popup, show: false }),
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+
+
+
   return (
     <>
       <Header />
@@ -84,7 +155,6 @@ const FAQ = () => {
           Frequently Asked Questions
         </h2>
 
-        {/* FAQ Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl mb-16">
           {faqs.map((faq, index) => (
             <div
@@ -113,7 +183,7 @@ const FAQ = () => {
             onClick={() => setShowModal(true)}
             className="bg-white text-color-3 font-semibold px-6 py-2 rounded-full shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
           >
-            Contact Us
+            Get in Touch
           </button>
         </div>
 
@@ -126,7 +196,7 @@ const FAQ = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-white/40 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative animate-fadeIn">
             <button
               onClick={() => setShowModal(false)}
@@ -134,35 +204,53 @@ const FAQ = () => {
             >
               <XMarkIcon className="w-6 h-6" />
             </button>
-
-            <h3 className="text-2xl font-semibold text-color text-center mb-4">
-              Contact Us
-            </h3>
-            <form className="flex flex-col gap-4">
+            <div className="flex flex-col items-center mb-5">
+              <h3 className="text-2xl font-semibold text-color text-center">
+                Reach Out to Us
+              </h3>
+              <p className="text-sm text-color-2">
+                Questions or concerns? We’d love to hear from you.
+              </p>
+            </div>
+            
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <input
                 type="text"
-                placeholder="Full Name"
-                className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-color-3 outline-none"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Name"
+                className="border border-color-2 rounded-lg px-4 py-2 outline-none"
               />
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Email Address"
-                className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-color-3 outline-none"
+                className="border border-color-2 rounded-lg px-4 py-2 outline-none"
               />
               <input
                 type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
                 placeholder="Subject"
-                className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-color-3 outline-none"
+                className="border border-color-2 rounded-lg px-4 py-2 outline-none"
               />
               <textarea
-                rows="4"
+                rows="3"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 placeholder="Your Message..."
-                className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-color-3 outline-none resize-none"
+                maxLength={100}
+                className="border border-color-2 rounded-lg px-4 py-2 outline-none resize-none text-sm text-color-2"
               ></textarea>
 
               <button
                 type="submit"
-                className="bg-color-3 text-white font-semibold py-2 rounded-lg hover:opacity-90 transition"
+                className="bg-color-3 text-sm text-white font-semibold py-2 rounded-lg hover:opacity-90 transition"
               >
                 Send Message
               </button>
@@ -170,6 +258,17 @@ const FAQ = () => {
           </div>
         </div>
       )}
+
+      {loading && <Loader text="Submitting your message..."/>}
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup({ ...popup, show: false })}
+        onConfirm={popup.onConfirm}
+      />
     </>
   );
 };

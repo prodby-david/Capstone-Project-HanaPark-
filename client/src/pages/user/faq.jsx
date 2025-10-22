@@ -130,11 +130,13 @@ const FAQ = () => {
     setFormData({ name: "", email: "", subject: "", message: "" });
 
     } catch (err) {
-        setPopup({
+      const errorMessage = err.response?.data?.message || "Something went wrong while sending your message. Please try again later.";
+
+      setPopup({
         show: true,
         type: "error",
         title: "Failed to Send",
-        message: "Something went wrong while sending your message. Please try again later.",
+        message: errorMessage,
         onConfirm: () => setPopup({ ...popup, show: false }),
       });
     } finally {
@@ -227,7 +229,7 @@ const FAQ = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email Address"
+                placeholder="Active Gmail Address"
                 className="border border-color-2 rounded-lg px-4 py-2 outline-none"
               />
               <input

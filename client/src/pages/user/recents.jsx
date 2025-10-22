@@ -256,7 +256,7 @@ const Recents = () => {
       </div>
 
       {showQR && latestReservation && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50 mx-5">
+        <div className="fixed inset-0 flex items-center justify-center bg-white/40 backdrop-blur-xs z-50">
           <div className="bg-white rounded-2xl shadow-xl p-6 relative max-w-md w-full">
             <button
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"

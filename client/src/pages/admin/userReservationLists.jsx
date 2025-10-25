@@ -158,15 +158,26 @@ const UserReservationLists = () => {
     );
   };
 
-  const handleCancelAdminReservation = (reservationId) => {
+    const handleCancelAdminReservation = (reservationId) => {
     openPopup(
       'Cancel Reservation?',
       "This action can't be undone.",
       'warning',
       async () => {
-        await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
-        toast.success('Reservation cancelled successfully!', toastOptions);
-        setReservations((prev) => prev.filter((r) => r._id !== reservationId));
+        try {
+          setIsLoading(true);
+          await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
+          toast.success('Reservation cancelled successfully!', toastOptions);
+          fetchReservations();
+        } catch (err) {
+          toast.error(
+            err.response?.data?.message || 'Failed to cancel reservation',
+            toastOptions
+          );
+        } finally {
+          setIsLoading(false);
+          closePopup();
+        }
       }
     );
   };
@@ -375,27 +386,29 @@ const UserReservationLists = () => {
         </div>
       </div>
 
-      <CustomPopup
-        show={popup.show}
-        type={popup.type}
-        title={popup.title}
-        message={popup.message}
-        onClose={closePopup}
-        onConfirm={
-          popup.onConfirm
-            ? async () => {
-                setIsLoading(true);
-                await Promise.resolve();
-                try {
-                  await popup.onConfirm();
-                } finally {
-                  setIsLoading(false);
-                  closePopup();
-                }
-              }
-            : closePopup
-        }
-      />
+      {popup.show && (
+          <CustomPopup
+            show={popup.show}
+            type={popup.type}
+            title={popup.title}
+            message={popup.message}
+            onClose={closePopup}
+            onConfirm={
+              popup.onConfirm
+                ? async () => {
+                    try {
+                      await popup.onConfirm();
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }
+                : closePopup
+            }
+          />
+        )}
+
+        {isLoading && <Loader />}
+
     </>
   );
 };

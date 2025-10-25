@@ -34,6 +34,7 @@ import UserRegistration from './pages/admin/registration/userRegistration'
 import AdminFeedbacks from './pages/admin/userFeedback'
 import FAQ from './pages/user/faq'
 import TermsAndConditions from './pages/user/terms'
+import Inquiries from './pages/admin/inquiries'
 
 function App() {
 
@@ -133,6 +134,14 @@ function App() {
           <AdminRoute>
             <AdminDashboard />
           </AdminRoute>}
+          />
+
+          <Route path='/inquiries' 
+          element={
+            <AdminRoute>
+              <Inquiries />
+            </AdminRoute>
+            }
           />
 
           <Route

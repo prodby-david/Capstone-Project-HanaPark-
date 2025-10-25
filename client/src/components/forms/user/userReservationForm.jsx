@@ -263,6 +263,7 @@ const UserReservationForm = () => {
         title={popup.title}
         message={popup.message}
         onClose={() => setPopup({ show: false })}
+        showCancel={false}
         onConfirm={popup.onConfirm}
       />
     </>

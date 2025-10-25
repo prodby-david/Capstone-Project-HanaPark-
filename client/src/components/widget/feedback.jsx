@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { ChatBubbleLeftEllipsisIcon, XMarkIcon, StarIcon } from "@heroicons/react/24/solid";
 import UserAPI from "../../lib/inteceptors/userInterceptor";
-import Swal from "sweetalert2";
-import Loader from '../../components/loaders/loader'
+import Loader from "../../components/loaders/loader";
+import CustomPopup from "../popups/popup";
 
 const FeedbackWidget = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feedbacks, setFeedbacks] = useState({
     rating: 0,
-    message: ""
+    message: "",
+  });
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: null,
   });
 
   const handleStarClick = (value) => {
@@ -26,20 +33,24 @@ const FeedbackWidget = () => {
     setLoading(true);
     try {
       await UserAPI.post("/feedback", feedbacks);
-      Swal.fire({
-        icon: "success",
+      setPopup({
+        show: true,
+        type: "success",
         title: "Thank you for your feedback!",
-        showConfirmButton: true,
-        confirmButtonText: "Close"
+        message: "Your feedback helps us improve your parking experience.",
+        onConfirm: () => {
+          setPopup({ ...popup, show: false });
+          setOpen(false);
+          setFeedbacks({ rating: 0, message: "" });
+        },
       });
-      setOpen(false);
-      setFeedbacks({ rating: 0, message: "" });
     } catch (err) {
-      Swal.fire({
-        icon: "error",
+      setPopup({
+        show: true,
+        type: "error",
         title: "Feedback Failed",
-        text: err.response?.data?.message || "Something went wrong. Please try again later.",
-        showConfirmButton: true,
+        message: err.response?.data?.message || "Something went wrong. Please try again later.",
+        onConfirm: () => setPopup({ ...popup, show: false }),
       });
     } finally {
       setLoading(false);
@@ -102,11 +113,17 @@ const FeedbackWidget = () => {
         </button>
       )}
 
-      {loading ? <Loader text="Submitting feedback..."/> : null}
+      {loading && <Loader text="Submitting feedback..." />}
 
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onConfirm={popup.onConfirm}
+        showCancel={false}
+      />
     </div>
-
-    
   );
 };
 

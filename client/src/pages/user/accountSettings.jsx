@@ -43,7 +43,6 @@ const AccountSettings = () => {
   const [isEditable, setIsEditable] = useState(false);
   const inputRef = useRef(null);
 
-  // --- Popup state ---
   const [popup, setPopup] = useState({
     show: false,
     type: 'info',

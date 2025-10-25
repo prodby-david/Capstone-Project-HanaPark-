@@ -86,6 +86,10 @@ const AdminHeader = () => {
             Create Slots
           </Link>
 
+          <Link to='/inquiries' className="hover:text-color-3 font-semibold">
+            Inquiries
+          </Link>
+
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsOpen(!isOpen)}

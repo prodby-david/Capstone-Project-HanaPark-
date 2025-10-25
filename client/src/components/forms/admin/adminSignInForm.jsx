@@ -121,6 +121,7 @@ const AdminSignInForm = () => {
         type={popup.type}
         title={popup.title}
         message={popup.message}
+        showCancel={false}
         onClose={closePopup}
         onConfirm={
           popup.onConfirm

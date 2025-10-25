@@ -24,7 +24,7 @@ const Inquiries = () => {
             <p><strong>Subject:</strong> {inq.subject}</p>
             <p><strong>Message:</strong> {inq.message}</p>
             <button
-            onClick={() => window.open(`mailto:${q.email}?subject=Re: ${q.subject}`, '_blank')}
+            onClick={() => window.open(`mailto:${inq.email}?subject=Re: ${inq.subject}`, '_blank')}
             className="mt-2 bg-color text-white px-3 py-1 rounded-lg hover:opacity-90 text-sm"
             >
             Reply via Gmail

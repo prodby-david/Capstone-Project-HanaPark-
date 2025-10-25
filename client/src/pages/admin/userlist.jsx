@@ -349,16 +349,6 @@ const UserList = () => {
                 ))}
               </div>
 
-              {filteredUsers.length > 10 && (
-                <div className="flex justify-center py-4 bg-white border-t">
-                  <button
-                    onClick={() => setShowAll((prev) => !prev)}
-                    className="px-4 py-2 bg-color text-white font-medium rounded-md hover:opacity-90 transition"
-                  >
-                    {showAll ? 'See Less' : 'See More'}
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         )}

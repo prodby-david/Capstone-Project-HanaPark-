@@ -31,15 +31,19 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Divider */}
       <div className="mt-10 flex justify-center">
         <div className="h-px w-full max-w-[1200px] bg-white"></div>
       </div>
 
-      {/* Copyright */}
-      <p className="text-center mt-5 text-sm">
-        &copy; {new Date().getFullYear()} HanaPark. All rights reserved.
-      </p>
+       <div className="text-center mt-5 text-sm">
+        <p className="text-xs">&copy; {new Date().getFullYear()} HanaPark. All rights reserved.</p>
+        <p className="text-xs mt-1">
+          Developed by <span className="font-semibold">John David Gaspar</span>,{" "}
+          <span className="font-semibold">Elijah Santos</span>,{" "}
+          <span className="font-semibold">Jan Symon Clemente</span>, and{" "}
+          <span className="font-semibold">Renz Barbecho</span>
+        </p>
+      </div>
     </footer>
   );
 }

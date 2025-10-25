@@ -149,7 +149,7 @@ const SignIn = () => {
             </div>
 
             <form className="flex flex-col gap-y-5" onSubmit={handleSubmit}>
-              {/* Username */}
+
               <div className="relative">
                 <UserIcon className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                 <input
@@ -162,7 +162,6 @@ const SignIn = () => {
                 />
               </div>
 
-              {/* Password */}
               <div className="relative">
                 <LockClosedIcon className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                 <input
@@ -186,7 +185,6 @@ const SignIn = () => {
                 )}
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-medium py-2.5 rounded-md hover:from-blue-800 hover:to-blue-600 transition-all duration-300 shadow-md cursor-pointer"
@@ -220,6 +218,7 @@ const SignIn = () => {
         message={popup.message}
         onClose={() => setPopup({ ...popup, show: false })}
         onConfirm={popup.onConfirm}
+        showCancel={false}
         confirmText="Confirm"
       />
     </>

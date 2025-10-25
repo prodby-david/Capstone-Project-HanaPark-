@@ -43,7 +43,7 @@ UserAPI.interceptors.response.use(
         setTimeout(() => {
           window.location.href = "/";
           hasShownSessionToast = false; 
-        }, 1000);
+        }, 3500);
       }
     }
 

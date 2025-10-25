@@ -24,7 +24,11 @@ const Inquiries = () => {
             <p><strong>Subject:</strong> {inq.subject}</p>
             <p><strong>Message:</strong> {inq.message}</p>
             <button
-            onClick={() => window.open(`mailto:${inq.email}?subject=Re: ${inq.subject}`, '_blank')}
+           onClick={() =>
+            window.open(
+                `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(inq.email)}&su=${encodeURIComponent("Re: " + inq.subject)}`, '_blank'
+            )}
+
             className="mt-2 bg-color text-white px-3 py-1 rounded-lg hover:opacity-90 text-sm"
             >
             Reply via Gmail

@@ -1,4 +1,4 @@
-import Question from "../../models/question.js"
+import Question from "../../models/inquiries.js"
 import validator from 'validator'
 
 

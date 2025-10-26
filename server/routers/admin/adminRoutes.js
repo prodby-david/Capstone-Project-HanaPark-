@@ -26,6 +26,7 @@ import GetAllFeedbacks from '../../controllers/users/getFeedback.js';
 import getActivityLogs from '../../controllers/admin/activitylogs.js';
 import UnarchiveUser from '../../controllers/admin/accounts/unarchive.js';
 import GetUserInquiries from '../../controllers/admin/inquiries.js';
+import DeleteInquiries from '../../controllers/admin/removeInquiry.js';
 
 
 
@@ -63,7 +64,7 @@ AdminRoute.patch('/unarchive/:id', UnarchiveUser)
 AdminRoute.patch('/reservation/cancel/:id', cancelReservation);
 
 AdminRoute.delete('/slots/:id', DeleteSlot);
-
+AdminRoute.delete('/inquiries/:id', DeleteInquiries);
 AdminRoute.delete('/users/:id', DeleteUser);
 
 

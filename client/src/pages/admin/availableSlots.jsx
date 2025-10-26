@@ -22,6 +22,8 @@ const AvailableSlots = () => {
   const [editedDescription, setEditedDescription] = useState('');
   const [visibleCount, setVisibleCount] = useState(6);
   const [isLoading, setIsLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [popup, setPopup] = useState({
     show: false,
@@ -61,7 +63,7 @@ const AvailableSlots = () => {
   }, []);
 
   const handleUpdate = async () => {
-    setIsLoading(true);
+    setUpdateLoading(true);
     try {
       await api.put(`/admin/slots/${selectedSlot._id}`, {
         slotStatus: editedStatus,
@@ -86,7 +88,7 @@ const AvailableSlots = () => {
         onConfirm: () => setPopup({ ...popup, show: false }),
       }); 
     } finally {
-      setIsLoading(false);
+      setUpdateLoading(false);
     }
   };
 
@@ -101,7 +103,7 @@ const AvailableSlots = () => {
       showCancel: true,
       onConfirm: async () => {
         setPopup({ ...popup, show: false });
-        setIsLoading(true);
+        setDeleteLoading(true);
         try {
           await api.delete(`/admin/slots/${id}`);
           setPopup({
@@ -122,7 +124,7 @@ const AvailableSlots = () => {
             onConfirm: () => setPopup({ ...popup, show: false }),
           });
         } finally {
-          setIsLoading(false);
+          setDeleteLoading(false);
         }
       },
       onClose: () => setPopup({ ...popup, show: false }),
@@ -360,7 +362,8 @@ const AvailableSlots = () => {
         )}
       </div>
 
-      {isLoading && <Loader text='Saving your changes...'/>}
+      {updateLoading && <Loader text='Updating slot...'/>}
+      {deleteLoading && <Loader text='Deleting slot...'/>}
 
       <CustomPopup
         show={popup.show}

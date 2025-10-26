@@ -20,9 +20,9 @@ const CreateSlot = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const MAX_SLOTS = {
-    Student: 40,
-    Staff: 30,
-    Visitor: 20,
+    Student: 60,
+    Staff: 40,
+    Visitor: 30,
   };
 
   const handleChange = async (e) => {

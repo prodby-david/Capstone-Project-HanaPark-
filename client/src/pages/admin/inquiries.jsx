@@ -134,15 +134,16 @@ const Inquiries = () => {
         </div>
       </div>
 
-      {popup.show && (
-        <CustomPopup
-          type={popup.type}
-          message={popup.message}
-          onClose={() => setPopup({ show: false, type: "", message: "", onConfirm: null })}
-          showCancel={false}
-          onConfirm={popup.onConfirm}
-        />
-      )}
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup({ show: false, type: "", message: "", onConfirm: null })}
+        onConfirm={popup.onConfirm}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        showCancel={popup.onConfirm ? true : false}
+      />
     </>
   );
 };

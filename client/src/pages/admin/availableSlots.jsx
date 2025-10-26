@@ -23,7 +23,6 @@ const AvailableSlots = () => {
   const [visibleCount, setVisibleCount] = useState(6);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Custom popup state
   const [popup, setPopup] = useState({
     show: false,
     type: '',

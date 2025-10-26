@@ -407,7 +407,7 @@ const UserReservationLists = () => {
           />
         )}
 
-        {isLoading && <Loader />}
+        {isLoading && <Loader text='Showing all the reservations...'/>}
 
     </>
   );

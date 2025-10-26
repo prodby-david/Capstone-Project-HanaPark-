@@ -15,12 +15,15 @@ const ApproveReservation = async (req, res) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    if (reservation.expiresAt < new Date()) {
+    // Only check expiry if entry is not used yet
+    if (!reservation.isEntryUsed && reservation.expiresAt < new Date()) {
       return res.status(400).json({ message: "Reservation expired" });
     }
 
+
     if (!reservation.isEntryUsed) {
       reservation.status = "Reserved";
+      reservation.expiresAt = null;
       reservation.isEntryUsed = true;
       await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Occupied" });
       await reservation.save();

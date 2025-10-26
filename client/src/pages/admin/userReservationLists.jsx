@@ -21,6 +21,10 @@ const UserReservationLists = () => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [completeLoading, setCompleteLoading] = useState(false);
+  const [qrLoading, setQRLoading] = useState(false);
   const [popup, setPopup] = useState({
     show: false,
     title: '',
@@ -118,7 +122,7 @@ const UserReservationLists = () => {
       'You are about to approve this reservation.',
       'warning',
       async () => {
-        setIsLoading(true);
+        setApproveLoading(true);
         try {
           await AdminAPI.post(`/admin/approve-reservation/${id}`);
           toast.success('Reservation approved successfully!', toastOptions);
@@ -129,7 +133,7 @@ const UserReservationLists = () => {
             toastOptions
           );
         } finally {
-          setIsLoading(false);
+          setApproveLoading(false);
           closePopup();
         }
       }
@@ -142,6 +146,7 @@ const UserReservationLists = () => {
       'This will complete the reservation.',
       'warning',
       async () => {
+        setCompleteLoading(true);
         try {
           await AdminAPI.post(`/admin/approve-reservation/${id}`);
           toast.success('Reservation completed successfully!', toastOptions);
@@ -152,6 +157,7 @@ const UserReservationLists = () => {
             toastOptions
           );
         } finally {
+          setCompleteLoading(false);
           closePopup();
         }
       }
@@ -164,6 +170,7 @@ const UserReservationLists = () => {
       "This action can't be undone.",
       'warning',
       async () => {
+        setCancelLoading(true);
         try {
           setIsLoading(true);
           await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
@@ -175,16 +182,18 @@ const UserReservationLists = () => {
             toastOptions
           );
         } finally {
-          setIsLoading(false);
+          setCancelLoading(false);
           closePopup();
         }
       }
     );
   };
 
-
   const handleQRScan = async (scannedText) => {
     const verificationCode = scannedText.trim().toLowerCase();
+
+    setQRLoading(true);
+
     try {
       const res = await AdminAPI.post('/admin/verify-reservation', {
         verificationCode,
@@ -196,6 +205,8 @@ const UserReservationLists = () => {
         err.response?.data?.message || 'Failed to verify reservation',
         toastOptions
       );
+    } finally {
+      setQRLoading(false);
     }
   };
 
@@ -407,7 +418,10 @@ const UserReservationLists = () => {
           />
         )}
 
-        {isLoading && <Loader text='Showing all the reservations...'/>}
+        {approveLoading && <Loader text='Approving the reservation...'/>}
+        {cancelLoading && <Loader text='Cancelling the reservation...'/>}
+        {completeLoading && <Loader text='Completing the reservation...'/>}
+        {qrLoading && <Loader text='Verifying the reservation...'/>}
 
     </>
   );

@@ -9,6 +9,7 @@ const DeleteInquiries = async (req,res) => {
         if (!inquiry) {
         return res.status(404).json({ message: "Inquiry not found" });
         }
+        
         res.status(200).json({ message: "Inquiry deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting inquiry" });

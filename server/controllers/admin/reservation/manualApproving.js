@@ -15,7 +15,6 @@ const ApproveReservation = async (req, res) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    // Only check expiry if entry is not used yet
     if (!reservation.isEntryUsed && reservation.expiresAt < new Date()) {
       return res.status(400).json({ message: "Reservation expired" });
     }

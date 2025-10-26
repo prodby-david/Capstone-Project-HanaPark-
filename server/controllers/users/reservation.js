@@ -80,7 +80,7 @@ const CreateReservation = async(req,res) => {
 
             const verificationCode = crypto.randomBytes(8).toString('hex').toLowerCase();
             const qrCodeDataURL = await QRCode.toDataURL(verificationCode);
-            const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+            const expiresAt = new Date(Date.now() + 5 * 1000);
 
             const userReservation = new Reservation({ reservedBy: userId, verificationCode, slotId, slotCode, qrCode: qrCodeDataURL,  slotPrice,reservationDate, reservationTime, plateNumber, vehicleType, status: 'Pending', isEntryUsed: false, isExitUsed: false, expiresAt });
 

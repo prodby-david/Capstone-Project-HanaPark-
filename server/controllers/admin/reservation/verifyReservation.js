@@ -2,6 +2,7 @@ import Reservation from "../../../models/reservation.js";
 import Slot from "../../../models/slot.js";
 import Notification from "../../../models/notification.js";
 import Activity from "../../../models/activitylog.js";
+import User from "../../../models/user.js";
 
 const VerifyReservation = async (req, res) => {
   try {
@@ -14,6 +15,27 @@ const VerifyReservation = async (req, res) => {
 
     if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
+    }
+
+     const now = new Date();
+
+    if (!reservation.isEntryUsed && reservation.expiresAt < now) {
+
+      reservation.status = "Cancelled";
+      await reservation.save();
+
+      await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Available" });
+
+      const noShowCount = await Reservation.countDocuments({
+        reservedBy: reservation.reservedBy._id,
+        status: 'Cancelled'
+      });
+
+      if (noShowCount >= 3) {
+        await User.findByIdAndUpdate(reservation.reservedBy._id, { isLocked: true });
+      }
+
+      return res.status(400).json({ message: "QR code expired. Reservation cancelled and slot reset." });
     }
 
     if (!reservation.isEntryUsed) {

@@ -20,7 +20,7 @@ const UserViolations = ({ userId }) => {
   }, [userId]);
 
   return (
-    <div className="rounded-2xl p-6 border border-color-2">
+    <div className="rounded-2xl p-6">
       <h2 className="text-xl font-semibold text-color mb-4 flex items-center gap-2">
         <ExclamationTriangleIcon className="w-6 h-6 text-color-3" />
         Account Violations

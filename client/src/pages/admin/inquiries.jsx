@@ -11,7 +11,7 @@ import CustomPopup from "../../components/popups/popup";
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
-  const [popup, setPopup] = useState({ show: false, type: "info", message: "", onConfirm: null });
+  const [popup, setPopup] = useState({ show: false, type: "info", title: '', message: "", onConfirm: null });
 
   useEffect(() => {
     const fetchInquiries = async () => {
@@ -28,7 +28,8 @@ const Inquiries = () => {
   const handleDelete = (id) => {
     setPopup({
       show: true,
-      type: "confirm",
+      type: "info",
+      title: "Confirm Deletion",
       message: "Are you sure you want to delete this inquiry?",
       onConfirm: async () => {
         try {
@@ -37,6 +38,7 @@ const Inquiries = () => {
           setPopup({
             show: true,
             type: "success",
+             title: "Deleted Successfully",
             message: "Inquiry deleted successfully!",
             onConfirm: null,
           });
@@ -45,6 +47,7 @@ const Inquiries = () => {
           setPopup({
             show: true,
             type: "error",
+            title: "Deletion Failed",
             message: "Failed to delete inquiry. Please try again.",
             onConfirm: null,
           });
@@ -137,6 +140,7 @@ const Inquiries = () => {
       <CustomPopup
         show={popup.show}
         type={popup.type}
+        title={popup.title}
         message={popup.message}
         onClose={() => setPopup({ show: false, type: "", message: "", onConfirm: null })}
         onConfirm={popup.onConfirm}

@@ -139,6 +139,7 @@ const Inquiries = () => {
           type={popup.type}
           message={popup.message}
           onClose={() => setPopup({ show: false, type: "", message: "", onConfirm: null })}
+          showCancel={false}
           onConfirm={popup.onConfirm}
         />
       )}

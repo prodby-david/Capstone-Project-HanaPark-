@@ -269,6 +269,7 @@ const FAQ = () => {
         title={popup.title}
         message={popup.message}
         onClose={() => setPopup({ ...popup, show: false })}
+        showCancel={false}
         onConfirm={popup.onConfirm}
       />
     </>

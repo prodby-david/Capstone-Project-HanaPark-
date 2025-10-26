@@ -11,7 +11,7 @@ import CustomPopup from "../../components/popups/popup";
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
-  const [popup, setPopup] = useState({ show: false, type: "", message: "", onConfirm: null });
+  const [popup, setPopup] = useState({ show: false, type: "info", message: "", onConfirm: null });
 
   useEffect(() => {
     const fetchInquiries = async () => {

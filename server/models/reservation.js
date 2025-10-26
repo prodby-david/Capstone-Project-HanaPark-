@@ -59,7 +59,6 @@ const reservationSchema = mongoose.Schema({
     },   
     expiresAt: { 
         type: Date, 
-        required: true 
     }
 }, {timestamps: true});
 

@@ -72,7 +72,7 @@ const Inquiries = () => {
           <hr className="border-gray-300 mt-4" />
         </div>
 
-        <div className="max-w-6xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="max-w-[1400px] mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {inquiries.map((inq) => (
             <div
               key={inq._id}
@@ -91,7 +91,8 @@ const Inquiries = () => {
                   <p>{inq.email}</p>
                 </div>
 
-                <p className="relative pl-4 border-l-4 border-color text-sm text-gray-700 leading-relaxed italic break-words">
+                <p className="relative pl-4 border-l-4 border-color text-sm text-gray-700 leading-relaxed italic whitespace-nowrap overflow-x-auto">
+
                   “
                   {inq.message.length > 100
                     ? inq.message.slice(0, 100) + "..."

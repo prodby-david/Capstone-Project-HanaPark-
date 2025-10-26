@@ -183,8 +183,8 @@ const step2Validations = () => {
   }
 
   const plate = formData.plateNumber.toUpperCase().trim();
-  const motorcycleRegex = /^[A-Z0-9]{6}$/;
-  const fourWheelRegex = /^[A-Z]{3}\d{4}$/i;
+  const motorcycleRegex = /^[A-Z0-9]{6}$/i;    
+  const fourWheelRegex = /^[A-Z]{3}[0-9]{4}$/i;
   const mvFileRegex = /^[0-9]{4}-[0-9]{9,12}$/;
 
   const motorcycleTypes = [

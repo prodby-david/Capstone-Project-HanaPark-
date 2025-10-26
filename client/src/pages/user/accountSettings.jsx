@@ -118,18 +118,58 @@ const AccountSettings = () => {
   };
 
   const handleSaveVehicle = async () => {
-    setSaveLoading(true);
-    try {
-      const res = await UserAPI.put('/vehicle-information', vehicleInformation);
-      if (res.data.success) {
-        showPopup('success', 'Vehicle Updated', res.data.message);
+    
+  const motorcycleRegex = /^[A-Z0-9]{6}$/i;    
+  const fourWheelRegex = /^[A-Z]{3}[0-9]{4}$/i;  
+
+
+  if (vehicleInformation.mvFile && mvFileRegex.test(vehicleInformation.mvFile)) {
+    console.log("MV File valid — skipping plate validation.");
+  } else {
+
+    if (
+      vehicleInformation.vehicleType === "2-Wheels (399cc below)" ||
+      vehicleInformation.vehicleType === "2-Wheels (400cc up)"
+    ) {
+      if (!motorcycleRegex.test(vehicleInformation.plateNumber)) {
+        showPopup(
+          "error",
+          "Invalid Plate Number",
+          "For 2-wheels, the plate number must be 6 alphanumeric characters (e.g. AB12CD or 123ABC)."
+        );
+        return;
       }
-    } catch (err) {
-      showPopup('error', 'Update Failed', err.response?.data?.message || 'Something went wrong');
-    } finally {
-      setSaveLoading(false);
     }
-  };
+
+    if (vehicleInformation.vehicleType === "4-Wheels") {
+      if (!fourWheelRegex.test(vehicleInformation.plateNumber)) {
+        showPopup(
+          "error",
+          "Invalid Plate Number",
+          "For 4-wheels, the plate number must follow the format ABC1234 (3 letters followed by 4 digits)."
+        );
+        return;
+      }
+    }
+  }
+
+  setSaveLoading(true);
+  try {
+    const res = await UserAPI.put("/vehicle-information", vehicleInformation);
+    if (res.data.success) {
+      showPopup("success", "Vehicle Updated", res.data.message);
+    }
+  } catch (err) {
+    showPopup(
+      "error",
+      "Update Failed",
+      err.response?.data?.message || "Something went wrong"
+    );
+  } finally {
+    setSaveLoading(false);
+  }
+};
+
 
   const handleChangeEmail = async (e) => {
     e.preventDefault();

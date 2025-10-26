@@ -118,9 +118,15 @@ const AccountSettings = () => {
   };
 
   const handleSaveVehicle = async () => {
-    
+
   const motorcycleRegex = /^[A-Z0-9]{6}$/i;    
   const fourWheelRegex = /^[A-Z]{3}[0-9]{4}$/i;  
+
+
+  if(!vehicleInformation.plateNumber) {
+    showPopup("error", "Plate Number Required", "Please enter your vehicle's plate number.");
+    return;
+  }
 
 
   if (vehicleInformation.mvFile && mvFileRegex.test(vehicleInformation.mvFile)) {

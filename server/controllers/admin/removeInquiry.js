@@ -1,10 +1,10 @@
-import Question from "../../models/inquiries.js";
+import Inquiry from "../../models/inquiries.js";
 
 
 const DeleteInquiries = async (req,res) => {
     try {
         const { id } = req.params;
-        const inquiry = await Question.findByIdAndDelete(id);
+        const inquiry = await Inquiry.findByIdAndDelete(id);
 
         if (!inquiry) {
         return res.status(404).json({ message: "Inquiry not found" });
@@ -15,4 +15,4 @@ const DeleteInquiries = async (req,res) => {
   }
 }
 
-export default DeleteInquiries
+export default DeleteInquiries;

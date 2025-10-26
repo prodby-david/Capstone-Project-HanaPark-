@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 
-const questionSchema = mongoose.Schema({
+const inquirySchema = mongoose.Schema({
     name:{
         type: String,
         required: true
@@ -21,6 +21,6 @@ const questionSchema = mongoose.Schema({
     }
 });
 
-const Question = mongoose.model('Question', questionSchema);
+const Inquiry = mongoose.model('Inquiry', inquirySchema);
 
-export default Question;
+export default Inquiry;

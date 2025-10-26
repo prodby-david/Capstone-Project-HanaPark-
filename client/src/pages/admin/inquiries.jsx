@@ -8,18 +8,30 @@ import {
 import AdminAPI from "../../lib/inteceptors/adminInterceptor";
 import AdminHeader from "../../components/headers/adminHeader";
 import CustomPopup from "../../components/popups/popup";
+import Loader from "../../components/loaders/loader";
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
-  const [popup, setPopup] = useState({ show: false, type: "info", title: '', message: "", onConfirm: null });
+  const [popup, setPopup] = useState({ 
+    show: false, 
+    type: "info", 
+    title: '', 
+    message: "", 
+    onConfirm: null 
+  });
+  const [loading, setLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchInquiries = async () => {
+      setLoading(true);
       try {
         const res = await AdminAPI.get("/admin/inquiries");
         setInquiries(res.data);
       } catch (err) {
         console.error("Error fetching inquiries:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchInquiries();
@@ -32,6 +44,7 @@ const Inquiries = () => {
       title: "Confirm Deletion",
       message: "Are you sure you want to delete this inquiry?",
       onConfirm: async () => {
+        setIsDeleting(true);
         try {
           await AdminAPI.delete(`/admin/inquiries/${id}`);
           setInquiries(inquiries.filter((inq) => inq._id !== id));
@@ -51,6 +64,8 @@ const Inquiries = () => {
             message: "Failed to delete inquiry. Please try again.",
             onConfirm: null,
           });
+        } finally {
+          setIsDeleting(false);
         }
       },
     });
@@ -72,33 +87,35 @@ const Inquiries = () => {
           <hr className="border-gray-300 mt-4" />
         </div>
 
-        <div className="max-w-[1400px] mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="max-w-[1400px] mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
           {inquiries.map((inq) => (
             <div
               key={inq._id}
-              className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+              className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full"
             >
-              <div>
+
+              <div className="flex flex-col">
                 <h2 className="text-lg font-semibold text-color-3 mb-2 flex items-center gap-2">
                   <EnvelopeIcon className="w-5 h-5 text-color-3" />
                   {inq.subject}
                 </h2>
 
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                  <UserIcon className="w-4 h-4 text-gray-500" />
-                  <span className="font-medium text-color">{inq.name}</span>
-                  <span className="text-color-2">•</span>
+                <div className="flex flex-col gap-2 text-sm text-gray-600 mb-3">
+                  <div className="flex items-center gap-x-1">
+                    <UserIcon className="w-4 h-4 text-gray-500" />
+                    <span className="font-medium text-color">{inq.name}</span>
+                  </div>
                   <p>{inq.email}</p>
                 </div>
 
-                <p className="relative pl-4 border-l-4 border-color text-sm text-gray-700 leading-relaxed italic whitespace-nowrap overflow-x-auto">
-
+                <p className="relative pl-4 border-l-4 border-color text-sm text-gray-700 leading-relaxed italic">
                   “
                   {inq.message.length > 100
                     ? inq.message.slice(0, 100) + "..."
                     : inq.message}
                   ”
                 </p>
+
               </div>
 
               <hr className="border-gray-200 my-4" />
@@ -137,6 +154,9 @@ const Inquiries = () => {
           )}
         </div>
       </div>
+
+      {loading && <Loader text='Showing user inquiries...'/>}
+      {isDeleting && <Loader text='Deleting inquiry...'/>}
 
       <CustomPopup
         show={popup.show}

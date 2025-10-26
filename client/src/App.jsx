@@ -35,6 +35,7 @@ import AdminFeedbacks from './pages/admin/userFeedback'
 import FAQ from './pages/user/faq'
 import TermsAndConditions from './pages/user/terms'
 import Inquiries from './pages/admin/inquiries'
+import HowItWorks from './pages/user/howitworks'
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
           <Route path="/reset-password" element={ <ForgotPassword />} />
           <Route path="/visitors" element={ <Visitors /> } />
           <Route path='/faq' element={ <FAQ /> }/>
+          <Route path='/how-it-works' element={ <HowItWorks /> }/>
           <Route path='/terms' element={<TermsAndConditions />} />
 
           {/* User Routes */}

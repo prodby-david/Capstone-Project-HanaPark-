@@ -250,6 +250,12 @@ const FAQ = () => {
                 className="border border-color-2 rounded-lg px-4 py-2 outline-none resize-none text-sm text-color-2"
               ></textarea>
 
+              <h2 className="text-xs text-color-3 text-center">
+                <span className="text-color font-semibold">NOTE:</span>
+                &nbsp;Please make sure your email is an active Gmail account, as all responses will be sent via Gmail. Kindly allow 1–3 business days for our team to get back to you.
+              </h2>
+
+
               <button
                 type="submit"
                 className="bg-color-3 text-sm text-white font-semibold py-2 rounded-lg hover:opacity-90 transition"

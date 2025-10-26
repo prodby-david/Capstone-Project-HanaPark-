@@ -52,17 +52,22 @@ const CustomPopup = ({
     <AnimatePresence>
       {show && (
         <motion.div
+          key={title + type}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
           className="fixed inset-0 z-[99] flex items-center justify-center bg-black/40 backdrop-blur-sm"
         >
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="bg-white rounded-2xl shadow-xl p-8 w-[90%] max-w-md text-center flex flex-col items-center"
+            initial={{ opacity: 0, y: -30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{
+              duration: 0.35,
+              ease: [0.25, 0.1, 0.25, 1], 
+            }}
+            className="bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center flex flex-col items-center"
           >
             {icons[type]}
 
@@ -100,6 +105,7 @@ const CustomPopup = ({
         </motion.div>
       )}
     </AnimatePresence>
+
   );
 };
 

@@ -95,7 +95,9 @@ const Recents = () => {
             type: "success",
             title: "Cancelled!",
             message: res.data.message,
+            showCancel: false,
             onConfirm: () => setPopup({ ...popup, show: false }),
+
           });
           setReservations((prev) =>
             prev.map((r) =>
@@ -279,6 +281,7 @@ const Recents = () => {
         message={popup.message}
         onClose={() => setPopup({ ...popup, show: false })}
         onConfirm={popup.onConfirm}
+        showCancel={popup.showCancel} 
       />
     </>
   );

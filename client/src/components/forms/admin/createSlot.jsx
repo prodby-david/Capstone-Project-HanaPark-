@@ -245,7 +245,7 @@ const CreateSlot = () => {
 
             <p className="text-xs text-gray-500 text-center">
               <span className="font-semibold text-color-3">NOTE:</span> Max
-              slots — Students: 40, Staff: 30, Visitors: 20.
+              slots — Students: 60, Staff: 40, Visitors: 30.
             </p>
 
             <button

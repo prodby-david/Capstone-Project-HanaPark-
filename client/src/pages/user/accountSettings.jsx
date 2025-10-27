@@ -259,7 +259,7 @@ const AccountSettings = () => {
               className={`flex items-center gap-2 w-full px-3 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === "password" ? "bg-blue-100 text-color" : "hover:bg-gray-100 text-gray-600"}`}
             >
               <KeyIcon className="w-5 h-5" />
-              <span>Password Information</span>
+              <span>Change Password</span>
             </button>
 
             <button

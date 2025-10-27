@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import AdminAPI from '../../lib/inteceptors/adminInterceptor';
-import AdminHeader from '../../components/headers/adminHeader';
-import SearchBar from '../../components/search/search';
-import QRScanner from '../../lib/qrscanner';
-import { toast } from 'react-toastify';
-import toastOptions from '../../lib/toastConfig';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { socket } from '../../lib/socket';
-import Loader from '../../components/loaders/loader';
-import CustomPopup from '../../components/popups/popup';
+import React, { useEffect, useState } from "react";
+import AdminAPI from "../../lib/inteceptors/adminInterceptor";
+import AdminHeader from "../../components/headers/adminHeader";
+import SearchBar from "../../components/search/search";
+import QRScanner from "../../lib/qrscanner";
+import { toast } from "react-toastify";
+import toastOptions from "../../lib/toastConfig";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { socket } from "../../lib/socket";
+import Loader from "../../components/loaders/loader";
+import CustomPopup from "../../components/popups/popup";
 
 const UserReservationLists = () => {
   const [reservations, setReservations] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState('Pending');
+  const [selectedStatus, setSelectedStatus] = useState("Pending");
   const [counts, setCounts] = useState({
     Pending: 3,
     Reserved: 3,
     Completed: 3,
     Cancelled: 3,
   });
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -27,32 +27,32 @@ const UserReservationLists = () => {
   const [qrLoading, setQRLoading] = useState(false);
   const [popup, setPopup] = useState({
     show: false,
-    title: '',
-    message: '',
-    type: 'info',
+    title: "",
+    message: "",
+    type: "info",
     onConfirm: null,
   });
 
   const increment = 3;
 
   useEffect(() => {
-    socket.on('connect', () => {
-      socket.emit('joinAdmin');
+    socket.on("connect", () => {
+      socket.emit("joinAdmin");
     });
     return () => {
-      socket.off('connect');
+      socket.off("connect");
     };
   }, []);
 
   useEffect(() => {
-    socket.on('reservationCreated', (newReservation) => {
+    socket.on("reservationCreated", (newReservation) => {
       setReservations((prev) => {
         const exists = prev.some((r) => r._id === newReservation._id);
         return exists ? prev : [...prev, newReservation];
       });
     });
 
-    socket.on('reservationCancelled', (cancelledReservation) => {
+    socket.on("reservationCancelled", (cancelledReservation) => {
       setReservations((prev) =>
         prev.map((r) =>
           r._id === cancelledReservation._id ? cancelledReservation : r
@@ -60,17 +60,25 @@ const UserReservationLists = () => {
       );
     });
 
-    socket.on('reservationCancelledByUser', (cancelledReservation) => {
-      setReservations((prev) => {
-        const exists = prev.some((r) => r._id === cancelledReservation._id);
-        if (!exists) return prev;
-        return prev.map((r) =>
-          r._id === cancelledReservation._id ? cancelledReservation : r
-        );
+    socket.on("reservationCancelledByUser", (cancelledReservation) => {
+
+      setReservations((prev) => prev.filter((r) => r._id !== cancelledReservation._id));
+
+      setPopup({
+        show: true,
+        title: "Reservation Cancelled",
+        message: `Reservation by ${cancelledReservation.reservedBy?.firstname || "User"} has been cancelled.`,
+        type: "success",
+        onConfirm: () => setPopup((prev) => ({ ...prev, show: false })),
       });
     });
 
-    socket.on('reservationApproved', (approvedReservation) => {
+
+    socket.on("userActivityCancelled", (activity) => {
+      console.log("Activity log:", activity);
+    });
+
+    socket.on("reservationApproved", (approvedReservation) => {
       setReservations((prev) =>
         prev.map((r) =>
           r._id === approvedReservation._id ? approvedReservation : r
@@ -78,7 +86,7 @@ const UserReservationLists = () => {
       );
     });
 
-    socket.on('reservationUpdated', (updatedReservation) => {
+    socket.on("reservationUpdated", (updatedReservation) => {
       setReservations((prev) =>
         prev.map((r) =>
           r._id === updatedReservation._id ? updatedReservation : r
@@ -87,21 +95,22 @@ const UserReservationLists = () => {
     });
 
     return () => {
-      socket.off('reservationCreated');
-      socket.off('reservationCancelled');
-      socket.off('reservationCancelledByUser');
-      socket.off('reservationApproved');
-      socket.off('reservationUpdated');
+      socket.off("reservationCreated");
+      socket.off("reservationCancelled");
+      socket.off("reservationCancelledByUser");
+      socket.off("userActivityCancelled");
+      socket.off("reservationApproved");
+      socket.off("reservationUpdated");
     };
   }, []);
 
   const fetchReservations = async () => {
     setIsLoading(true);
     try {
-      const res = await AdminAPI.get('/admin/reservations');
+      const res = await AdminAPI.get("/admin/reservations");
       setReservations(res.data);
     } catch (err) {
-      console.error('Error fetching reservations:', err);
+      console.error("Error fetching reservations:", err);
     } finally {
       setIsLoading(false);
     }
@@ -111,25 +120,25 @@ const UserReservationLists = () => {
     fetchReservations();
   }, []);
 
-  const openPopup = (title, message, type = 'info', onConfirm = null) => {
+  const openPopup = (title, message, type = "info", onConfirm = null) => {
     setPopup({ show: true, title, message, type, onConfirm });
   };
   const closePopup = () => setPopup((prev) => ({ ...prev, show: false }));
 
   const handleApprove = async (id) => {
     openPopup(
-      'Are you sure?',
-      'You are about to approve this reservation.',
-      'warning',
+      "Are you sure?",
+      "You are about to approve this reservation.",
+      "warning",
       async () => {
         setApproveLoading(true);
         try {
           await AdminAPI.post(`/admin/approve-reservation/${id}`);
-          toast.success('Reservation approved successfully!', toastOptions);
+          toast.success("Reservation approved successfully!", toastOptions);
           fetchReservations();
         } catch (err) {
           toast.error(
-            err.response?.data?.message || 'Failed to approve reservation',
+            err.response?.data?.message || "Failed to approve reservation",
             toastOptions
           );
         } finally {
@@ -142,18 +151,18 @@ const UserReservationLists = () => {
 
   const handleComplete = async (id) => {
     openPopup(
-      'Mark as Completed?',
-      'This will complete the reservation.',
-      'warning',
+      "Mark as Completed?",
+      "This will complete the reservation.",
+      "warning",
       async () => {
         setCompleteLoading(true);
         try {
           await AdminAPI.post(`/admin/approve-reservation/${id}`);
-          toast.success('Reservation completed successfully!', toastOptions);
+          toast.success("Reservation completed successfully!", toastOptions);
           fetchReservations();
         } catch (err) {
           toast.error(
-            err.response?.data?.message || 'Failed to complete reservation',
+            err.response?.data?.message || "Failed to complete reservation",
             toastOptions
           );
         } finally {
@@ -164,21 +173,21 @@ const UserReservationLists = () => {
     );
   };
 
-    const handleCancelAdminReservation = (reservationId) => {
+  const handleCancelAdminReservation = (reservationId) => {
     openPopup(
-      'Cancel Reservation?',
+      "Cancel Reservation?",
       "This action can't be undone.",
-      'warning',
+      "warning",
       async () => {
         setCancelLoading(true);
         try {
           setIsLoading(true);
           await AdminAPI.patch(`/admin/reservation/cancel/${reservationId}`);
-          toast.success('Reservation cancelled successfully!', toastOptions);
+          toast.success("Reservation cancelled successfully!", toastOptions);
           fetchReservations();
         } catch (err) {
           toast.error(
-            err.response?.data?.message || 'Failed to cancel reservation',
+            err.response?.data?.message || "Failed to cancel reservation",
             toastOptions
           );
         } finally {
@@ -191,18 +200,16 @@ const UserReservationLists = () => {
 
   const handleQRScan = async (scannedText) => {
     const verificationCode = scannedText.trim().toLowerCase();
-
     setQRLoading(true);
-
     try {
-      const res = await AdminAPI.post('/admin/verify-reservation', {
+      const res = await AdminAPI.post("/admin/verify-reservation", {
         verificationCode,
       });
       toast.success(res.data.message, toastOptions);
       fetchReservations();
     } catch (err) {
       toast.error(
-        err.response?.data?.message || 'Failed to verify reservation',
+        err.response?.data?.message || "Failed to verify reservation",
         toastOptions
       );
     } finally {
@@ -214,7 +221,7 @@ const UserReservationLists = () => {
     const query = searchQuery.toLowerCase();
     const reservedByName = res.reservedBy
       ? `${res.reservedBy.lastname} ${res.reservedBy.firstname}`.toLowerCase()
-      : '';
+      : "";
     return (
       reservedByName.includes(query) ||
       res.plateNumber?.toLowerCase().includes(query) ||
@@ -235,12 +242,11 @@ const UserReservationLists = () => {
     setCounts((prev) => ({ ...prev, [status]: increment }));
   };
 
-  const statusTabs = ['Pending', 'Reserved', 'Completed', 'Cancelled'];
+  const statusTabs = ["Pending", "Reserved", "Completed", "Cancelled"];
 
   return (
     <>
       <AdminHeader />
-
       <div className="py-5 px-5">
         <div className="text-center my-5">
           <h2 className="text-xl font-semibold text-color">
@@ -266,8 +272,8 @@ const UserReservationLists = () => {
               key={status}
               className={`px-4 py-2 rounded font-semibold cursor-pointer ${
                 selectedStatus === status
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
               onClick={() => setSelectedStatus(status)}
             >
@@ -286,13 +292,12 @@ const UserReservationLists = () => {
           ) : (
             <div className="overflow-auto h-80 rounded-lg border border-gray-200">
               <div className="min-w-[1000px] flex flex-col gap-2 p-4">
-
                 <div
                   className={`grid gap-4 items-center bg-white text-color-3 font-bold text-sm p-4 rounded-t-lg text-center ${
-                    selectedStatus === 'Pending' ||
-                    selectedStatus === 'Reserved'
-                      ? 'grid-cols-9'
-                      : 'grid-cols-8'
+                    selectedStatus === "Pending" ||
+                    selectedStatus === "Reserved"
+                      ? "grid-cols-9"
+                      : "grid-cols-8"
                   }`}
                 >
                   <div>Name</div>
@@ -303,8 +308,8 @@ const UserReservationLists = () => {
                   <div>Vehicle Type</div>
                   <div>Plate Number</div>
                   <div>Date & Time</div>
-                  {(selectedStatus === 'Pending' ||
-                    selectedStatus === 'Reserved') && <div>Actions</div>}
+                  {(selectedStatus === "Pending" ||
+                    selectedStatus === "Reserved") && <div>Actions</div>}
                 </div>
 
                 {filteredReservationsByStatus(selectedStatus)
@@ -313,16 +318,16 @@ const UserReservationLists = () => {
                     <div
                       key={res._id}
                       className={`grid gap-4 items-center bg-white text-color-2 text-sm p-4 rounded-t-lg text-center ${
-                        selectedStatus === 'Pending' ||
-                        selectedStatus === 'Reserved'
-                          ? 'grid-cols-9'
-                          : 'grid-cols-8'
+                        selectedStatus === "Pending" ||
+                        selectedStatus === "Reserved"
+                          ? "grid-cols-9"
+                          : "grid-cols-8"
                       }`}
                     >
                       <div>
                         {res.reservedBy
                           ? `${res.reservedBy.lastname}, ${res.reservedBy.firstname}`
-                          : 'Deleted User'}
+                          : "Deleted User"}
                       </div>
                       <div>{res.verificationCode}</div>
                       <div>{res.slotCode}</div>
@@ -333,10 +338,10 @@ const UserReservationLists = () => {
                       <div>
                         {res.reservationDate} {res.reservationTime}
                       </div>
-                      {(selectedStatus === 'Pending' ||
-                        selectedStatus === 'Reserved') && (
+                      {(selectedStatus === "Pending" ||
+                        selectedStatus === "Reserved") && (
                         <div>
-                          {selectedStatus === 'Pending' && (
+                          {selectedStatus === "Pending" && (
                             <div className="flex flex-col justify-center gap-2">
                               <button
                                 onClick={() => handleApprove(res._id)}
@@ -356,7 +361,7 @@ const UserReservationLists = () => {
                               </button>
                             </div>
                           )}
-                          {selectedStatus === 'Reserved' && (
+                          {selectedStatus === "Reserved" && (
                             <div className="flex justify-center gap-2">
                               <button
                                 onClick={() => handleComplete(res._id)}
@@ -398,31 +403,31 @@ const UserReservationLists = () => {
       </div>
 
       {popup.show && (
-          <CustomPopup
-            show={popup.show}
-            type={popup.type}
-            title={popup.title}
-            message={popup.message}
-            onClose={closePopup}
-            onConfirm={
-              popup.onConfirm
-                ? async () => {
-                    try {
-                      await popup.onConfirm();
-                    } catch (err) {
-                      console.error(err);
-                    }
+        <CustomPopup
+          show={popup.show}
+          type={popup.type}
+          title={popup.title}
+          message={popup.message}
+          onClose={closePopup}
+          showCancel={false}
+          onConfirm={
+            popup.onConfirm
+              ? async () => {
+                  try {
+                    await popup.onConfirm();
+                  } catch (err) {
+                    console.error(err);
                   }
-                : closePopup
-            }
-          />
-        )}
+                }
+              : closePopup
+          }
+        />
+      )}
 
-        {approveLoading && <Loader text='Approving the reservation...'/>}
-        {cancelLoading && <Loader text='Cancelling the reservation...'/>}
-        {completeLoading && <Loader text='Completing the reservation...'/>}
-        {qrLoading && <Loader text='Verifying the reservation...'/>}
-
+      {approveLoading && <Loader text="Approving the reservation..." />}
+      {cancelLoading && <Loader text="Cancelling the reservation..." />}
+      {completeLoading && <Loader text="Completing the reservation..." />}
+      {qrLoading && <Loader text="Verifying the reservation..." />}
     </>
   );
 };

@@ -24,6 +24,13 @@ const AvailableSlots = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [slotCounts, setSlotCounts] = useState({
+    Available: 0,
+    Reserved: 0,
+    Occupied: 0,
+    "Ongoing Maintenance": 0,
+  });
+
 
   const [popup, setPopup] = useState({
     show: false,
@@ -49,18 +56,61 @@ const AvailableSlots = () => {
     setVisibleCount(showSlots.length);
   };
 
-  useEffect(() => {
-    socket.on('slotUpdated', (updatedSlot) => {
-      setShowSlots((prevSlots) =>
-        prevSlots.map((slot) =>
-          slot._id === updatedSlot._id ? updatedSlot : slot
-        )
-      );
-    });
-    return () => {
-      socket.off('slotUpdated');
+  const recalculateCounts = (slots) => {
+    const counts = {
+      Available: 0,
+      Reserved: 0,
+      Occupied: 0,
+      "Ongoing Maintenance": 0,
     };
-  }, []);
+
+    slots.forEach((slot) => {
+      if (counts[slot.slotStatus] !== undefined) {
+        counts[slot.slotStatus]++;
+      }
+    });
+
+    return counts;
+  };
+
+
+  useEffect(() => {
+  socket.on('slotUpdated', (updatedSlot) => {
+    console.log('Slot updated:', updatedSlot);
+
+    setShowSlots((prevSlots) => {
+      let updatedSlots;
+      const exists = prevSlots.some((slot) => slot._id === updatedSlot._id);
+
+      if (exists) {
+        updatedSlots = prevSlots.map((slot) =>
+          slot._id === updatedSlot._id ? updatedSlot : slot
+        );
+      } else {
+        updatedSlots = [...prevSlots, updatedSlot];
+      }
+
+      setSlotCounts(recalculateCounts(updatedSlots));
+      return updatedSlots;
+    });
+  });
+
+  socket.on('slotDeleted', (deletedId) => {
+    console.log('🗑️ Slot deleted:', deletedId);
+
+    setShowSlots((prevSlots) => {
+      const updatedSlots = prevSlots.filter(slot => slot._id !== deletedId);
+      setSlotCounts(recalculateCounts(updatedSlots));
+      return updatedSlots;
+    });
+  });
+
+  return () => {
+    socket.off('slotUpdated');
+    socket.off('slotDeleted');
+  };
+}, []);
+
 
   const handleUpdate = async () => {
     setUpdateLoading(true);
@@ -142,6 +192,8 @@ const AvailableSlots = () => {
 
       const res = await api.get(url);
       setShowSlots(res.data);
+      setSlotCounts(recalculateCounts(res.data));
+
     } catch (err) {
       console.error('Error fetching slots:', err);
     } finally {
@@ -181,7 +233,8 @@ const AvailableSlots = () => {
     <>
       <AdminHeader />
       <div className="p-8 min-h-screen">
-        <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
+
+        <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-4">
           <h2 className="text-2xl font-semibold text-color flex items-center gap-2">
             <span className="bg-color-3 text-white px-3 py-1 rounded-lg text-base">Admin</span>
             Parking Slots
@@ -229,6 +282,30 @@ const AvailableSlots = () => {
             </div>
           </div>
         </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+          <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-md p-5 hover:scale-105 transition-transform duration-200 border border-green-600">
+            <span className="text-sm font-semibold text-green-600">Available</span>
+            <span className="text-2xl font-extrabold text-green-700">{slotCounts.Available}</span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-md p-5 hover:scale-105 transition-transform duration-200 border border-yellow-600">
+            <span className="text-sm font-semibold text-yellow-600">Reserved</span>
+            <span className="text-2xl font-extrabold text-yellow-700">{slotCounts.Reserved}</span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-md p-5 hover:scale-105 transition-transform duration-200 border border-red-600">
+            <span className="text-sm font-semibold text-red-600">Occupied</span>
+            <span className="text-2xl font-extrabold text-red-700">{slotCounts.Occupied}</span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-md p-5 hover:scale-105 transition-transform duration-200 border border-blue-600">
+            <span className="text-sm font-semibold text-blue-600">Ongoing Maintenance</span>
+            <span className="text-2xl font-extrabold text-blue-700">{slotCounts["Ongoing Maintenance"]}</span>
+          </div>
+        </div>
+
+
 
         {isLoading ? (
           <Loader />

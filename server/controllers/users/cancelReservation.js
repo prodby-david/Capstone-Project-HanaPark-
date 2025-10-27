@@ -1,6 +1,6 @@
 import Reservation from "../../models/reservation.js"; 
 import Slot from "../../models/slot.js";
-import Activity from '../../models/activitylog.js'
+import Activity from "../../models/activitylog.js";
 
 const CancelReservation = async (req, res) => {
   try {
@@ -8,40 +8,37 @@ const CancelReservation = async (req, res) => {
     const userId = req.user?.userId;
 
     if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
+      return res.status(401).json({ message: "Unauthorized access. Please log in." });
     }
 
     const reservation = await Reservation.findByIdAndUpdate(
       id,
-      { status: 'Cancelled' },
+      { status: "Cancelled" },
       { new: true }
-    )
-    .populate('reservedBy', 'firstname lastname userType studentId staffId');
+    ).populate("reservedBy", "firstname lastname userType studentId staffId");
 
     if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: 'Available' });
-
-    console.log('ReservedBy user:', reservation.reservedBy);
+    await Slot.findByIdAndUpdate(reservation.slotId, { slotStatus: "Available" });
 
     const newActivity = new Activity({
       reservationId: reservation._id,
       reservedBy: reservation.reservedBy._id,
-      slotCode: reservation.slotCode,  
+      slotCode: reservation.slotCode,
       status: "Cancelled",
     });
 
     await newActivity.save();
 
     const populatedActivity = await Activity.findById(newActivity._id)
-    .populate('reservedBy', 'firstname lastname userType studentId staffId').lean();
+      .populate("reservedBy", "firstname lastname userType studentId staffId")
+      .lean();
 
-    console.log("Populated activity before emit:", populatedActivity);
+    req.io.to("admins").emit("userActivityCancelled", populatedActivity);
+    req.io.to("admins").emit("reservationCancelledByUser", reservation);
 
-    req.io.to('admins').emit('reservationCancelledByUser', populatedActivity);
- 
     res.status(200).json({ message: "Reservation cancelled successfully", reservation });
   } catch (err) {
     res.status(500).json({ message: "Error cancelling reservation", err });

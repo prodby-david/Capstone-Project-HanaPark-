@@ -422,7 +422,6 @@ const UserReservationLists = () => {
           title={popup.title}
           message={popup.message}
           onClose={closePopup}
-          showCancel={false}
           onConfirm={
             popup.onConfirm
               ? async () => {

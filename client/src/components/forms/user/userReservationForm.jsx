@@ -56,24 +56,19 @@ const UserReservationForm = () => {
     vehicleType: '',
   })
 
-  useEffect(() => {
-    const now = new Date()
-    const dateOptions = {
-      timeZone: 'Asia/Manila',
-      year: 'numeric',
-      month: 'long',
-      day: '2-digit',
-    }
-    const timeOptions = {
-      timeZone: 'Asia/Manila',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    }
+ useEffect(() => {
+  const now = new Date()
+  
+  // Reservation date in YYYY-MM-DD
+  const date = now.toISOString().split('T')[0]  // "2025-10-28"
 
-    setReservationDate(new Intl.DateTimeFormat('en-PH', dateOptions).format(now))
-    setReservationTime(new Intl.DateTimeFormat('en-PH', timeOptions).format(now))
-  }, [])
+  // Reservation time in HH:mm (24-hour format)
+  const time = now.toTimeString().slice(0, 5)   // "HH:mm"
+
+  setReservationDate(date)
+  setReservationTime(time)
+}, [])
+
 
   useEffect(() => {
     const fetchSlot = async () => {
@@ -144,7 +139,18 @@ const UserReservationForm = () => {
     setUserVehicle((prev) => ({ ...prev, [name]: value }))
   }
 
-  const nextStep = () => setStep((prev) => prev + 1)
+  const nextStep = (data = {}) => {
+    setReservationData(prev => ({
+      ...prev,
+      ...data,
+      reservationDate,
+      reservationTime: data.reservationTime || reservationTime
+    }))
+    if (data.reservationTime) setReservationTime(data.reservationTime)
+    setStep(prev => prev + 1)
+  }
+
+
   const prevStep = (e) => {
     e.preventDefault()
     setStep((prev) => prev - 1)

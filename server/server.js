@@ -71,24 +71,39 @@ app.use('/', UserRouter);
 
 cron.schedule('* * * * *', async () => {
   console.log('Checking expired reservations...');
+
   try {
     const now = new Date();
 
+    // Find pending reservations where reservation datetime has already passed
     const expiredReservations = await Reservation.find({
-      status: 'Pending',
-      expiresAt: { $lte: now }
+      status: 'Pending'
     });
 
     for (const res of expiredReservations) {
-      await Slot.findByIdAndUpdate(res.slotId, { slotStatus: 'Available' });
-      await Reservation.findByIdAndDelete(res._id);
+      // Combine reservationDate and reservationTime into a single Date
+      const [hours, minutes] = res.reservationTime.split(':').map(Number);
+      const resDateParts = res.reservationDate.split('-'); // adjust format if needed
+      const reservationDateTime = new Date(res.reservationDate);
+      reservationDateTime.setHours(hours, minutes, 0, 0);
+
+      if (now > reservationDateTime) {
+        // Cancel the reservation
+        await Reservation.findByIdAndUpdate(res._id, { status: 'Cancelled' });
+
+        // Make the slot available
+        await Slot.findByIdAndUpdate(res.slotId, { slotStatus: 'Available' });
+
+        console.log(`Reservation ${res._id} automatically cancelled.`);
+        
+        // Emit real-time update to user/admin
+        req.io.to(res.reservedBy.toString()).emit('reservationCancelled', res._id);
+        req.io.to("admins").emit('reservationCancelled', res._id);
+      }
     }
 
-    if (expiredReservations.length > 0) {
-      console.log(`🧹 Cleaned up ${expiredReservations.length} expired reservations.`);
-    }
   } catch (err) {
-    console.error('Error cleaning expired reservations:', err);
+    console.error('Error checking expired reservations:', err);
   }
 });
 

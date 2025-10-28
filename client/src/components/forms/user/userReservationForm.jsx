@@ -157,7 +157,7 @@ const UserReservationForm = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e?.preventDefault?.()
     setLoading(true)
     try {
       const res = await UserAPI.post(`/reservation-form/${slotId}`, reservationData)
@@ -174,6 +174,7 @@ const UserReservationForm = () => {
         },
       })
     } catch (err) {
+      console.error('Reservation error:', err)
       setPopup({
         show: true,
         type: 'error',

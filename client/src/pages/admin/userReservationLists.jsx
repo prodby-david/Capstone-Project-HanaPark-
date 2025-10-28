@@ -266,21 +266,34 @@ const UserReservationLists = () => {
           />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
-          {statusTabs.map((status) => (
+       <div className="flex flex-col md:flex-row gap-3 justify-center mb-5">
+        {statusTabs.map((status) => {
+          const count = filteredReservationsByStatus(status).length;
+          return (
             <button
               key={status}
-              className={`px-4 py-2 rounded font-semibold cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2 rounded font-semibold cursor-pointer ${
                 selectedStatus === status
                   ? "bg-blue-500 text-white"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
               onClick={() => setSelectedStatus(status)}
             >
-              {status}
+              <span>{status}</span>
+              <span
+                className={`text-xs font-bold px-2 py-1 rounded-full ${
+                  selectedStatus === status
+                    ? "bg-white text-blue-600"
+                    : "bg-blue-500 text-white"
+                }`}
+              >
+                {count}
+              </span>
             </button>
-          ))}
-        </div>
+          );
+        })}
+      </div>
+
 
         {isLoading && <Loader />}
 

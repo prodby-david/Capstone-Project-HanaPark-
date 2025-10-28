@@ -70,6 +70,7 @@ const Step3 = ({
             readOnly={trackRadioBox}
             value={userVehicle.vehicleType}
             handleChange={handleChange}
+            slotType={slot?.slotType}
           />
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrashIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid';
+import { TrashIcon, LockClosedIcon, LockOpenIcon, ArchiveBoxIcon  } from '@heroicons/react/24/solid';
 import { api } from '../../lib/api';
 import AdminAPI from '../../lib/inteceptors/adminInterceptor';
 import SearchBar from '../../components/search/search';
@@ -64,6 +64,10 @@ const UserList = () => {
 
       return matchesUserFields || matchesVehicleFields;
     });
+
+    const lockedCount = filteredUsers.filter((user) => user.isLocked).length;
+    const unlockedCount = filteredUsers.filter((user) => !user.isLocked).length;
+    const archivedCount = usersList.filter((user) => user.status === 'Archived').length;
 
   const handleLock = (id, currentStatus) => {
     if (currentStatus) {
@@ -229,6 +233,7 @@ const UserList = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-4">
+
           <button
             onClick={() => setShowArchived((prev) => !prev)}
             className={`px-4 py-2 rounded-md text-white cursor-pointer font-semibold text-sm transition ${
@@ -264,6 +269,23 @@ const UserList = () => {
             <Loader />
           </div>
         )}
+
+        <div className="flex flex-wrap justify-center sm:justify-start gap-3 mt-6">
+          <div className="flex items-center gap-1 px-3 py-1 rounded-md bg-red-50 border border-red-400 text-red-600 text-sm font-medium">
+            <LockClosedIcon className="w-4 h-4" />
+            <span>Locked: {lockedCount}</span>
+          </div>
+
+          <div className="flex items-center gap-1 px-3 py-1 rounded-md bg-green-50 border border-green-400 text-green-600 text-sm font-medium">
+            <LockOpenIcon className="w-4 h-4" />
+            <span>Active Accounts: {unlockedCount}</span>
+          </div>
+
+          <div className="flex items-center gap-1 px-3 py-1 rounded-md bg-gray-50 border border-gray-300 text-gray-600 text-sm font-medium">
+            <ArchiveBoxIcon className="w-4 h-4" />
+            <span>Archived Accounts: {archivedCount}</span>
+          </div>
+        </div>
 
         {!isLoading && (
           <div className="w-full max-w-6xl overflow-x-auto mt-6">

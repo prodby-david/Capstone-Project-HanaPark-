@@ -14,7 +14,6 @@ const Visitors = () => {
   const [visibleSlot, setVisibleSlot] = useState(9);
   const [loading, setLoading] = useState(true);
 
-  // Fetch slots from backend
   const fetchVisitorSlots = async () => {
     try {
       const res = await publicApi.get('/visitors');

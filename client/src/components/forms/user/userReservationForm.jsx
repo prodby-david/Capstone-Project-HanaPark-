@@ -223,15 +223,15 @@ const UserReservationForm = () => {
            {step === 2 && (
               <Step2
                 date={reservationDate}
-                initialTime={reservationTime} // use initialTime prop
+                initialTime={reservationTime} 
                 nextStep={(data) => {
-                  // merge reservationTime into reservationData
+                  
                   setReservationData((prev) => ({
                     ...prev,
                     reservationDate: reservationDate,
                     reservationTime: data.reservationTime,
                   }));
-                  nextStep(); // go to next step
+                  nextStep(); 
                 }}
                 prevStep={prevStep}
               />

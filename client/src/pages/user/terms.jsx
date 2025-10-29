@@ -26,7 +26,7 @@ const TermsAndConditions = () => {
           </p>
 
           <div className="space-y-10">
-            {/* Section 1 */}
+
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <BuildingOfficeIcon className="w-8 h-8 text-color-3" />
@@ -39,7 +39,6 @@ const TermsAndConditions = () => {
               </p>
             </section>
 
-            {/* Section 2 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <UserIcon className="w-8 h-8 text-color-3" />
@@ -52,7 +51,6 @@ const TermsAndConditions = () => {
               </p>
             </section>
 
-            {/* Section 3 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <ClockIcon className="w-8 h-8 text-color-3" />
@@ -66,7 +64,6 @@ const TermsAndConditions = () => {
               </ul>
             </section>
 
-            {/* Section 4 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <ExclamationTriangleIcon className="w-8 h-8 text-color-3" />
@@ -80,7 +77,6 @@ const TermsAndConditions = () => {
               </ul>
             </section>
 
-            {/* Section 5 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <ShieldCheckIcon className="w-8 h-8 text-color-3" />
@@ -93,7 +89,6 @@ const TermsAndConditions = () => {
               </p>
             </section>
 
-            {/* Section 6 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <InformationCircleIcon className="w-8 h-8 text-color-3" />
@@ -106,7 +101,6 @@ const TermsAndConditions = () => {
               </ul>
             </section>
 
-            {/* Section 7 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <GlobeAltIcon className="w-8 h-8 text-color-3" />
@@ -119,7 +113,6 @@ const TermsAndConditions = () => {
               </p>
             </section>
 
-            {/* Section 8 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <CheckCircleIcon className="w-8 h-8 text-color-3" />
@@ -132,7 +125,6 @@ const TermsAndConditions = () => {
               </p>
             </section>
 
-            {/* Section 9 */}
             <section>
               <div className="flex items-center gap-3 mb-3">
                 <CheckCircleIcon className="w-8 h-8 text-color-3" />

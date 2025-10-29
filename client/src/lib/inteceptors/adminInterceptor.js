@@ -21,13 +21,13 @@ AdminAPI.interceptors.response.use(
       error.response &&
       (error.response.status === 401 || error.response.status === 403) &&
       !originalRequest._retry &&
-      !isExcluded // ✅ Only refresh for protected routes
+      !isExcluded 
     ) {
       originalRequest._retry = true;
 
       try {
-        await AdminAPI.get('/admin/refresh'); // try refresh token
-        return AdminAPI(originalRequest); // retry original request
+        await AdminAPI.get('/admin/refresh');
+        return AdminAPI(originalRequest); 
       } catch (refreshError) {
         window.location.href = "/admin/passcode";
         sessionStorage.clear();
@@ -35,7 +35,6 @@ AdminAPI.interceptors.response.use(
       }
     }
 
-    // For other errors, just return the error
     return Promise.reject(error);
   }
 );

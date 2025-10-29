@@ -25,11 +25,9 @@ import UserList from './pages/admin/userlist'
 import ResetPassword from './components/forms/user/resetpassword';
 import UserReservationLists from './pages/admin/userReservationLists'
 import Recents from './pages/user/recents'
-import CompletedReservation from './pages/admin/completedReservation'
 import AccountSettings from './pages/user/accountSettings'
 import GuestRoute from './routes/guestRoute'
 import UserType from './pages/admin/userType'
-import StaffRegistration from './components/forms/admin/staffRegistration'
 import UserRegistration from './pages/admin/registration/userRegistration'
 import AdminFeedbacks from './pages/admin/userFeedback'
 import FAQ from './pages/user/faq'
@@ -147,15 +145,6 @@ function App() {
           />
 
           <Route
-          path='/admin/reservations/completed'
-          element={
-            <AdminRoute>
-              <CompletedReservation />
-            </AdminRoute>
-          }
-          />
-
-          <Route
           path='/account-type'
           element={
             <AdminRoute>
@@ -186,15 +175,6 @@ function App() {
           element={ 
           <AdminRoute>
             <UserRegistration />
-          </AdminRoute> 
-          } 
-          />
-
-          <Route 
-          path='/registration/staff' 
-          element={ 
-          <AdminRoute>
-            <StaffRegistration />
           </AdminRoute> 
           } 
           />

@@ -98,7 +98,6 @@ const Dashboard = () => {
             </Link>
           </motion.div>
 
-          {/* Account Settings */}
           <motion.div
             variants={fadeUp}
             whileHover={{ scale: 1.05 }}

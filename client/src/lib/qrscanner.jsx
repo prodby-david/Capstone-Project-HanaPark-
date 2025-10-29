@@ -46,7 +46,6 @@ const QRScanner = ({ onScanSuccess }) => {
         Scan QR
       </button>
 
-      {/* Scanner modal */}
       {scannerVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="relative bg-white p-1 rounded shadow-lg">

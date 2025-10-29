@@ -1,5 +1,5 @@
 import User from "../../models/user.js";
-import UserLog from "../../models/userlog.js";
+import UserLog from '../../models/userlogs.js'
 
 
 

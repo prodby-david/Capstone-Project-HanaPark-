@@ -1,5 +1,4 @@
-import UserLog from "../../models/userlog.js";
-
+import UserLog from '../../../models/userlog.js'
 
 
 const getUserLogs = async (req, res) => {

@@ -1,7 +1,7 @@
 import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import UserLog from '../../models/userlog.js';
+import UserLog from '../../models/userlog.js'
 
 const MAX_ATTEMPTS = 5;
 const LOCK_TIME = 15 * 60 * 1000; 

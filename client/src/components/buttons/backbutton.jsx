@@ -6,7 +6,7 @@ const BackButton = ({onClick}) => {
   return (
 
     <div>
-        <button
+        <button type='button'
         onClick={onClick}
         className=" text-color-3 text-sm border w-[100px] p-2 rounded cursor-pointer transition ease-in-out hover:bg-gray-100 duration-300" >
 

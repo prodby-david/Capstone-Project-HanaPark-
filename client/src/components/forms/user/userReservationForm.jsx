@@ -218,7 +218,7 @@ const UserReservationForm = () => {
         )}
 
         <div className="rounded-2xl w-full max-w-3xl p-6 sm:p-10 bg-white">
-          <form className="w-full">
+          <form className="w-full" onSubmit={e => e.preventDefault()}>
             {step === 1 && <Step1 slot={slot} nextStep={nextStep} />}
            {step === 2 && (
               <Step2

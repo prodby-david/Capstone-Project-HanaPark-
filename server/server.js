@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 app.use('/admin', AdminRoute);  
 app.use('/', UserRouter);       
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('*/10 * * * * *', async () => {
   console.log('Checking expired reservations...');
   try {
     const now = new Date();
@@ -79,10 +79,15 @@ cron.schedule('* * * * *', async () => {
       expiresAt: { $lte: now }
     });
 
-    for (const res of expiredReservations) {
-      await Slot.findByIdAndUpdate(res.slotId, { slotStatus: 'Available' });
-      await Reservation.findByIdAndDelete(res._id);
-    }
+    
+    await Slot.updateMany(
+      { _id: { $in: expiredReservations.map(r => r.slotId) } },
+      { slotStatus: 'Available' }
+    );
+    await Reservation.updateMany(
+      { _id: { $in: expiredReservations.map(r => r._id) } },
+      { status: 'Cancelled' }
+    );
 
     if (expiredReservations.length > 0) {
       console.log(`🧹 Cleaned up ${expiredReservations.length} expired reservations.`);

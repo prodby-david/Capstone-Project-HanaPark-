@@ -220,14 +220,23 @@ const UserReservationForm = () => {
         <div className="rounded-2xl w-full max-w-3xl p-6 sm:p-10 bg-white">
           <form className="w-full">
             {step === 1 && <Step1 slot={slot} nextStep={nextStep} />}
-            {step === 2 && (
+           {step === 2 && (
               <Step2
                 date={reservationDate}
-                reservationTime={reservationTime}
-                nextStep={nextStep}
+                initialTime={reservationTime} // use initialTime prop
+                nextStep={(data) => {
+                  // merge reservationTime into reservationData
+                  setReservationData((prev) => ({
+                    ...prev,
+                    reservationDate: reservationDate,
+                    reservationTime: data.reservationTime,
+                  }));
+                  nextStep(); // go to next step
+                }}
                 prevStep={prevStep}
               />
             )}
+
             {step === 3 && (
               <Step3
                 userVehicle={userVehicle}

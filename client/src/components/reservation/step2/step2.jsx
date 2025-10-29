@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import NextButton from '../../buttons/nextbutton'
 import BackButton from '../../buttons/backbutton'
+import CustomPopup from '../../popups/popup'
 
 const Step2 = ({ date, initialTime, nextStep, prevStep }) => {
   const [reservationTime, setReservationTime] = useState(initialTime || '')
   const [currentTime, setCurrentTime] = useState(new Date())
   const [minTime, setMinTime] = useState('05:00')
   const maxTime = '21:00'
+  const [popup, setPopup] = useState({ show: false, title: '', message: '', type: 'info' })
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -23,19 +25,20 @@ const Step2 = ({ date, initialTime, nextStep, prevStep }) => {
     if (calculatedMin > maxTime) calculatedMin = maxTime
 
     setMinTime(calculatedMin)
-    // Remove automatic overwrite to allow manual selection
-    // if (!reservationTime || reservationTime < calculatedMin) {
-    //   setReservationTime(calculatedMin)
-    // }
   }, [currentTime])
 
   const handleNext = () => {
     if (!reservationTime) {
-      alert('Please select a reservation time before continuing.')
-      return
+      setPopup({
+        show: true,
+        title: 'Missing Time',
+        message: 'Please select a reservation time before continuing.',
+        type: 'warning',
+        onClose: () => setPopup({ ...popup, show: false }),
+      });
+      return;
     }
 
-    // Validation: must be 2 hours ahead
     const [hh, mm] = reservationTime.split(':').map(Number)
     const selectedDate = new Date()
     selectedDate.setHours(hh, mm, 0, 0)
@@ -43,17 +46,30 @@ const Step2 = ({ date, initialTime, nextStep, prevStep }) => {
     const twoHoursAhead = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000)
 
     if (selectedDate < twoHoursAhead) {
-      alert('Reservation time must be at least 2 hours from now.')
-      return
+      setPopup({
+        show: true,
+        title: 'Invalid Time',
+        message: 'Reservation time must be at least 2 hours from now.',
+        type: 'warning',
+        onClose: () => setPopup({ ...popup, show: false }),
+      });
+      return;
     }
 
     if (reservationTime < '05:00' || reservationTime > '21:00') {
-      alert('Reservation time must be between 5:00 AM and 9:00 PM.')
-      return
+      setPopup({
+        show: true,
+        title: 'Invalid Time',
+        message: 'Reservation time must be between 5:00 AM and 9:00 PM.',
+        type: 'warning',
+        onClose: () => setPopup({ ...popup, show: false }),
+      });
+      return;
     }
 
-    nextStep({ reservationTime }) // send time to parent
+    nextStep({ reservationTime })
   }
+
 
   return (
     <div className="flex flex-col justify-center items-center p-6 sm:p-10 bg-white">
@@ -109,7 +125,17 @@ const Step2 = ({ date, initialTime, nextStep, prevStep }) => {
           <NextButton onClick={handleNext} />
         </div>
       </div>
+
+      <CustomPopup
+        show={popup.show}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={popup.onClose}
+      />
     </div>
+
+    
   )
 }
 

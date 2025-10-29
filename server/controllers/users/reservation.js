@@ -80,9 +80,22 @@ const CreateReservation = async(req,res) => {
 
             const verificationCode = crypto.randomBytes(8).toString('hex').toLowerCase();
             const qrCodeDataURL = await QRCode.toDataURL(verificationCode);
-            const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+            const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000); 
+
 
             const userReservation = new Reservation({ reservedBy: userId, verificationCode, slotId, slotCode, qrCode: qrCodeDataURL,  slotPrice,reservationDate, reservationTime, plateNumber, vehicleType, status: 'Pending', isEntryUsed: false, isExitUsed: false, expiresAt });
+
+            const now = new Date();
+            const selectedDateTime = new Date(`${reservationDate}T${reservationTime}:00`);
+
+            const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+
+            if (selectedDateTime < twoHoursLater) {
+            return res.status(400).json({
+                message: 'Reservation time must be at least 2 hours from now.'
+            });
+            }
+
 
             await userReservation.save();
 

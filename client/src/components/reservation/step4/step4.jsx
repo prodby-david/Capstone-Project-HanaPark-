@@ -13,6 +13,17 @@ const Step4 = ({
   prevStep, 
   submit 
 }) => {
+
+  const formatTime12 = (time24) => {
+    if (!time24) return ''
+    const [hourStr, minute] = time24.split(':')
+    let hour = parseInt(hourStr, 10)
+    const ampm = hour >= 12 ? 'PM' : 'AM'
+    hour = hour % 12
+    if (hour === 0) hour = 12
+    return `${hour}:${minute} ${ampm}`
+  }
+
   return (
     <>
       <div className="flex flex-col gap-y-6 p-6 md:p-10 ">
@@ -41,7 +52,10 @@ const Step4 = ({
 
             <div className="space-y-1 text-sm">
               <p><span className="text-color-2 font-medium">Reservation Date:</span> {reservationDate}</p>
-              <p><span className="text-color-2 font-medium">Reservation Time:</span> {reservationTime}</p>
+              <p>
+                <span className="text-color-2 font-medium">Reservation Time:</span> {formatTime12(reservationTime)}
+              </p>
+
             </div>
           </div>
 

@@ -13,13 +13,9 @@ const userLogSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  }, { timestamps: true });
 
-const UserLog = mongoose.model("User_Log", userLogSchema);
+const UserLog = mongoose.model("UserLog", userLogSchema);
 
 
 export default UserLog;

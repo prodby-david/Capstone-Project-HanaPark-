@@ -21,4 +21,5 @@ const userLogSchema = new mongoose.Schema({
 
 const UserLog = mongoose.model("User_Log", userLogSchema);
 
+
 export default UserLog;

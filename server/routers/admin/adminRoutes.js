@@ -27,6 +27,7 @@ import getActivityLogs from '../../controllers/admin/activitylogs.js';
 import UnarchiveUser from '../../controllers/admin/accounts/unarchive.js';
 import GetUserInquiries from '../../controllers/admin/inquiries.js';
 import DeleteInquiries from '../../controllers/admin/removeInquiry.js';
+import getUserLogs from '../../controllers/admin/accounts/getUserLogs.js';
 
 
 
@@ -55,6 +56,7 @@ AdminRoute.get('/reservations/completed', GetCompletedReservation);
 AdminRoute.get('/feedbacks', GetAllFeedbacks);
 AdminRoute.get('/activities', getActivityLogs)
 AdminRoute.get('/inquiries', GetUserInquiries)
+AdminRoute.get('/user-logs', getUserLogs)
 
 AdminRoute.put('/slots/:id', EditSlot);
 

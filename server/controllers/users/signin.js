@@ -1,6 +1,7 @@
 import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import UserLog from "../../models/userLog.js";
 
 const MAX_ATTEMPTS = 5;
 const LOCK_TIME = 15 * 60 * 1000; 
@@ -73,6 +74,12 @@ const studentSignInController = async (req, res) => {
     user.currentToken = user_token;
     await user.save();
 
+    await UserLog.create({
+      userId: user._id,
+      action: 'logged in',
+      description: `${user.firstname} ${user.lastname} logged in.`,
+    });
+
     const user_refresh_token = jwt.sign(payload, process.env.USER_REFRESH_KEY, {
       expiresIn: "7d",
     });
@@ -89,6 +96,15 @@ const studentSignInController = async (req, res) => {
       secure: true,
       sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    
+    req.io.to('admins').emit('userLoggedIn', {
+      userId: user._id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      userType: user.userType,
+      action: 'logged in',
+      createdAt: new Date(),
     });
 
     res.status(200).json({

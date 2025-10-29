@@ -14,23 +14,13 @@ const Logout = async (req,res) => {
         if (user) {
             await User.findByIdAndUpdate(userId, { currentToken: null });
 
-            req.io.to('admins').emit('userLoggedOut', {
-                userId: user._id,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                userType: user.userType,
-                action: 'logged out',
-                createdAt: new Date(),
-            });
-
-            await UserLog.create({
-                userId: user._id,
-                action: 'logged out',
-                description: `${user.firstname} ${user.lastname} logged out.`,
+           const log = await UserLog.create({
+            userId: user._id,
+            action: 'logged out',
+            description: `${user.firstname} ${user.lastname} logged out.`,
             });
         }
-
-
+        
         res.clearCookie('user_token', {
         httpOnly:true,
         secure: process.env.NODE_ENV === "production",

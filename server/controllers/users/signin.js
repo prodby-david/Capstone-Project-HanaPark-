@@ -74,12 +74,6 @@ const studentSignInController = async (req, res) => {
     user.currentToken = user_token;
     await user.save();
 
-    await UserLog.create({
-      userId: user._id,
-      action: 'logged in',
-      description: `${user.firstname} ${user.lastname} logged in.`,
-    });
-
     const user_refresh_token = jwt.sign(payload, process.env.USER_REFRESH_KEY, {
       expiresIn: "7d",
     });
@@ -98,13 +92,10 @@ const studentSignInController = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     
-    req.io.to('admins').emit('userLoggedIn', {
+    const log = await UserLog.create({
       userId: user._id,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      userType: user.userType,
       action: 'logged in',
-      createdAt: new Date(),
+      description: `${user.firstname} ${user.lastname} logged in.`,
     });
 
     res.status(200).json({

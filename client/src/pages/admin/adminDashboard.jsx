@@ -112,7 +112,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUserLogs = async () => {
       try {
-        const res = await AdminAPI.get('/user-logs'); 
+        const res = await AdminAPI.get('/admin/user-logs'); 
         setUserLogs(res.data);
       } catch (err) {
         console.error("Error fetching user logs:", err);

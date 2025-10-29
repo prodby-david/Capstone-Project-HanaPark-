@@ -68,14 +68,12 @@ const AdminDashboard = () => {
       setUnseenCount(prev => prev + 1);
     });
 
-    socket.on("userLoggedIn", (activity) => {
-      setReservation((prev) => [activity, ...prev]);
-      setUnseenCount(prev => prev + 1);
+    socket.on("userLoggedIn", (log) => {
+      setUserLogs((prev) => [log, ...prev]);
     });
 
-    socket.on("userLoggedOut", (activity) => {
-      setReservation((prev) => [activity, ...prev]);
-      setUnseenCount(prev => prev + 1);
+    socket.on("userLoggedOut", (log) => {
+      setUserLogs((prev) => [log, ...prev]);
     });
 
     return () => {

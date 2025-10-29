@@ -42,13 +42,6 @@ const Logout = async (req,res) => {
             sameSite: 'Strict'
         });
 
-       const logout =  await UserLog.create({
-            userId: user._id,
-            action: 'logged out',
-            description: `${user.firstname} ${user.lastname} logged out.`,
-        });
-
-
         res.status(200).json({ message: 'Cookies cleared successfully.' });
 
     } catch (err) {
